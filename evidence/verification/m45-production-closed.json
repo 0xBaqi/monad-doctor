@@ -1,0 +1,10 @@
+{
+  "checkedAt": "2026-10-10T22:15:59.811Z",
+  "localProduction": true,
+  "checks": [
+    "Production without Redis returns safe 503 and visible accessible error",
+    "Denied request does not fabricate report or export",
+    "All three workflows fail closed in production",
+    "Invalid provider and unsupported method remain rejected"
+  ]
+}

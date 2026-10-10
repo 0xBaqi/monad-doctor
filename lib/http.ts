@@ -1,6 +1,7 @@
+import { reserveBudget } from './budget.ts';
 import { diagnose } from './engine.ts';
 import { BodyLimitError, readBounded } from './rpc.ts';
-import { ValidationError } from './validation.ts';
+import { parseInput, ValidationError } from './validation.ts';
 let active = 0, windowStart = 0, windowCount = 0;
 function json(value: unknown, status = 200) { return Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } }); }
 export async function handleDiagnostic(request: Request): Promise<Response> {
@@ -26,7 +27,15 @@ export async function handleDiagnostic(request: Request): Promise<Response> {
  active++; windowCount++;
  try {
   const body = await readBounded(request.body, 16384, 3000);
-  const report = await diagnose(JSON.parse(body));
+  const input = parseInput(JSON.parse(body));
+  const admission = await reserveBudget();
+  if (admission.status === 'unavailable') return json({error:'Diagnostic protection is unavailable. No RPC calls were made. Retry later.'},503);
+  if (admission.status === 'exhausted') {
+   const response = json({error:'Shared diagnostic budget reached. No RPC calls were made. Retry later.'},429);
+   response.headers.set('Retry-After',String(admission.retryAfter));
+   return response;
+  }
+  const report = await diagnose(input);
   return json(report);
  } catch (e) {
   if (e instanceof BodyLimitError) return json({ error: 'Request exceeds 16 KiB.' }, 413);

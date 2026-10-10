@@ -113,3 +113,11 @@ M4: configure the chosen host's edge limits and private origin, enable the remot
 - Accessibility checks are essentials, not a WCAG conformance audit or screen-reader certification.
 
 Final focused M4 browser retry passed all seven checks, including keyboard skip link, 1440/390/320px layouts, labeled 16px mobile inputs, loading lockout and synthetic accessible 429. ESLint passed again after the new script. Screenshots: evidence/verification/m4-1440.png, m4-390.png and m4-320.png.
+
+## M4.5 protected deployment preparation ? 2026-10-10
+
+58/58 deterministic tests passed (seven new shared-limiter tests), TypeScript, ESLint and production build passed. No Redis network dependency exists in tests. Actual Redis atomicity and concurrent admission have not yet been verified and remain a deployment gate. Four checks against the actual local production build passed: safe visible 503 without credentials, no fabricated report/export, all three modes fail closed, and invalid providers/GET remain rejected. See evidence/verification/m45-production-closed.json and .png. This is local production verification, not deployed-URL QA.
+
+Read-only network investigation: evidence/live/m45-network-2026-10-10T22-12-02-749Z/comparison.json records successful chain-143 responses through native fetch and the collector on both providers. Earlier timeouts were not reproduced. Sequential samples cannot isolate provider, network or scheduling causes; no timeout suppression or increased RPC deadline was introduced.
+
+Security scans before publication: original tracked/candidate files clean; history scan covered two commits and 142 blobs with no findings. Local Vercel OIDC/environment files remain ignored and were not printed. Vercel verified OWNER/Hobby scope 0x-baqi; created only monad-doctor and published its live /api/diagnose WAF rule at 6 requests/60 seconds/IP. Rule ID rule_monad_doctor_diagnostic_per_ip_quota_246QC3. No app deployment or paid activation. GitHub CLI is installed but unauthenticated: no owner verification, destination availability confirmation, repository creation, push, or hosted CI result. User account actions are required as documented in docs/protected-deployment.md.

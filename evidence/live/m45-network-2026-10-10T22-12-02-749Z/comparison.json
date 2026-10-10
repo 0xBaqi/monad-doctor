@@ -1,0 +1,49 @@
+{
+  "records": [
+    {
+      "provider": "primary",
+      "path": "direct-native-fetch",
+      "startedAt": "2026-10-10T22:11:58.581Z",
+      "durationMs": 2029,
+      "httpStatus": 200,
+      "validMainnet": true
+    },
+    {
+      "provider": "primary",
+      "path": "application-collector",
+      "evidence": [
+        {
+          "id": 1,
+          "method": "eth_chainId",
+          "params": [],
+          "observedAt": "2026-10-10T22:12:00.649Z",
+          "durationMs": 497,
+          "result": "0x8f"
+        }
+      ]
+    },
+    {
+      "provider": "secondary",
+      "path": "direct-native-fetch",
+      "startedAt": "2026-10-10T22:12:01.146Z",
+      "durationMs": 943,
+      "httpStatus": 200,
+      "validMainnet": true
+    },
+    {
+      "provider": "secondary",
+      "path": "application-collector",
+      "evidence": [
+        {
+          "id": 1,
+          "method": "eth_chainId",
+          "params": [],
+          "observedAt": "2026-10-10T22:12:02.090Z",
+          "durationMs": 659,
+          "result": "0x8f"
+        }
+      ]
+    }
+  ],
+  "interpretation": "Four bounded read-only calls. Sequential samples cannot identify a provider-wide outage or prove an intermittent defect. Direct fetch bypasses diagnostic validation; collector retains validated evidence."
+}

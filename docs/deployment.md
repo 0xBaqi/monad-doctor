@@ -33,3 +33,7 @@ Before exposing POST /api/diagnose, configure an enforced firewall rule (not Log
 Official authority: https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting and https://vercel.com/docs/functions/configuring-functions/duration . Pricing/account availability must be confirmed in the target account; no paid activation is authorized. CORS is not authentication or an abuse budget.
 
 The Vercel CLI sign-in check succeeded using NODE_USE_SYSTEM_CA=1 after a certificate error; TLS verification remained enabled. GitHub destination and Vercel project/team remain pending. No tokens were read or written to project files.
+
+## M4.5 superseding deployment configuration
+
+See [protected deployment setup](protected-deployment.md). The API now requires shared Redis admission in production and on Vercel. The earlier no-environment-variable statement applies only to local development. The verified 0x-baqi Hobby project monad-doctor exists and its per-IP API firewall rule is published (6 requests / 60 seconds). No app deployment has occurred. Global limiter credentials, live atomicity verification, GitHub login/publication and hosted CI remain pending.

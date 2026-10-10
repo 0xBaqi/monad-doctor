@@ -1,0 +1,11 @@
+import {execFileSync} from 'node:child_process';
+const git=(args,input)=>execFileSync('git',args,{input,windowsHide:true,maxBuffer:32*1024*1024});
+const objects=git(['rev-list','--objects','--all']).toString().trim().split('\n');
+const names=new Map(objects.map(line=>{const space=line.indexOf(' ');return [space<0?line:line.slice(0,space),space<0?'':line.slice(space+1)];}));
+const types=git(['cat-file','--batch-check'],[...names.keys()].join('\n')+'\n').toString().trim().split('\n');
+const blobs=types.filter(line=>line.split(' ')[1]==='blob').map(line=>line.split(' ')[0]);
+const data=git(['cat-file','--batch'],blobs.join('\n')+'\n');
+const findings=[];let offset=0;
+const patterns=[['private-key',/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],['known-token',/(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[A-Z0-9]{16}|sk-[A-Za-z0-9]{24,})/],['credential-url',/https?:\/\/[^\s/"']+:[^\s/"']+@/]];
+for(const id of blobs){const end=data.indexOf(10,offset),size=Number(data.subarray(offset,end).toString().split(' ')[2]);const body=data.subarray(end+1,end+1+size);offset=end+size+2;const file=names.get(id);if(size>1048576)findings.push({id,file,issue:'large-artifact'});if(/(^|\/)(node_modules|[.]next|[.]env[^/]*|exports)(\/|$)|[.](pem|key|p12|pfx|tmp|tsbuildinfo)$/.test(file))findings.push({id,file,issue:'sensitive-or-generated-path'});if(/[.](png|jpg|ico)$/.test(file))continue;const text=body.toString('utf8');for(const [issue,re]of patterns)if(re.test(text))findings.push({id,file,issue});if(file.endsWith('.json')){const inspect=x=>{if(!x||typeof x!=='object')return;for(const [key,value]of Object.entries(x)){if(['privateKey','apiKey','authorization','password'].includes(key)&&value)findings.push({id,file,issue:'credential-field'});if(key==='data'&&typeof value==='string'&&!['0x','[redacted]'].includes(value))findings.push({id,file,issue:'nonempty-data'});inspect(value);}};inspect(JSON.parse(text.replace(/^\uFEFF/,'')));}}
+console.log(JSON.stringify({checkedAt:new Date().toISOString(),commits:Number(git(['rev-list','--count','--all']).toString()),blobs:blobs.length,findings,limits:'Scans all reachable Git blobs for paths, known secret patterns and structured credential fields; not proof against arbitrary encoded secrets.'},null,2));if(findings.length)process.exitCode=1;

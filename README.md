@@ -2,7 +2,7 @@
 
 Find and fix Monad integration problems before they reach production.
 
-M4 preparation is in progress. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
+M4.5 protected deployment preparation is in progress. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
 
 M3 release candidate: **51 unit tests, 10 browser checks, TypeScript, lint and production build passed locally**. CI is configured; public deployment is not performed.
 
@@ -17,7 +17,7 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:3000. No wallet, private keys, API credentials, database, or environment file required.
+Open http://127.0.0.1:3000. Local development requires no wallet, private keys, API credentials, database, or environment file. Production diagnostics now require a configured fail-closed shared limiter; see [protected deployment setup](docs/protected-deployment.md).
 
 ```sh
 npm test
