@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m1.1",
+  "provider": "primary",
+  "mode": "health",
+  "startedAt": "2026-10-10T06:25:38.680Z",
+  "completedAt": "2026-10-10T06:25:39.759Z",
+  "input": {
+    "mode": "health",
+    "provider": "primary"
+  },
+  "findings": [
+    {
+      "id": "rpc.1.network",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "eth_chainId: evidence unavailable",
+      "detail": "RPC connection failed. Check connectivity or choose another provider.",
+      "nextStep": "Retry or choose another provider. Successful checks in this report remain visible.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T06:25:38.680Z",
+      "durationMs": 1079,
+      "error": {
+        "code": "NETWORK",
+        "message": "RPC connection failed. Check connectivity or choose another provider."
+      }
+    }
+  ]
+}

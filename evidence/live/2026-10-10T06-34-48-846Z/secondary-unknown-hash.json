@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m1.1",
+  "provider": "secondary",
+  "mode": "transaction",
+  "startedAt": "2026-10-10T06:35:07.598Z",
+  "completedAt": "2026-10-10T06:35:08.658Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "secondary",
+    "hash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "tx.outcome-unknown",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "Transaction outcome is unknown",
+      "detail": "No usable receipt was returned. Monad does not return pending transactions through eth_getTransactionByHash. Missing data cannot distinguish pending, dropped, unknown, or unavailable history.",
+      "nextStep": "Confirm the hash and network, then retry. Do not mark this transaction failed solely because the lookup is null.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T06:35:07.598Z",
+      "durationMs": 306,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-10T06:35:07.904Z",
+      "durationMs": 305,
+      "result": null
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-10T06:35:08.209Z",
+      "durationMs": 242,
+      "result": null
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T06:35:08.451Z",
+      "durationMs": 207,
+      "result": {
+        "number": "0x6aeb244",
+        "hash": "0x08e77def2e03486e67fa9edee8967f77a69c4aef368e93dc02511e2bf4851c83",
+        "parentHash": "0x212eda5e43a2016895c1cd4b04b16d58d20b4a05076da87e0afd72d3fc5c7514",
+        "timestamp": "0x6ac9dca0",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x2b503eb76ec226c3c6498193840d108a7dd921a1b3584820e955a858ebac078e",
+          "0x66a66da5930ff987698704a718fc1bd596eb08f1ffe2fd825092dec93fb625bf",
+          "0xbb9fa5bdd0d343ed93bb17537818ec2cf6c30f40c4744990fdee304c9c4b93dc",
+          "0x65f672202b3b620aeb7c79502beca5c3424f466b63ae5fe7d3a673df2532c364",
+          "0x45b70aa24e5f01e4fdc5168f2029af53a82435df7fc1f06c57e327a67ce6a2d8",
+          "0x10536020e07c59a120fc2b0f6f67bb8119397510a568a138e114ace22ee15e70",
+          "0xda9cd0d1d190f211049321bad897e4105594f78e8d14dbc4c828152519723a77",
+          "0x00342d9847a6f6029b342d223ddd359b94f877babfb9872819dd3e1f045ae798",
+          "0xa66a2ed08de80f8c2cf5ba0b9af4699c25ed010883a09434b5a834c644e75d6f",
+          "0x9da06a55b2ef9077085199c0d2a1af346e834d8b22a535762e4112079d4b7675",
+          "0xe5afdc80a14b36cb994f409e92d55d1dcc9b09e4e171de73898468d41340570d",
+          "0xec40564126f2af0d0dc1465052b9a09c9780900b26b33b187e774b557bce15a1",
+          "0x94d52368e76217788fd252693fdde5f887509d73101cbc932b1b4f2e568549a3",
+          "0x9d66902d73bca56b682536be859433bb4c52b1949778ee46b00fd2d90f59c5a2",
+          "0x06ff22ec0f439460e8766e2051853ac215273de800dc301b9f5a860c5e93abe4",
+          "0xd8aea0a4eecb7ae29b92df3ea862982a9824964b2991dd81d4d925b3b451c196",
+          "0xe343f31e04d1a365e23e59880fac8280ee3166f5ef2bc2143a57139fba9916a5",
+          "0xb426fcee30f086613a4fc457fcca225ec4b55f4db5b87e01b77eff789fd112fa",
+          "0x8775a549693fe8e9772ebebecffb7b3b4d16138a50376eb81180cc726aca2a26",
+          "0x2d0307ae3e923e91cef0dee7feac1e8f82fa315a7d0dee584914dbaa58a8376d"
+        ]
+      }
+    }
+  ]
+}

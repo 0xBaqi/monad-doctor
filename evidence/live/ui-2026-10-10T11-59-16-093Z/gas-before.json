@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m2.0",
+  "provider": "primary",
+  "mode": "gas",
+  "startedAt": "2026-10-10T11:59:43.831Z",
+  "completedAt": "2026-10-10T11:59:51.958Z",
+  "input": {
+    "mode": "gas",
+    "provider": "primary",
+    "gasLimit": "1000000",
+    "call": {
+      "from": "0x0000000000000000000000000000000000000001",
+      "to": "0x000000000000000000000000000000000000dead",
+      "data": "0x",
+      "value": "0"
+    }
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "gas.protocol-cap",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Within the documented transaction gas cap",
+      "detail": "Proposed: 1000000 gas. Documented Monad per-transaction maximum: 30,000,000 gas (reviewed 2026-10-10). RPC simulation caps and block gas limits are separate limits.",
+      "nextStep": "A viable limit must cover the operation and stay within 30,000,000. Never reduce below a verified requirement; reduce or split work and re-estimate if necessary.",
+      "evidence": [],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ]
+    },
+    {
+      "id": "gas.estimate-unknown",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "No usable gas estimate",
+      "detail": "Without a successful estimate, this report cannot assess execution headroom. A failed estimate does not establish an on-chain failure.",
+      "nextStep": "Inspect the call inputs and retry. Do not replace a failed estimate with a very large gas limit.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing",
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    },
+    {
+      "id": "rpc.3.timeout",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "eth_estimateGas: evidence unavailable",
+      "detail": "RPC timed out. Evidence is incomplete; retry or switch provider.",
+      "nextStep": "Retry or choose another provider. Successful checks in this report remain visible.",
+      "evidence": [
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T11:59:43.831Z",
+      "durationMs": 1116,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T11:59:44.947Z",
+      "durationMs": 819,
+      "result": {
+        "number": "0x6afae52",
+        "hash": "0xf351256717fc75a069b9026c4b4c2d78333ede7fb728f106fc6ba3895a7cd79b",
+        "parentHash": "0xa14297156b711e806c52b5437f386a3ecfecb88ed64575cb2e6d6f0f416da7bf",
+        "timestamp": "0x6aca28b4",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xfc7c46df47fa2a9d3e9f485718240f6378c4fa30440afb99082d01ba8c1eb25b",
+          "0x4aec313812650fb0b61c27e085001655699bdd4679b1a857dbc67ab997d7013f",
+          "0x318f42f62a95673df95eb497d5dd2cbfa9c60e27f95d71f6b7dd32cbd5acfc78",
+          "0x3af0cc547ab59311ee9709a78811b0d71050498244ddaaeb26efe02ac9134e6a",
+          "0x7fd0f611632d63a45480924f5afc411601cae959c4b2ce24fd4b21181cf5057f",
+          "0xbd73d780c0965c9245a84e4c3564f45e4497b9d14255834c984e23d58b1a0d9f"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_estimateGas",
+      "params": [
+        {
+          "from": "0x0000000000000000000000000000000000000001",
+          "to": "0x000000000000000000000000000000000000dead",
+          "data": "0x",
+          "value": "0x0"
+        },
+        "0x6afae52"
+      ],
+      "observedAt": "2026-10-10T11:59:45.766Z",
+      "durationMs": 5011,
+      "error": {
+        "code": "TIMEOUT",
+        "message": "RPC timed out. Evidence is incomplete; retry or switch provider."
+      }
+    },
+    {
+      "id": 4,
+      "method": "eth_gasPrice",
+      "params": [],
+      "observedAt": "2026-10-10T11:59:50.777Z",
+      "durationMs": 1181,
+      "result": "0x17bfac7c00"
+    }
+  ]
+}

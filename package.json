@@ -1,0 +1,35 @@
+{
+  "name": "monad-doctor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node --use-system-ca node_modules/next/dist/bin/next dev --hostname 127.0.0.1",
+    "build": "node --use-system-ca node_modules/next/dist/bin/next build",
+    "start": "node --use-system-ca node_modules/next/dist/bin/next start --hostname 127.0.0.1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "live": "node --use-system-ca --experimental-strip-types scripts/live-check.ts",
+    "verify": "node scripts/verify.mjs",
+    "qa:browser": "node --use-system-ca scripts/browser-check.mjs",
+    "live:smoke": "node --use-system-ca --experimental-strip-types scripts/smoke.ts"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "^16.0.0",
+    "playwright-core": "^1.64.0",
+    "typescript": "^5.9.0"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "node": "v24.18.0",
+  "results": [
+    {
+      "task": "test",
+      "exitCode": 0,
+      "error": null,
+      "completedAt": "2026-10-10T17:02:52.362Z"
+    },
+    {
+      "task": "typecheck",
+      "exitCode": 0,
+      "error": null,
+      "completedAt": "2026-10-10T17:03:04.196Z"
+    },
+    {
+      "task": "lint",
+      "exitCode": 0,
+      "error": null,
+      "completedAt": "2026-10-10T17:03:35.306Z"
+    },
+    {
+      "task": "build",
+      "exitCode": 0,
+      "error": null,
+      "completedAt": "2026-10-10T17:05:21.000Z"
+    }
+  ]
+}

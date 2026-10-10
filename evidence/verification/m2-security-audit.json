@@ -1,0 +1,24 @@
+{
+  "recordedAt": "2026-10-10T12:05:31.802Z",
+  "provenance": "Summary of actual npm audit command outputs in the M2 session",
+  "full": {
+    "command": "npm audit --json",
+    "exitCode": 1,
+    "highEntries": 5,
+    "rootAdvisory": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "packages": [
+      "braces",
+      "micromatch",
+      "fast-glob",
+      "@next/eslint-plugin-next",
+      "eslint-config-next"
+    ],
+    "patchedVersion": null
+  },
+  "production": {
+    "command": "npm audit --omit=dev --json --fetch-timeout=30000 --fetch-retries=0",
+    "exitCode": 0,
+    "vulnerabilities": 0
+  },
+  "dependenciesChanged": false
+}

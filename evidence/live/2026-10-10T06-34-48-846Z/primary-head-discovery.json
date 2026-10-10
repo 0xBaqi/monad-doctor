@@ -1,0 +1,95 @@
+{
+  "origin": "actual-live-rpc",
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T06:34:51.193Z",
+      "durationMs": 189,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T06:34:51.382Z",
+      "durationMs": 179,
+      "result": {
+        "number": "0x6aeb20b",
+        "hash": "0x12d4c2ee070f48f160458c81d8bc6cde33ffdb6b895d6a43f095fc779da1420e",
+        "parentHash": "0xb9045c65a343088cc8b636531f95d70431bbe128a48ba9bfec19fbb8f565c9b6",
+        "timestamp": "0x6ac9dc8f",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x81f9e43b6ece21dcb71705d67dd9c44b74f1059597606c2c0f113b726636d4dd",
+          "0xf3ba119131213560f796a66fd96e5418631f0c19a4a0ed18297d11978310d27b",
+          "0x0b60cab320e08ede79249e11155722873c4c3411b78ec6c3ebc1d0ac0b2d2a3b",
+          "0x12b2bec7c5b744dfc3b2a35b83d50b14c49463b153affc83cbd9ff27e1b6a652",
+          "0xb4f8def15380e7ce9c4bac70ce31483a52236e21a1925c1126ef3950d97f4271",
+          "0x4c7049ef7ee4ae79bfae94d1a4ff077165a9881808691bfa3c757d13895187b4",
+          "0x383bc397d604f1b3d7806ded2bc3c867cddc5c2a3bd8c9150f36553f8a50bf5f",
+          "0x3b3b3571444e4b08052b4840773c20f73f12fa7fe69825b214f7a6464de07739",
+          "0xd6bca8fcf4806cef545e8e7ed3558520b8fae7912623fc8547b3502961af6013",
+          "0xca1080cbc5be097901004594a3a49ac38bb75ae9b7fba3eab903e56dfc0fea29",
+          "0x1353ecbfe4bc0271795a6ca6ef9087eaaa378d00e126ed79e653502ecb678338",
+          "0x0bfcba5270278f1ee383ebdd3cbce88531c0026ad88633adbc2ff45977e86b60",
+          "0x418c7fc88d8ed0537e2844e9ea480efe71f6906c8410c7fd321d8a4ceb2e1ec1",
+          "0x2ee202602966e183674703d0c32c8060211ed21b026b54c53be493c494689990",
+          "0xd94c10c2e1dc1d9e9d2cda04906109f7211d6ffe3075a48efb7eaa5de62c59ad",
+          "0x47c4ee662309acf8afe198eb27e0f68b1ca96533e0fc2dab03d808a680af7e06",
+          "0x1f412212140e3a1e482bc679bea115c4a6676227183a8c5adf3c46e2c70d4477",
+          "0x406df66c87a520adf936d6d39021e94293cfee46f60c25e7abe50db9c62db7ff",
+          "0xc2745764a7fe576ff73fc35c477e514595356fa22d0dc4329fd096364b60b27c",
+          "0x17308e110d886242c2cac29925c65ecc1db41e681cf26223c01ac2a6f19736ce"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-10T06:34:51.561Z",
+      "durationMs": 206,
+      "result": {
+        "number": "0x6aeb20d",
+        "hash": "0x988503a3b791e01af295f56fafa8c242c674efa848616462e70ee1bd48bceb07",
+        "parentHash": "0xba4d1d7e517d7a1a053873c906459fde114aaef0fef95627d7657a97ebe5868e",
+        "timestamp": "0x6ac9dc8f",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xd1ae2d7dcf9e2402be790f784147ebc510338f2c9d0fbef4115ed8ec185c04b5",
+          "0xee2df073a4e3ed41998e515e0ca98b2cfdd3b21e8dc1df2c2f4dfdc5762c3220",
+          "0x36eeccf07b004a4a02052742913d7da01441c89b44bb079211eaf2e05d292e72",
+          "0xafdc02c939dccef7aef4d7d5fe60c86f01b22cc4917c84b7aa94b03c27a08483",
+          "0x94d776d2d0a8de20a68f70f2e3817117726f4e1e728e2d290ef3965733b7f443",
+          "0xf84bc703af7113f22a17df8d4ace728ff1abb38068a9c9fdd5300b8ed90bb432",
+          "0x2071d0c2fb9a993d77ede0960e9804969c914fb675d3a4479144659277f6557a",
+          "0xae21ef5498d7d29c31882b733c792ddb24e92c4dd41784b34a39c14644f40e0b",
+          "0xdf826806126636ffca6f917caec15e9221143a4385735066830140e5834fce41",
+          "0x09e0ac977d376dbdfe824c32e54abb5562034d5fe99de350fb98d09284db97f4",
+          "0x53001bf7f0f2ae58f0f9b702a337542a095bab196ba29b19df74ed170e0ee8cc",
+          "0xb0bbafb6a025a4e961d67830f4a3c03bb8e0c1b5bfbb474906a7a0673919c019",
+          "0xb98eb9742b5a3af72593a6499fff28b8996adfd47b161ec6b126e343f04d8655",
+          "0x5908da69ae0a64adaa0c085b72a651876e0fda2d54df690db865900a02c52554",
+          "0x85e4005b1dfbc76a4fea771fd4d9ba41fb50d68da862e130bf9a6aa3f96ebf5b",
+          "0x3ea71899095182d8e1a35f0cc8a11e73619ddb19a1a4370079fd4a77bb3a3178",
+          "0x50141d6bf4361e289c331e9fc9bf771ca9ceda3c1d30f12ba6df59623f52eb42",
+          "0xec062acdeb3243161c4fe2dbf983d6c648d89bec49e43643f664df6081aa2aee",
+          "0xf47b6596584108f42b89163ad8d50dc8f6b6199d66b7e5fed4e8176bbd0cdcc9",
+          "0x4e42b8a881c46e44ed1ee5ae9ce543a784bfde7fff592aa1c1631e467da924af",
+          "0x65fa691ffcbdc9ac76b6bb2a16ebdfec7b77c3b8763a8d3fdefe225b63415c43",
+          "0xb56fe4abef5c68cbd84c9cbfa57a145aa09bfffdb44ae0005a238de1be62a95f"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m2.0",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-10T11:56:59.444Z",
+  "completedAt": "2026-10-10T11:57:00.654Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "tx.outcome-unknown",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "Transaction outcome is unknown",
+      "detail": "No usable receipt was returned. Monad does not return pending transactions through eth_getTransactionByHash. Missing data cannot distinguish pending, dropped, unknown, or unavailable history.",
+      "nextStep": "Confirm the hash and network, then retry. Do not mark this transaction failed solely because the lookup is null.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T11:56:59.444Z",
+      "durationMs": 312,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-10T11:56:59.756Z",
+      "durationMs": 378,
+      "result": null
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-10T11:57:00.134Z",
+      "durationMs": 211,
+      "result": null
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T11:57:00.345Z",
+      "durationMs": 309,
+      "result": {
+        "number": "0x6afac2f",
+        "hash": "0x977a288f39cd0d1fde36c9196cea9c7d714f085b49148854e53a5bcd1fe4458a",
+        "parentHash": "0x98b12a428deda5ce38fcd67cf9572311ad5ee13a44fea55826c260548bf716d8",
+        "timestamp": "0x6aca280f",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xeb45e5475748cf87f5f0fffbead5fc33b324e2edf3f0296cdd9bc3925af1a7d8",
+          "0xd8cc7af9f394acd4cb713213207a9d0e4d35d1de7b0ea2013f6bf4a2444e8035",
+          "0x3991152f2988b3658581eb06721db512597946350003c4d1a2ce663ed133c213",
+          "0x19095f04fecfd34c61620290698f6fc5c837b606ff70558a04e33672503b88f7",
+          "0xe2c47416df24b65a91d69443290832edb7ebd83820d0b9061cccc606e8a71f04",
+          "0x4ca83506f231e2fea6dc770b27c604107806aa58f3e08625046db5815e492456",
+          "0xe26883a7fcc01407eb536deaa933584ce4bcb54bd526b20302a786a2529e8d7d",
+          "0xd282296092a031078bcf0674440367bbd7758c24d6ce81df0d40f5dfcdfc3f08",
+          "0x840f5271bed60b065f7e59dafb2ad375740b709cdcd030a07515940dd025b99f",
+          "0x628aae285bb43e9a928c1f02548733ed56ff28e7b903aced8e151213d1b76e81",
+          "0x4eba8423b24e28ea28d57c9a1f279ebdef6839f6ee8f956a68f99feb7ceec0fc",
+          "0x9571b9ad469538e8f934f996edfa1002f3f9648eb78733c31255d322991917f0",
+          "0xa01c70bb45f7ce3aa48b1fc1ec74ef01557da0cbed002347bf8ec69f950487d9",
+          "0xb91f2a9110fabba89cfc3d24f59d17dbeb5ee291a49fd496c4c09cf6c763a5ce"
+        ]
+      }
+    }
+  ]
+}

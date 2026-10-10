@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provider": "primary",
+  "mode": "gas",
+  "startedAt": "2026-10-10T17:11:36.941Z",
+  "completedAt": "2026-10-10T17:11:37.640Z",
+  "input": {
+    "mode": "gas",
+    "provider": "primary",
+    "gasLimit": "1000000",
+    "call": {
+      "from": "0x0000000000000000000000000000000000000001",
+      "to": "0x000000000000000000000000000000000000dead",
+      "data": "0x",
+      "value": "0"
+    }
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "gas.protocol-cap",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Within the documented transaction gas cap",
+      "detail": "Proposed: 1000000 gas. Documented Monad per-transaction maximum: 30,000,000 gas (reviewed 2026-10-10). RPC simulation caps and block gas limits are separate limits.",
+      "nextStep": "A viable limit must cover the operation and stay within 30,000,000. Never reduce below a verified requirement; reduce or split work and re-estimate if necessary.",
+      "evidence": [],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ]
+    },
+    {
+      "id": "gas.estimate-comparison",
+      "severity": "warning",
+      "basis": "inferred",
+      "title": "Gas padding has a cost on Monad",
+      "detail": "RPC estimate: 21000 gas. Proposed: 1000000 gas. Extra allowance: 979000 gas. Monad charges the submitted limit. An estimate applies to the sampled state and is not a guarantee of future execution.",
+      "nextStep": "Use a measured limit appropriate to this operation. Re-estimate when state changes; avoid blindly copying large Ethereum-style buffers.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ]
+    },
+    {
+      "id": "gas.cost-comparison",
+      "severity": "info",
+      "basis": "inferred",
+      "title": "Cost at the sampled gas price",
+      "detail": "At 102000000000 wei/gas: proposed limit costs 0.102 MON; estimated limit costs 0.002142 MON. This is a conditional comparison, not an actual charge or guaranteed saving.",
+      "nextStep": "Check current fees and re-estimate before any future transaction. Monad Doctor never signs or submits.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T17:11:36.941Z",
+      "durationMs": 169,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T17:11:37.110Z",
+      "durationMs": 175,
+      "result": {
+        "number": "0x6b0a078",
+        "hash": "0x9417fdbded89e8fcef1bd3358f37631716cdfc0ead8207669923946addc89597",
+        "parentHash": "0xaf0ef75998c2ee15752402fc3c12ee738ba67fbd6c53c5edf29c4b16a8ebd538",
+        "timestamp": "0x6aca71cd",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x1094d1f5d0f28acb80ab16b8abb5550fe4970e4362bee50c66aaa6bdc5628046",
+          "0x9b02f25d409d227d9e326db39932023ad7e1b1b49a97321551432e6bd6376cf4",
+          "0x60a28172eab062cdaab32d1ed71a8317f9a2ca2c414ad778bd6aa84e8397e3f2",
+          "0xd9eed5d48e6c3f8d8dd9bc0763857730573b58d15d4775dc6d9051d6093d31e7",
+          "0xa95e38e949585883258f5bfd7c828ea54c50e92060b56e42c1ee2721287cfeac",
+          "0xf3d18326342f7d5ec86bb64a5458f16dbb92cb71f0f41cea54b4278dc8d2aee3",
+          "0x31f37d4b041774317915a53b5807ad8ca91b2968628e22766c7a9fb53bdc3e63",
+          "0xfa4b910da3f33446ae953677f9358ff7b17af3267f128209459ef535577d537b",
+          "0x3a7a5c1e6418f7afdfb2f2622a5fb619e5905f2e4b97ddefd50ae7bf3bab217b",
+          "0x259843feb6a4e3fe86045f21430de86bdc2d48f6c561499fb4d9a99d1c09ade7"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_estimateGas",
+      "params": [
+        {
+          "from": "0x0000000000000000000000000000000000000001",
+          "to": "0x000000000000000000000000000000000000dead",
+          "data": "0x",
+          "value": "0x0"
+        },
+        "0x6b0a078"
+      ],
+      "observedAt": "2026-10-10T17:11:37.285Z",
+      "durationMs": 181,
+      "result": "0x5208"
+    },
+    {
+      "id": 4,
+      "method": "eth_gasPrice",
+      "params": [],
+      "observedAt": "2026-10-10T17:11:37.466Z",
+      "durationMs": 172,
+      "result": "0x17bfac7c00"
+    }
+  ]
+}

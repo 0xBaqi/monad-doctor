@@ -1,0 +1,63 @@
+{
+  "origin": "actual-live-rpc",
+  "collectedAt": "2026-10-10T11:56:38.052Z",
+  "noTransactionsSubmitted": true,
+  "reports": [
+    {
+      "provider": "primary",
+      "health": [
+        "network.mainnet",
+        "rpc.latest",
+        "rpc.heads"
+      ],
+      "chainConfirmed": true
+    },
+    {
+      "provider": "secondary",
+      "health": [
+        "network.mainnet",
+        "rpc.latest",
+        "rpc.heads"
+      ],
+      "chainConfirmed": true
+    }
+  ],
+  "revertedSearchLimitPerProvider": 8,
+  "primaryFinalityObservation": [
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ],
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ],
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ]
+  ],
+  "primaryFailedSearch": "0x1a88505563e1ef771885a44548e7047b943a61fe4282d816823370feb7ac5051",
+  "secondaryFinalityObservation": [
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ],
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ],
+    [
+      "tx.execution",
+      "tx.inclusion",
+      "tx.finalized"
+    ]
+  ],
+  "secondaryFailedSearch": "0x54a39c5bf6ecb5fff29bf176044808a826b5331c88673a683e1c1df18f1cdbfe",
+  "completedAt": "2026-10-10T11:57:40.930Z"
+}

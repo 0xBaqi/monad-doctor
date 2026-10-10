@@ -1,0 +1,12 @@
+import { execFileSync } from 'node:child_process';
+import { readFile, stat, readdir } from 'node:fs/promises';
+const git=(args)=>execFileSync('git',args,{encoding:'utf8',windowsHide:true});
+const files=[...new Set(git(['ls-files','--cached','--others','--exclude-standard','-z']).split('\0').filter(Boolean))];
+const findings=[];let totalBytes=0;
+const patterns=[['private-key',/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/],['known-token',/(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[A-Z0-9]{16}|sk-[A-Za-z0-9]{24,})/],['credential-url',/https?:\/\/[^\s/"']+:[^\s/"']+@/]];
+function inspectJson(x,file){if(!x||typeof x!=='object')return;for(const [k,v]of Object.entries(x)){if(['privateKey','apiKey','authorization','password'].includes(k)&&v)findings.push({file,issue:'credential-field'});if(k==='data'&&typeof v==='string'&&!['0x','[redacted]'].includes(v))findings.push({file,issue:'nonempty-data-needs-review'});inspectJson(v,file);}}
+for(const file of files){const size=(await stat(file)).size;totalBytes+=size;if(size>1048576)findings.push({file,issue:'larger-than-1MiB'});if(/(^|\/)(node_modules|[.]next|[.]env[^/]*|exports)(\/|$)|[.](pem|key|p12|pfx|tmp|tsbuildinfo)$/.test(file))findings.push({file,issue:'excluded-material'});if(/[.](png|jpg|ico)$/.test(file))continue;const s=await readFile(file,'utf8');for(const [issue,re]of patterns)if(re.test(s))findings.push({file,issue});if(file.endsWith('.json'))inspectJson(JSON.parse(s.replace(/^\uFEFF/,'')),file);}
+for(const p of ['node_modules/probe','.next/probe','.env','.env.local','exports/personal.json','private.key','temp.tmp','tsconfig.tsbuildinfo']){try{git(['check-ignore',p]);}catch{findings.push({file:p,issue:'ignore-rule-missing'});}}
+let clientFiles=0;async function bundles(dir){for(const e of await readdir(dir,{withFileTypes:true})){const file=dir+'/'+e.name;if(e.isDirectory())await bundles(file);else if(file.endsWith('.js')){clientFiles++;const s=await readFile(file,'utf8');if(s.includes('https://rpc.monad.xyz')||s.includes('https://rpc1.monad.xyz'))findings.push({file,issue:'server-endpoint-in-client-bundle'});for(const [issue,re]of patterns)if(re.test(s))findings.push({file,issue});}}}
+await bundles('.next/static');
+console.log(JSON.stringify({reviewedAt:new Date().toISOString(),files:files.length,totalBytes,clientFiles,findings,limits:'Pattern and structural scan plus manual review; not a proof that arbitrary encoded secrets are absent.'},null,2));if(findings.length)process.exitCode=1;

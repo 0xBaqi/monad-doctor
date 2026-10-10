@@ -1,0 +1,63 @@
+
+> monad-doctor@0.1.0 test
+> node --experimental-strip-types --test tests/*.test.ts
+
+✔ a stalled body is cancelled within its deadline (60.366ms)
+✔ collector stops after ten calls (189.0543ms)
+✔ HTTP content type is an exact media type (55.6359ms)
+✔ same-origin guard uses the browser-facing Host when Next normalizes the URL (7.3178ms)
+✔ four active body readers bound concurrency and release capacity (212.2992ms)
+✔ per-process minute budget stops request thirty-one without RPC work (61.2108ms)
+✔ input validation rejects private fields, URL injection, odd calldata and numeric coercion (5.6548ms)
+✔ quantities reject malformed or oversized RPC data (1.8675ms)
+✔ wrong chain stops all dependent calls (157.5164ms)
+✔ RPC health keeps partial evidence (3.7451ms)
+✔ health detects inconsistent head views (5.5274ms)
+✔ gas boundary and padding math uses bigint (1.2929ms)
+✔ before/after reproduces Monad padding issue without sending a transaction (26.7222ms)
+✔ failed estimate never invents a fallback (2.3983ms)
+✔ null lookups are unknown, never diagnosed dropped or failed (0.8083ms)
+✔ successful receipt above finalized height is provisional (0.6808ms)
+✔ finality requires matching hash and membership (1.6566ms)
+✔ missing finalized or canonical evidence never implies finality (0.9503ms)
+✔ execution failure can be finalized without inventing failure cause (31.7999ms)
+✔ transaction and receipt disagreement suppresses outcome claims (0.2641ms)
+✔ transaction orchestration validates finality end to end (4.0642ms)
+✔ RPC rejects mismatched ID, invalid envelopes, invalid JSON and shapes (6.1319ms)
+✔ RPC maps outages and rate limits without leaking response bodies (4.8287ms)
+✔ provider error messages/data and extra fields cannot enter exports (0.9122ms)
+✔ request timeout aborts fetch and produces incomplete evidence (62.6131ms)
+✔ response size and request budgets are bounded (1.6675ms)
+✔ server-controlled allowlists reject arbitrary endpoint and financial methods (0.4458ms)
+✔ HTTP boundary rejects malformed requests before any RPC calls (19.0957ms)
+✔ mode cannot be an array coerced to a supported name (3.6038ms)
+✔ 256-bit boundaries are exact for input values (1.4589ms)
+✔ simulation above cap does not recommend a clamped limit or executable cost (1.404ms)
+✔ huge padding retains exact bigint cost arithmetic (0.7647ms)
+✔ inclusion remains observed when receipt is missing, outcome remains unknown (2.0341ms)
+✔ receipt exceeding transaction gas suppresses outcome conclusions (0.6883ms)
+✔ same-height finalized hash conflict never establishes finality (0.5332ms)
+✔ receipt without canonical block keeps inclusion unknown (0.4909ms)
+✔ freshness boundaries and large timestamps do not lose integer precision (3.1736ms)
+✔ stale gas state is explicitly warned without inventing a fresh estimate (209.074ms)
+✔ sharing export removes calldata from input and evidence without changing original (11.5053ms)
+✔ stalled response body obeys per-request deadline even when fetch already resolved (53.597ms)
+✔ RPC transport fixes endpoint and refuses redirects without forwarding user headers (2.1418ms)
+✔ HTTP rejects cross-site metadata and non-POST requests (6.351ms)
+✔ export drops unknown metadata and nested credential fields (99.8603ms)
+✔ export preserves rule IDs timestamps sources and reproduction instructions (6.4994ms)
+✔ export rejects bad metadata dangling references duplicate IDs and foreign sources (14.5613ms)
+✔ export refuses unsupported methods and malformed results (8.0307ms)
+✔ export omits arbitrary error strings while preserving numeric RPC code (2.2905ms)
+✔ all workflows provide checked unknown why and verification guidance (0.9986ms)
+✔ synthetic wrong-network example stops after chain ID (2.5346ms)
+✔ HTTP rejects invalid lengths and invalid UTF-8 as client errors (13.8225ms)
+✔ HTTP body cancellation rejection is handled safely (24.7032ms)
+ℹ tests 51
+ℹ suites 0
+ℹ pass 51
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3689.0509

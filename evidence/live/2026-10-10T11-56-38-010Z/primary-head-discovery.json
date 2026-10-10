@@ -1,0 +1,84 @@
+{
+  "origin": "actual-live-rpc",
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T11:56:43.780Z",
+      "durationMs": 245,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T11:56:44.025Z",
+      "durationMs": 307,
+      "result": {
+        "number": "0x6afabf9",
+        "hash": "0x996df9fae16264b6eed83be4181148973cbd2a6de998e6a3a7614564acad7656",
+        "parentHash": "0x6c18a1c76e17d517bc246a3daf7d47b6ffe757353f197f9c4c61d3eb47c68322",
+        "timestamp": "0x6aca27ff",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x06577e0c5b2c8f879c340d71875704d8393ccf4b4b9ea63d1a3c1c02b75976eb",
+          "0xae92b25ffc320bbd7d5508b4174bd283a0491808b14be4c77e5ff7b3092150a8",
+          "0x72f0c34d27f6b57c8cb93a474d71d696ad4b1ed0b6cf3872524cd8f3da30876d",
+          "0x52b9eb9692f643ca243e0e35fbcfe02f7f0af9ef41c39ee903153a72997b0755",
+          "0xa9f9157b1eab3b5beb5536877c5339a899cd8b6c6f2b1bd537af39252b4ec0f4",
+          "0x458d5ac1730a63c594adb38988af7009b654a810d6969f981bdc30ce8923d0b3",
+          "0x3d380cfa8b0a8e522dce1694dfa09914a1a856ae746514258c60c1e39b80deea",
+          "0x1a88505563e1ef771885a44548e7047b943a61fe4282d816823370feb7ac5051",
+          "0xf865e3642e2efaa3e83a3055a2dce1ebe0c72290a4bbd321dab0bae2624fccb1",
+          "0x529c6bae2f200b73191e9f2621143144de3452acafde738ce7d5353448b59765",
+          "0xda4120057d8c8c69a159bb8d4cfa07f080445651f617fe83ef388a3f186842d3",
+          "0x9de7cf690a81541065c1c79e26c35bd7be8d238159f247c7c77d2ed1331e1d2c",
+          "0x6f984781850e09ce2860dea6cf91fa3846f51f98f30525fe2f7d75e75f812d49",
+          "0x97b980a688cfe42f281fa14d50aea37373e320f1d8e5807bd51372a57d57bb60",
+          "0xbd4ed1ca65efdb05011427a18663d7c466fcbe11e16e00000d2f7375bb41b51b",
+          "0xff464ed264c3486b1f629ec43b92be370d282b16b4f0e63f47bbffd390b6ebf9",
+          "0x18d842b55b1a5f3e6c4e633dd7110b5a2e5a25993fc47c44342cb3aa7e570ac7"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-10T11:56:44.332Z",
+      "durationMs": 446,
+      "result": {
+        "number": "0x6afabfc",
+        "hash": "0xd7c2111e8d96338281e7f5ce195c41f92f3055a9904e21138a2e0409a7ca7b0a",
+        "parentHash": "0x1cf74480addcaef49d84938b8dcafd427b13ea0b515bf63244739be571cde822",
+        "timestamp": "0x6aca2800",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x96119bbdeeba2ff2b19d1f5f511a884f0b033df54d05e32fb4ed7330611f7b0a",
+          "0xd3bc67556ccc9dcbb9d44de01cdcb5686bc0a9d51f770a8f2d44b930a2e869c2",
+          "0xaaf6cde8f8a8776d5a00d6a279d49a8d76d603e6d365544639f8448450fa82ea",
+          "0xeb7217fed4a8d3b542800633a5f6ed4f9af73c09e173175cb1a2ddb173c0357b",
+          "0xb82b9a147a9fe4d55e311b7208d64e57724767db9f29be2dc7acbb9b6a58730c",
+          "0x8108c3423da77f519d50b1170f7454b94e172dd5498067860ba413997e5e42a9",
+          "0x8401ffa3a7c7c4468417e7944ef887b7dfd35013b184efa84ff9b63c41b41e8e",
+          "0x15e76841fc1ef5b76e6e5e7c2b1d9ea6a3468af6b2338a185593230c85c069a3",
+          "0xbb2cb26e1c816f25a63fe5c6684cd67c6058b3840e2669244d48eefee39b0ba3",
+          "0x31b4a47e4b83c7b6e2dcddec7a8c926e65bc020ff12900c4d1c0437a3c656240",
+          "0x86acb634767b8878193fd938d573b94b6be8f80e9f57723b8e2b4b1e51e27fab",
+          "0x1ac3652171159abbedff308095abe2467a476bedf8df310d34f1257d9b000c46",
+          "0x1361cfbd3610c681cecd2f97f42d830a6c53d5fdca3687974ae05bf4d0334178",
+          "0xd01f1bf3c46618feae304e0468c6c08896ca6261acc730551d0124003c2fd0d0"
+        ]
+      }
+    }
+  ]
+}

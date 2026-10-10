@@ -1,0 +1,103 @@
+# Verification record
+
+## Synthetic regression tests
+- First engine milestone: 22/22 passing.
+- Boundary refinements: 25/25 passing, including stalled streams, exact content types, and ten-call cap.
+- Synthetic inputs live in tests/ and are never presented as Mainnet findings.
+
+## Actual Mainnet RPC evidence
+Successful collection: evidence/live/2026-10-10T06-34-48-846Z/ . Earlier failed TLS run retained at evidence/live/2026-10-10T06-25-38-635Z/ .
+
+Both QuickNode and Alchemy returned chain ID 143, readable latest/finalized heads, valid finalized transaction evidence, and 21,000-gas estimates for the unsigned zero-value example.
+
+Primary sampled latest block: **112112140**. Finalized head sampled immediately before it: **112112136**. Observed block gas limit: **150,000,000**. These are sequential observations, not an atomic four-block lag measurement.
+
+Transaction **0x81f9e43b6ece21dcb71705d67dd9c44b74f1059597606c2c0f113b726636d4dd**: receipt status 0x1 at block **112112139**; sampled finalized head **112112143**; block hash/membership matched. The secondary endpoint independently returned a different finalized transaction sample. Full parameters, timestamps, normalized responses and outcomes are in the JSON reports.
+
+Three follow-up samples on each provider were already finalized. We did **not** capture a live provisional-to-finalized transition. That branch is covered by deterministic tests; no millisecond finality measurement is claimed. Finality conclusions rely on the selected RPC, not independent cryptographic verification.
+
+All-zero hash lookup returned no usable receipt and correctly remained unknown, not failed or dropped.
+
+## Live before / after
+At sampled gas price **102,000,000,000 wei/gas**, the primary endpoint estimated **21,000 gas**:
+- Before: proposed 1,000,000; padding warning; conditional fee **0.102 MON**.
+- After: proposed 21,000; estimate match; conditional fee **0.002142 MON**.
+- Both estimates were actual read-only calls. No transaction was signed, submitted or charged. The comparison is not an observed monetary saving.
+
+See primary-gas-before.json and primary-gas-after.json in the successful collection directory, plus equivalent secondary reports.
+
+## Environment issue and fix
+Node initially failed RPC and npm HTTPS with UNABLE_TO_VERIFY_LEAF_SIGNATURE. Using Node 24's Windows system certificate store resolved this without disabling TLS verification. The environment variable NODE_USE_SYSTEM_CA=1 was applied to the rerun.
+
+## Final verification ? complete
+- Unit tests: **26/26 passed**, including the production-origin regression.
+- TypeScript: passed. ESLint: passed. Next.js 16.4.0 production build: passed.
+- Production browser checks: **8/8 passed** on installed Chrome. All three live forms, the gas correction, JSON download, malformed-hash error, desktop layout, 390px mobile layout, and absence of JavaScript errors verified.
+- Desktop and mobile screenshots were visually inspected; no clipping or horizontal overflow found.
+- Actual browser-run API reports: evidence/live/ui-2026-10-10T11-34-19-374Z/ . These are separate from synthetic test fixtures.
+- Machine-readable logs: evidence/verification/checks.json and browser-checks.json; per-command .log files; desktop.png, desktop-gas-report.png, mobile-gas-report.png.
+- Local QA server was used only for validation. Start normally with npm run dev. No public deployment was performed.
+
+### Toolchain note
+ESLint is pinned to 9.39.5 because the Next.js lint plugins currently declare peer support through ESLint 9. The attempted ESLint 10 upgrade produced peer overrides and was reverted. npm warns that ESLint 9 is deprecated; this is a development-tooling limitation, not a runtime dependency.
+
+
+
+## M2 verification - October 10, 2026
+
+### Correctness and regression coverage
+- **42/42 deterministic tests passed** (16 added to M1's 26). TypeScript, ESLint and production build all exited 0; see evidence/verification/checks.json and per-command logs.
+- New coverage: mode coercion, exact 256-bit boundaries, above-cap estimates, large padding arithmetic, inclusion with missing receipt, impossible receipt gas usage, finalized hash conflicts, missing block evidence, bigint freshness thresholds, stale simulation state, calldata redaction, response-body deadline, fixed transport options, HTTP method/site checks, concurrent readers and minute quota.
+- Rule version m2.0. Inclusion, receipt execution and provider-attested finality are separate findings. Failed status never establishes a root cause. A simulation above the transaction cap gets no clamped recommendation. Freshness is an explicitly inferred application heuristic.
+- Focused official references rechecked: [gas pricing](https://docs.monad.xyz/developer-essentials/gas-pricing), [RPC semantics](https://docs.monad.xyz/reference/json-rpc/overview), [block states](https://docs.monad.xyz/monad-arch/consensus/block-states). M1 before/after example is preserved unchanged.
+
+### Actual live observations
+Collection: [M2 live summary](../evidence/live/2026-10-10T11-56-38-010Z/summary.json). No signing, broadcasting or funding.
+
+| Provider | Chain ID | Finalized / later latest height | Gas estimate |
+| --- | --- | --- | --- |
+| primary | 143 | 112176118 / 112176121 | 21000 |
+| secondary | 143 | 112176205 / 112176209 | 21000 |
+
+Sequential block samples are not an atomic lag measurement. Both providers returned successful transaction receipts, matching canonical block membership and covering finalized heads. Both returned null transaction and receipt for the all-zero hash; these remained unknown.
+
+Trustworthy failed-execution examples found within the eight-receipt / 18-second scan bound:
+- Primary: 0x1a88505563e1ef771885a44548e7047b943a61fe4282d816823370feb7ac5051.
+- Secondary: 0x54a39c5bf6ecb5fff29bf176044808a826b5331c88673a683e1c1df18f1cdbfe.
+
+See each provider's failed-transaction.json for status 0x0, block hash/membership and finality evidence. These establish failed execution, not specifically a REVERT opcode or out-of-gas cause. No trace/root-cause claim is made. All three follow-up samples per provider were already finalized; no live provisional-to-finalized transition was captured. That branch remains deterministic-fixture coverage.
+
+### Security audit and remaining limitations
+- Fixed server endpoints, six read-only methods, strict inputs, rejected redirects, no forwarded credentials/headers, bounded bodies/calls/time/concurrency and local quota. No arbitrary URL or RPC forwarding path was found in the HTTP route.
+- Fixed array-mode coercion and independent response-body timeout allowance. Added Fetch Metadata rejection and POST enforcement. Exports redact calldata in both input and estimate parameters; arbitrary provider error text and extra response fields remain excluded.
+- Production-only npm audit: **0 vulnerabilities**. Full audit: **5 high package entries from one unpatched development-only braces advisory**, [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). No compatible patched version is listed. Do not feed untrusted patterns/repositories into lint; track upstream resolution. No forced downgrade or dependency additions were made. Audit summary: evidence/verification/m2-security-audit.json.
+- ESLint 9 maintenance limitation remains. Finality trusts one provider and is not a cryptographic proof; samples are sequential. Freshness depends on the local clock. Null history cannot identify pending/dropped transactions. Estimates cannot guarantee execution at future state. Limits are per process, not a distributed public-service quota. Public addresses remain in exports; calldata must be re-entered locally for reproduction.
+- Live browser attempt one recorded a real 5,011 ms estimate timeout, correctly shown as unknown with no fallback. Evidence retained at evidence/live/ui-2026-10-10T11-59-16-093Z/; check failure retained at evidence/verification/m2-browser-first-attempt.json.
+
+### M2 file inventory and Git state
+All project files remain untracked on main, with no commits, as at the initial M2 inspection. No unrelated repository was changed. No deployment was performed.
+
+Modified: README.md; app/page.tsx; lib/model.ts, validation.ts, engine.ts, rules.ts, rpc.ts, http.ts; scripts/live-check.ts, browser-check.mjs; docs/development-journal.md, verification.md. Added: lib/export.ts; tests/m2.test.ts, capacity.test.ts; timestamped live evidence and verification artifacts. Package manifest/lockfile and original before/after example were not changed in M2.
+
+M3 recommendation: establish a reviewed Git baseline and CI for deterministic checks; resolve/track the tooling advisory and design deployment-level quotas before any public release. Keep live acceptance observations separate from deterministic CI tests.
+
+### Final M2 browser acceptance
+Second attempt: **9/9 passed**, with no browser JavaScript errors. Covered all three workflows, actual gas before/after, normalized JSON download, calldata redaction, malformed hash errors, desktop and 390px mobile layout. Actual UI evidence: evidence/live/ui-2026-10-10T12-13-09-282Z/. Screenshots and checks: evidence/verification/. First failed attempt remains recorded separately. Local QA server stopped after checks; no deployment.
+
+## M3 release foundation - October 10, 2026
+
+- **51/51 unit tests passed**, including nine new M3 regressions. TypeScript, ESLint and production build all exited 0 after the clean lockfile install. Machine records: evidence/verification/checks.json and per-task logs.
+- **10/10 production-browser checks passed**, with no JavaScript errors. New coverage verifies expandable unknown/verification guidance and exportVersion/ruleVersion metadata; all M2 workflows, gas correction, redaction, malformed-hash feedback and desktop/mobile bounds remain covered. Actual browser evidence: evidence/live/ui-2026-10-10T17-11-16-723Z/.
+- Limited live smoke: evidence/live/m3-smoke-2026-10-10T12-45-39-404Z/ . Exactly three health RPC calls per provider, both passed chain ID 143 and latest/finalized checks. Browser acceptance made additional bounded read-only diagnostic requests. No signing, broadcasting or actual fee-savings claim.
+- New deterministic cases: unknown/nested export fields, metadata preservation, invalid references/sources/timestamps, unsupported methods/results, safe error export, workflow guidance, synthetic wrong network, bad Content-Length/UTF-8 and cancellation rejection handling.
+- CI: .github/workflows/validate.yml, Ubuntu + Node 24.18.0, immutable official action pins, read-only token, no persisted checkout credentials, 15-minute timeout; npm ci --ignore-scripts --no-audit then typecheck/lint/test/build. YAML parsed and equivalent commands passed locally. **Hosted GitHub Actions has not run**: no remote or push was configured. CI has no live RPC dependency or user secrets.
+- Fresh production audit: zero vulnerabilities (m3-production-audit.json). Outstanding development advisory remains GHSA-vfj7-8cjw-p6xm / CVE-2026-93687, high, braces <=3.0.3; five affected tooling package entries via the existing lint chain. Official advisory still lists no patched version. No dependency upgrades were made. See deployment.md for assessment and safest resolution.
+- API limits/allowlists retained; stricter length/UTF-8 validation and safe cancellation added. Exports explicitly select and validate fields, redact calldata, drop unsupported metadata and provide reproduction instructions. See reports.md.
+- Pre-staging scan reviewed all candidate artifacts, JSON credential/data fields, ignore rules and final client bundles. No detected secrets, large generated artifacts or server RPC URLs in client bundles. node_modules, .next, .env files, private key files, exports and temporary material are ignored. Pattern scanning is not a proof against arbitrary encoded secrets; reviewed evidence contains only public RPC observations and empty/redacted demo calldata.
+- Initial local Git baseline includes the reviewed source, lockfile, tests, CI, documentation and small evidence artifacts. Commit hash and final status are recorded in the completion report; no remote changes, pushes or history rewriting.
+
+### M3 limitations and M4 recommendation
+
+Public deployment still needs ingress quotas, origin protection and host-specific verification. Process quotas multiply across serverless instances and reset on restart. Prefer edge per-client plus aggregate limits with a single protected origin initially; no rate-limit database was added. Provider-attested finality, sequential observations, mutable estimates, missing-history ambiguity and the unobserved live finality transition remain explicit. Public addresses remain in exports; calldata must be re-entered locally. ESLint maintenance and the unpatched development advisory remain open.
+
+M4: configure the chosen host's edge limits and private origin, enable the remote/hosted CI only when authorized, run staging acceptance and rehearse the documented demo. Keep the release focused; no CLI or new diagnostic features are necessary before these operational checks.

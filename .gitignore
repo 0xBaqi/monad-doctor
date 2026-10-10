@@ -1,0 +1,20 @@
+node_modules/
+.next/
+*.tsbuildinfo
+.env*
+coverage/
+
+
+.qa/
+
+# Local exports, private material, and temporary artifacts
+exports/
+*.pem
+*.key
+*.p12
+*.pfx
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+npm-debug.log*

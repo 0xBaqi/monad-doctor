@@ -1,0 +1,24 @@
+
+> monad-doctor@0.1.0 build
+> node --use-system-ca node_modules/next/dist/bin/next build
+
+▲ Next.js 16.4.0 (Turbopack)
+✓ Running next.config.ts took 12.7s
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 39.7s
+  Running TypeScript ...
+  Finished TypeScript in 15.1s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/3) ...
+✓ Generating static pages using 3 workers (3/3) in 1575ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+└ ƒ /api/diagnose
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

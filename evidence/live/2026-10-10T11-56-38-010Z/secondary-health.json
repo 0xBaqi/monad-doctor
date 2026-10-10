@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m2.0",
+  "provider": "secondary",
+  "mode": "health",
+  "startedAt": "2026-10-10T11:57:05.757Z",
+  "completedAt": "2026-10-10T11:57:10.123Z",
+  "input": {
+    "mode": "health",
+    "provider": "secondary"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "rpc.latest",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Latest block is readable",
+      "detail": "Block 112176209; gas limit 150000000. Request latency: 317 ms. Latest is the proposed view, not proof of finality.",
+      "nextStep": "Use finalized for settlement; latency describes this request only.",
+      "evidence": [
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    },
+    {
+      "id": "rpc.heads",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized head is readable",
+      "detail": "Finalized: 112176205. Latest sampled afterward: 112176209. These requests are not an atomic snapshot.",
+      "nextStep": "Keep finality separate from execution success.",
+      "evidence": [
+        2,
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T11:57:05.757Z",
+      "durationMs": 3083,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T11:57:08.840Z",
+      "durationMs": 966,
+      "result": {
+        "number": "0x6afac4d",
+        "hash": "0x95dd91e4d9235b62ceeebd65403846354ece0b086a895cbffd1c00cb0a22e032",
+        "parentHash": "0x7d6e2dea63b1173e6a851c1a2c369e750abfbd4e2da39f9d89b8f3d86fc6aabe",
+        "timestamp": "0x6aca2818",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xe76271470a5c89cf4083f3c244975aeaf69ce3725955a231d50ed1d8a7ede5d5",
+          "0x84f4eaa2bd819a7ee846a332bebc3078c9eb63671b27028e99ccb4fce72ae53c",
+          "0xbc5b22f5dc869052d8db6999f756a2e165a68312019b34bfc066875fbf97ead0",
+          "0x5b8068e7a9fdc0d2a79d0481367ea993e057c4e52bdb26f56d6427895f6a3ea3",
+          "0x5009bf05de38062dff5c19283d3d1582965a5d6f9bf6cb0d1751c4a1010026c3",
+          "0x07ef1c4e677e103d10f4db184f08403b7942d7f9c3132020cf438c07fb9d94bc",
+          "0x04adb102219c1812a6136360364dc40389a55036cdd92594ef9868e958df6474",
+          "0x9634d01156028ac885a57a4869a6d7d64e04c8af952c2f9061d47db5296bb7f1",
+          "0xb701aea4bca6b6583af8a776e02025b6a6afad1c896107e5fa22e0b342e03ea4"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-10T11:57:09.806Z",
+      "durationMs": 317,
+      "result": {
+        "number": "0x6afac51",
+        "hash": "0x1242bde4c37abaabdb7543313d1eeeed62291a07eb757939958e2e535c41d58e",
+        "parentHash": "0xb2d280270cd951b67cb62b6a1760e01a84f0f89aa3399a095b0f6cb2474ed0f7",
+        "timestamp": "0x6aca2819",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xc92291711d600bbcda6bb4b058cec13c4e9a5bde49f6ba39c8459e0379b56bff",
+          "0x3c25a4f55b618086655478b5425a39f45675cf17495753efb6948b16e867910d",
+          "0x54a39c5bf6ecb5fff29bf176044808a826b5331c88673a683e1c1df18f1cdbfe",
+          "0x15224dd095a84b274c0cd22ead90883ca7931c029a28ed91645dc640245092a5",
+          "0x532cb9a40045ffaf55c327407714cc15c09e925fe0192de42ff4b8e057916e89",
+          "0x9a04eb7d27ede519646c5352103eca1e57024f64999c68cb6219d522b063aae2",
+          "0x392cc7a431e4a3ed5b6dc717b308db45b1cbe3438893313879a03b6d43696b17",
+          "0xe00b246b7cd45338411cd80da2d42deb8be405fc565e9bbf7083570fd4a07438",
+          "0x13b57990ffff4df728ae3d18fac536f71099bb182e2d2610a5e4d7f92f23ef13",
+          "0xcb55fa7647165be12e7e29ccd81a658f24a5644195e6b707651ed9fdff68291f"
+        ]
+      }
+    }
+  ]
+}

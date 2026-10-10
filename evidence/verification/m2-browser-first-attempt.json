@@ -1,0 +1,25 @@
+{
+  "base": "http://127.0.0.1:3143",
+  "checkedAt": "2026-10-10T12:00:41.802Z",
+  "checks": [
+    {
+      "name": "Desktop initial render without overflow",
+      "passed": true
+    },
+    {
+      "name": "Health form returns actual Mainnet evidence",
+      "passed": true
+    },
+    {
+      "name": "JSON export downloads normalized evidence",
+      "passed": true
+    },
+    {
+      "name": "Browser run",
+      "passed": false,
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(before.findings.some(f=>f.id==='gas.estimate-comparison'&&f.severity==='warning'))\n"
+    }
+  ],
+  "errors": [],
+  "evidenceDir": "evidence/live/ui-2026-10-10T11-59-16-093Z"
+}

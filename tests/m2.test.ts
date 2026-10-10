@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { diagnose } from '../lib/engine.ts';
+import { exportReport } from '../lib/export.ts';
+import { gasRules, lifecycleRules, freshness } from '../lib/rules.ts';
+import { parseInput, decimal, quantity } from '../lib/validation.ts';
+import { createRpc } from '../lib/rpc.ts';
+import { handleDiagnostic } from '../lib/http.ts';
+import type { Block, Receipt, Transaction } from '../lib/model.ts';
+// Deterministic synthetic fixtures only. No network.
+const hash='0x'+'a'.repeat(64), bh='0x'+'b'.repeat(64), addr='0x'+'1'.repeat(40);
+const b:Block={number:'0x64',hash:bh,parentHash:'0x'+'c'.repeat(64),timestamp:'0x1',gasLimit:'0x8f0d180',transactions:[hash]};
+const tx:Transaction={hash,blockHash:bh,blockNumber:'0x64',gas:'0x5208',from:addr,to:addr};
+const receipt:Receipt={transactionHash:hash,blockHash:bh,blockNumber:'0x64',status:'0x1',gasUsed:'0x5208',effectiveGasPrice:'0x1'};
+const input={mode:'gas',provider:'primary',gasLimit:'1000000',call:{from:addr,to:addr,data:'0xdeadbeef',value:'0'}};
+function fake(handler:(m:string,p:unknown[])=>unknown){return createRpc('primary',{now:()=>1000,fetcher:async(_u,i)=>{const r=JSON.parse(String(i?.body));return Response.json({jsonrpc:'2.0',id:r.id,result:handler(r.method,r.params)});}});}
+test('mode cannot be an array coerced to a supported name',()=>{for(const mode of [['gas'],['health'],{},null])assert.throws(()=>parseInput({...input,mode}));});
+test('256-bit boundaries are exact for input values',()=>{const max=2n**256n-1n;assert.equal(decimal(max.toString(),'value'),max.toString());assert.throws(()=>decimal((max+1n).toString(),'value'));assert.throws(()=>parseInput({...input,call:{...input.call,from:'0x123'}}));});
+test('simulation above cap does not recommend a clamped limit or executable cost',()=>{const r=gasRules(30000000n,30000001n,1n,[]);assert.ok(r.some(f=>f.id==='gas.estimate-over-cap'));assert.ok(!r.some(f=>f.id==='gas.cost-comparison'));assert.match(r.find(f=>f.id==='gas.estimate-over-cap')!.nextStep,/Do not clamp/);});
+test('huge padding retains exact bigint cost arithmetic',()=>{const max=2n**256n-1n;const r=gasRules(max,21000n,10n**18n,[]);assert.match(r.find(f=>f.id==='gas.cost-comparison')!.detail,new RegExp(max.toString()+' MON'));});
+test('inclusion remains observed when receipt is missing, outcome remains unknown',()=>{const r=lifecycleRules(hash,tx,null,b,undefined,[]);assert.ok(r.some(f=>f.id==='tx.inclusion'&&f.basis==='observed'));assert.ok(r.some(f=>f.id==='tx.outcome-unknown'));assert.ok(!r.some(f=>f.id==='tx.finalized'||f.id==='tx.execution'));});
+test('receipt exceeding transaction gas suppresses outcome conclusions',()=>{const r=lifecycleRules(hash,tx,{...receipt,gasUsed:'0x5209'},b,b,[]);assert.equal(r[0].id,'tx.inconsistent');});
+test('same-height finalized hash conflict never establishes finality',()=>{const r=lifecycleRules(hash,tx,receipt,{...b,hash:'0x'+'d'.repeat(64)},b,[]);assert.ok(r.some(f=>f.id==='tx.finality-unknown'&&f.severity==='error'));assert.ok(!r.some(f=>f.id==='tx.finalized'));});
+test('receipt without canonical block keeps inclusion unknown',()=>{const r=lifecycleRules(hash,null,receipt,b,undefined,[]);assert.ok(r.some(f=>f.id==='tx.inclusion'&&f.basis==='unknown'));assert.ok(r.some(f=>f.id==='tx.execution'));assert.ok(!r.some(f=>f.id==='tx.finalized'));});
+test('freshness boundaries and large timestamps do not lose integer precision',()=>{assert.deepEqual(freshness(b,121000,[],'gas'),[]);assert.equal(freshness(b,122000,[],'gas')[0].basis,'inferred');assert.deepEqual(freshness({...b,timestamp:'0x1f'},1000,[],'tx'),[]);assert.equal(freshness({...b,timestamp:'0x20'},1000,[],'tx').length,1);assert.match(freshness({...b,timestamp:'0x20000000000001'},1000,[],'tx')[0].detail,/-9007199254740992 seconds/);});
+test('stale gas state is explicitly warned without inventing a fresh estimate',async()=>{const r=await diagnose(input,{now:()=>200000,rpc:fake(m=>m==='eth_chainId'?'0x8f':m==='eth_getBlockByNumber'?b:'0x5208')});assert.ok(r.findings.some(f=>f.id==='gas.clock-risk'));});
+test('sharing export removes calldata from input and evidence without changing original',async()=>{const r=await diagnose(input,{rpc:fake(m=>m==='eth_chainId'?'0x8f':m==='eth_getBlockByNumber'?b:'0x5208')});const x=exportReport(r);assert.ok(!JSON.stringify(x).includes('deadbeef'));assert.equal(r.input.call?.data,'0xdeadbeef');assert.ok(x.evidence.some(e=>e.method==='eth_estimateGas'));});
+test('stalled response body obeys per-request deadline even when fetch already resolved',async()=>{let cancelled=false;const rpc=createRpc('primary',{timeoutMs:20,fetcher:async()=>new Response(new ReadableStream({cancel(){cancelled=true;}}))});const r=await rpc.call('eth_chainId',[],quantity);assert.equal(r.ok,false);if(!r.ok)assert.equal(r.error.code,'TIMEOUT');assert.ok(cancelled);});
+test('RPC transport fixes endpoint and refuses redirects without forwarding user headers',async()=>{const rpc=createRpc('primary',{fetcher:async(url,i)=>{assert.equal(url,'https://rpc.monad.xyz');assert.equal(i?.redirect,'error');assert.deepEqual(i?.headers,{'Content-Type':'application/json'});return Response.json({jsonrpc:'2.0',id:1,result:'0x8f'});}});assert.equal((await rpc.call('eth_chainId',[],quantity)).ok,true);});
+test('HTTP rejects cross-site metadata and non-POST requests',async()=>{assert.equal((await handleDiagnostic(new Request('http://localhost/api/diagnose'))).status,405);assert.equal((await handleDiagnostic(new Request('http://localhost/api/diagnose',{method:'POST',headers:{'content-type':'application/json','sec-fetch-site':'cross-site'},body:'{}'}))).status,403);});

@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m1.1",
+  "provider": "primary",
+  "mode": "health",
+  "startedAt": "2026-10-10T06:34:48.916Z",
+  "completedAt": "2026-10-10T06:34:51.182Z",
+  "input": {
+    "mode": "health",
+    "provider": "primary"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "rpc.latest",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Latest block is readable",
+      "detail": "Block 112112140; gas limit 150000000. Request latency: 324 ms. Latest is the proposed view, not proof of finality.",
+      "nextStep": "Use finalized for settlement; latency describes this request only.",
+      "evidence": [
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    },
+    {
+      "id": "rpc.heads",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized head is readable",
+      "detail": "Finalized: 112112136. Latest sampled afterward: 112112140. These requests are not an atomic snapshot.",
+      "nextStep": "Keep finality separate from execution success.",
+      "evidence": [
+        2,
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T06:34:48.917Z",
+      "durationMs": 1428,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T06:34:50.345Z",
+      "durationMs": 513,
+      "result": {
+        "number": "0x6aeb208",
+        "hash": "0x2853c86b35145740b762ff3159b1d176092ef51937a2c5350270e38781e919c7",
+        "parentHash": "0x5c0f3f8006ea6e022377395a8d2e28216e7e6fe0c67167bade24dc9aaec6d6e3",
+        "timestamp": "0x6ac9dc8e",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x82f781171df6dc08d25b3eca6596d28cf6771bb180a33877ac76f363c1b93630",
+          "0x2e381119e84b0ded527877fcc0b10aff311240ae1778a9d8e55d8da343b5d652",
+          "0x100bed9cd62658f1f9e4eafaed6debda569f82a4afdcb32b46b3372c64b11579",
+          "0x89bf803c40c95aad4c7d8b7acaa59f9e3d9b938d39040d59a3a1051546ae79db",
+          "0xd6608d5802fa4f6750526ed34348defdd954104142daf6ca24e3c1303633143b",
+          "0x02b3799985dbf6309ab88709b67d90e1842572db5d6b26505a7081758f92ef74",
+          "0xa64982cb66ad8cbef7b70884e103e6a826e9c1e8f7d2ab9dde97217aeafb1161",
+          "0x21ecf53f43ba4ba5bc9ee2ea3caf61739e0095c8f1a44316654b9b8e7078b966",
+          "0x48a4a2ae66f6338880e09ba6fb614543b1abbb34ebf32dd136053c771b27e8d1",
+          "0x2e2e3b47485c0ba05c659508065a680fd4df1855bb82df760dc9e7552b899ecf",
+          "0xf993652b4437e604bb414f30b3f9efd053a273f7d3a9484f17875794dbb47584",
+          "0x1bd3cb7ab22172db680f5f58044ef98455080c3732f128ae485dba073bd6e660",
+          "0xf06344a1cee95d1bc5b9d2132acd36f9f7bb2fb31ec9e2735eec58088d20c07e",
+          "0x69eae0da5f79862b5fa624d03b114043a8a4f09bb597aec33b7bc559b363a5c4",
+          "0x8685ad66ef59ef66cc06f1c686bfa929471befaf99ab931aa711757ce476da15",
+          "0x22aa91db2de5f5f41be23c1b6822a138dad074c27340de2e626aac23748fdc26",
+          "0x12958295e492c511e650bc24e53a5149bc156bfa92ccf239fdc9a1f00936ede2",
+          "0x9718b6086d365fb891bc42b316e7bf2d603786c266940c64ababea839351180f",
+          "0x80f267aff46b8adca9e72d3bf4728c673c898273a3252a5486e4b0409a16af42",
+          "0x5c1730850139df82831c9c955d9c002278fda359eda637aaff9bb416577e6e57",
+          "0x96567ab4099d4da578b7f71c9a555f526c42638de9c8d536eb19118005b4b351",
+          "0xb8aebbca9d12eb2832341158b5859d6f282da60008a414b9e634a2408c4a242d",
+          "0xf75e51a94618fab208248be79a8cfa5d0a3b78bcf2b9347595aa6696775c27ae",
+          "0xedde1d053d1e4c4e32f023c192cd8fbf61e82854e7c1e9bf6acfb74911f93b95",
+          "0x9a084a55e6264a363ad54bd6b9295d44ab9060bbd818b82347679c058d15dff5",
+          "0xed8e260be37df89050389d3380a5394ebe033b5fb1622e4ef9f6593533dba859",
+          "0x500ae18c54bd49958c4cc22025a4b6e3276adeb9ccea24436ebb88405657a074",
+          "0x944350829d75d3f361f3db3844cd54e618fec69fb551d37f601fcb82a72e5f23",
+          "0x0232da46acbf7331c3f1495b29146bc03002b5a9297a3828b170053410ef410b"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-10T06:34:50.858Z",
+      "durationMs": 324,
+      "result": {
+        "number": "0x6aeb20c",
+        "hash": "0xba4d1d7e517d7a1a053873c906459fde114aaef0fef95627d7657a97ebe5868e",
+        "parentHash": "0x12d4c2ee070f48f160458c81d8bc6cde33ffdb6b895d6a43f095fc779da1420e",
+        "timestamp": "0x6ac9dc8f",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xdd709066424c8b493f95359250e7281f8da2110362b0dbd077403452f8bb6435",
+          "0x5e9e1bcd95d2d31e167ef250e69c4a9daf2b28e16518117f69ed36277e168b21",
+          "0xacfb60c6e54c90735e51dde5252340535f4a6fdd660fb3c2a4cfdc85398f047c",
+          "0x37531f69d260ad77eaff18474ef9092f9e6b9b6e247791a0bda98d174c7d2890",
+          "0x28aa82dee44821a9e81031dca6051848dbd6e5fa19672ef7cd4b5738751f60ca",
+          "0xf74a09a497a917720ef97c4a69da15239f73af776f52a39f4333d226c30cf353",
+          "0xa6c1a09346d0b4ef73350ee5a18418723e4d92481c0c88f955398ecd1522af0d",
+          "0xa0de4988de70f2c8301e295fcfa6017e1d40d9865a6ed1d036f3575970c35162",
+          "0x87101389b75ad38bec79a32ea1c1cfe09f930e58d80595b792639f0bb7ffa560",
+          "0xd0b68b9dc88ad3466060f16cfbe7c7be6d5300737b7627f01eb6a2b4d210b938",
+          "0x26856194a2cfb97448b2475f65a92d4577390e5e82a15dbdac6c5e501daf53f9",
+          "0x7397a153532a9cc253fa857b132ad18d6c2d1633c3a4f3d3d652803b579c7c38",
+          "0xb9e1c84ece25fbcf59d6ead31660e70f8d39b97e93c8800150dd405a4e4ba3d7",
+          "0xac6bbb939226701b4d7106e53984e9335415c64edad6c599c5a71a3ceb2c2df5",
+          "0x2e31f661242b1847024bfc701c639ec5e0461709427caca3fa15d25462f6cbc7",
+          "0x46cebcf3ac9ec709a54820038516061136757e5986582c82563f322ed2b305d5",
+          "0x627b89985a71ee37711f2b59a4472ea293ed5f0630167c13b78e1df69d22dad7",
+          "0x09140f847e1c7c19bbf7c021b3695ac43bd28933ed66b2a6548de4320be6f8e6",
+          "0x555e60db15800dc43b4121fcc03f642cbfc1e82bfa39bb7ab922e2c670949349",
+          "0xa3d0ddde90f27f290765195e50ee9f53e298c6cdb7f60849a1f41d9c024c2363",
+          "0xbca0f23ff4732505ee347cf7e2374170fbc18bae7f855406f3af6a04d38fe02a"
+        ]
+      }
+    }
+  ]
+}
