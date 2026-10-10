@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-10T17:49:19.410Z",
+  "completedAt": "2026-10-10T17:49:24.424Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x54b56069596310485abef3eb4ccef0c9982ba3a59d40d93478a473606503930a"
+  },
+  "findings": [
+    {
+      "id": "rpc.1.timeout",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "eth_chainId: evidence unavailable",
+      "detail": "RPC timed out. Evidence is incomplete; retry or switch provider.",
+      "nextStep": "Retry or choose another provider. Successful checks in this report remain visible.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T17:49:19.411Z",
+      "durationMs": 5013,
+      "error": {
+        "code": "TIMEOUT",
+        "message": "RPC timed out. Evidence is incomplete; retry or switch provider."
+      }
+    }
+  ]
+}

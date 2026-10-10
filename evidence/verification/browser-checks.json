@@ -1,6 +1,6 @@
 {
   "base": "http://127.0.0.1:3143",
-  "checkedAt": "2026-10-10T17:12:11.194Z",
+  "checkedAt": "2026-10-10T17:49:51.756Z",
   "checks": [
     {
       "name": "Desktop initial render without overflow",
@@ -31,18 +31,11 @@
       "passed": true
     },
     {
-      "name": "Lifecycle form confirms real finalized transaction",
-      "passed": true
-    },
-    {
-      "name": "Malformed hash produces meaningful visible error",
-      "passed": true
-    },
-    {
-      "name": "No browser JavaScript errors",
-      "passed": true
+      "name": "Browser run",
+      "passed": false,
+      "error": "The expression evaluated to a falsy value:\n\n  assert.ok(tx.findings.some(f=>f.id==='tx.finalized'))\n"
     }
   ],
   "errors": [],
-  "evidenceDir": "evidence/live/ui-2026-10-10T17-11-16-723Z"
+  "evidenceDir": "evidence/live/ui-2026-10-10T17-48-36-048Z"
 }

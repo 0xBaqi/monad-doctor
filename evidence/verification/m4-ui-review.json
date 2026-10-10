@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-10-10T17:54:14.697Z",
+  "kind": "Local UI checks; intercepted 429 is synthetic",
+  "passed": true,
+  "checks": [
+    "Keyboard skip link reaches diagnostic heading",
+    "1440px empty state without horizontal overflow",
+    "390px empty state without horizontal overflow",
+    "320px empty state without horizontal overflow",
+    "Mobile input text is 16px and labels resolve",
+    "Synthetic delayed response shows loading and prevents resubmission",
+    "Synthetic 429 displays accessible error; no fabricated findings"
+  ]
+}

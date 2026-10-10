@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-10-10T17:49:44.077Z",
+  "kind": "Local UI checks; intercepted 429 is synthetic",
+  "passed": false,
+  "checks": [
+    "Keyboard skip link reaches diagnostic heading",
+    "1440px empty state without horizontal overflow",
+    "390px empty state without horizontal overflow",
+    "320px empty state without horizontal overflow"
+  ]
+}

@@ -101,3 +101,15 @@ Second attempt: **9/9 passed**, with no browser JavaScript errors. Covered all t
 Public deployment still needs ingress quotas, origin protection and host-specific verification. Process quotas multiply across serverless instances and reset on restart. Prefer edge per-client plus aggregate limits with a single protected origin initially; no rate-limit database was added. Provider-attested finality, sequential observations, mutable estimates, missing-history ambiguity and the unobserved live finality transition remain explicit. Public addresses remain in exports; calldata must be re-entered locally. ESLint maintenance and the unpatched development advisory remain open.
 
 M4: configure the chosen host's edge limits and private origin, enable the remote/hosted CI only when authorized, run staging acceptance and rehearse the documented demo. Keep the release focused; no CLI or new diagnostic features are necessary before these operational checks.
+
+## M4 local preparation ? 2026-10-10
+
+- 51/51 deterministic unit tests passed; no diagnostic engine changes or new unit tests. TypeScript, ESLint and production build passed. The journey text required an encoding correction; the production build was rerun successfully afterward.
+- Initial desktop/mobile screenshots were captured before edits. Focused UI changes preserve the design and diagnostic scope. New browser checks cover skip navigation, 1440/390/320px layouts, mobile input text, loading and synthetic 429 errors. See m4-ui-review.json for the actual result; intercepted responses are explicitly synthetic.
+- Live browser attempt at 17:48 UTC passed seven checks: desktop layout, live health, guidance, health export, live gas before/after, gas export redaction and mobile report overflow. Transaction assertion stopped because its chain-ID call timed out; the app reported unknown, not finality. No browser JavaScript errors were recorded. The remaining checks in that run did not execute. Saved in evidence/verification/m4-browser-first-attempt.json and evidence/live/ui-2026-10-10T17-48-36-048Z/.
+- Earlier limited provider smoke at 17:42 UTC timed out on both initial chain-ID calls: evidence/live/m3-smoke-2026-10-10T17-42-17-190Z/ (legacy script directory prefix). This does not prove provider-wide outages. Historical M3 passing results remain historical, not a substitute for this run.
+- Secret/artifact and client-bundle scan reported no findings. Pattern scanning is not proof against arbitrary encoded secrets.
+- No remote publication, hosted Actions run, deployment or production-URL verification occurred. GitHub destination, Vercel project/team and public aggregate quota controls remain unresolved. No paid services enabled.
+- Accessibility checks are essentials, not a WCAG conformance audit or screen-reader certification.
+
+Final focused M4 browser retry passed all seven checks, including keyboard skip link, 1440/390/320px layouts, labeled 16px mobile inputs, loading lockout and synthetic accessible 429. ESLint passed again after the new script. Screenshots: evidence/verification/m4-1440.png, m4-390.png and m4-320.png.

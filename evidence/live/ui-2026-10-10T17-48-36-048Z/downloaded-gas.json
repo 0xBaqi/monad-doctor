@@ -1,0 +1,194 @@
+{
+  "exportVersion": 1,
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provenance": "Actual RPC observations when collected by the app; deterministic fixtures must be labeled separately. Calldata omitted for sharing.",
+  "provider": "primary",
+  "mode": "gas",
+  "startedAt": "2026-10-10T17:49:01.805Z",
+  "completedAt": "2026-10-10T17:49:02.536Z",
+  "input": {
+    "mode": "gas",
+    "provider": "primary",
+    "gasLimit": "21000",
+    "call": {
+      "from": "0x0000000000000000000000000000000000000001",
+      "to": "0x000000000000000000000000000000000000dead",
+      "value": "0",
+      "data": "[redacted]"
+    }
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ],
+      "explanation": {
+        "checked": "The selected provider chain ID was compared with Monad Mainnet 143 (0x8f).",
+        "unknown": "Chain identity alone does not establish provider freshness, correct execution, or finality.",
+        "why": "A response from the wrong network cannot diagnose a Monad Mainnet integration.",
+        "verify": "After correcting network configuration, rerun RPC health. Confirm network.mainnet and inspect latest/finalized evidence; failed requests remain unknown."
+      }
+    },
+    {
+      "id": "gas.protocol-cap",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Within the documented transaction gas cap",
+      "detail": "Proposed: 21000 gas. Documented Monad per-transaction maximum: 30,000,000 gas (reviewed 2026-10-10). RPC simulation caps and block gas limits are separate limits.",
+      "nextStep": "A viable limit must cover the operation and stay within 30,000,000. Never reduce below a verified requirement; reduce or split work and re-estimate if necessary.",
+      "evidence": [],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ],
+      "explanation": {
+        "checked": "The proposed limit was compared with the documented transaction cap and any successful estimate at the recorded finalized block. Cost uses a separate sampled gas price.",
+        "unknown": "The estimate is not a verified universal minimum or a guarantee for future state. No transaction was submitted and no actual fee saving was measured.",
+        "why": "Monad charges the submitted gas limit. Too little gas may fail; unnecessary allowance can increase the conditional fee.",
+        "verify": "Keep sender, recipient, value and calldata identical. Rerun after adjusting the proposed limit; inspect the new estimate and block timestamp. Do not reduce below a known requirement or clamp an above-cap estimate. Unknown estimates need a successful recheck."
+      }
+    },
+    {
+      "id": "gas.estimate-comparison",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Limit matches the RPC estimate",
+      "detail": "RPC estimate: 21000 gas. Proposed: 21000 gas. An estimate applies to the sampled state and is not a guarantee of future execution.",
+      "nextStep": "Use a measured limit appropriate to this operation. Re-estimate when state changes; avoid blindly copying large Ethereum-style buffers.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ],
+      "explanation": {
+        "checked": "The proposed limit was compared with the documented transaction cap and any successful estimate at the recorded finalized block. Cost uses a separate sampled gas price.",
+        "unknown": "The estimate is not a verified universal minimum or a guarantee for future state. No transaction was submitted and no actual fee saving was measured.",
+        "why": "Monad charges the submitted gas limit. Too little gas may fail; unnecessary allowance can increase the conditional fee.",
+        "verify": "Keep sender, recipient, value and calldata identical. Rerun after adjusting the proposed limit; inspect the new estimate and block timestamp. Do not reduce below a known requirement or clamp an above-cap estimate. Unknown estimates need a successful recheck."
+      }
+    },
+    {
+      "id": "gas.cost-comparison",
+      "severity": "info",
+      "basis": "inferred",
+      "title": "Cost at the sampled gas price",
+      "detail": "At 102000000000 wei/gas: proposed limit costs 0.002142 MON; estimated limit costs 0.002142 MON. This is a conditional comparison, not an actual charge or guaranteed saving.",
+      "nextStep": "Check current fees and re-estimate before any future transaction. Monad Doctor never signs or submits.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/developer-essentials/gas-pricing"
+      ],
+      "explanation": {
+        "checked": "The proposed limit was compared with the documented transaction cap and any successful estimate at the recorded finalized block. Cost uses a separate sampled gas price.",
+        "unknown": "The estimate is not a verified universal minimum or a guarantee for future state. No transaction was submitted and no actual fee saving was measured.",
+        "why": "Monad charges the submitted gas limit. Too little gas may fail; unnecessary allowance can increase the conditional fee.",
+        "verify": "Keep sender, recipient, value and calldata identical. Rerun after adjusting the proposed limit; inspect the new estimate and block timestamp. Do not reduce below a known requirement or clamp an above-cap estimate. Unknown estimates need a successful recheck."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-10T17:49:01.805Z",
+      "durationMs": 184,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-10T17:49:01.989Z",
+      "durationMs": 179,
+      "result": {
+        "number": "0x6b0bd85",
+        "hash": "0x6cba3df3cdb228188d1a373741f9b02b1be96e1fc9186709ab9d649f8ca40e49",
+        "parentHash": "0x94af2aa06efd94d63c0835b0fee7d7aeb4dc2f61c1cf35d5a2063004b38de52e",
+        "timestamp": "0x6aca7a91",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x0cde684b21250b9b54ebad3d6528004ee6883f9be4f7da6a8543bb7a2c3cd6b9",
+          "0x011aeba486fc1d65aa362e30ca125c605e3dc964c38c2547dd6f114d9f19f37f",
+          "0xf127d57897cb08827da08d97898787f3da7db3fbf5572eae73cda9bdaa326023",
+          "0x3f7a9c333a61dddd1bc6839787a4bd6dfe9ac997f28099464796470430818b62",
+          "0x7056399325b996fe78bbe4350dd278add4c9be92d6d30c4284d4fcfa49514dc0",
+          "0x885086e82d9a052a2d64eb71dc569d049027a1870a41dbc4b957d886f52dacca",
+          "0x42a95e1c18b0091ce1f8342af904ea200369289188d12b2778a44ec81a050de2",
+          "0x70cc5cd7c48267994cd2f12a649b4e79f9e24a651536d16b26e5f2be2aa1b958",
+          "0x39a228990ac47eeb1777ede056bb60373b669908403586d6cafadf1e65807b74",
+          "0x44512bfccc70b06a57ce0f8db3ef2386025fad89d1d05e34a019631f10d5af54",
+          "0xcd235066dfd4985bcf3eacfe65bdd0cfd0225b517c149006dea2666bc2e7e730",
+          "0xaf431cba48abf1e4a43196b9d7c2c4947eb10d5ac12d3bf2afa779ef937f9290",
+          "0x3a2b44419ec49becc1362d2a40d54bec757d7e07295eed83b43e4b17d471e8d5",
+          "0x218cb5974242a17478d667b8146410e5fa579d300f57322b6c966bd6e3fddc61",
+          "0x85b1822edce942eeabd08064cf8e5bb489506e7033f3147dac5f3dbe862228ed",
+          "0x11790a1ccf0b8a40889797b6de338676159a7136c5864300e10e3fdce5cfaadc",
+          "0x2081f7c97e34d4712c3039400b12e44b9e2b1e33cb682c7aea82f55236faaf22",
+          "0x65a7b8f7651a66d57c4b4b5682171c8bfbd1d7284b40d318d6bea37ee82019f6",
+          "0xad9cf8a2763d60cdae7b307eb6e3754910c7eeed39fa98d0c683031db5fb8d91",
+          "0x56dbcc59616076ef2552c652fc5ed2305ae15257040de6b6d43fbcb124f32c7e",
+          "0xd86058d022fdb6a5fb10f493bccd71d3c13cc69b9651d3138162099086925638",
+          "0xcef728d1407a15f0972828ca5565cc5222b2744901e328f839a5950d6d564b18",
+          "0x0851d2c7053c6f2e05388c7a85e6186cba5d5523fc0c373803878af4a1d63210",
+          "0x97762ba1e8a66ef0326e7bfb32e9e6aafce9dc61a7593ffc9761182ad9b0342a",
+          "0x49b2c00c465012191d646757e69e10d495963f980cdda7406833822c0c07c502",
+          "0xb2bad50af68954bc5881cad070da3225759154dd5d9f56ef1f317b9f349645d7"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_estimateGas",
+      "params": [
+        {
+          "from": "0x0000000000000000000000000000000000000001",
+          "to": "0x000000000000000000000000000000000000dead",
+          "value": "0x0",
+          "data": "[redacted]"
+        },
+        "0x6b0bd85"
+      ],
+      "observedAt": "2026-10-10T17:49:02.168Z",
+      "durationMs": 192,
+      "result": "0x5208"
+    },
+    {
+      "id": 4,
+      "method": "eth_gasPrice",
+      "params": [],
+      "observedAt": "2026-10-10T17:49:02.360Z",
+      "durationMs": 176,
+      "result": "0x17bfac7c00"
+    }
+  ],
+  "reproduction": {
+    "steps": [
+      "Select the recorded mode and provider.",
+      "Re-enter the sanitized inputs; supply calldata locally for gas analysis.",
+      "Run again and compare rule IDs, evidence and timestamps. Changed state can change results."
+    ],
+    "calldataIncluded": false,
+    "containsPublicAddresses": true
+  }
+}

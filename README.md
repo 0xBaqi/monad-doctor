@@ -1,5 +1,9 @@
 # Monad Doctor
 
+Find and fix Monad integration problems before they reach production.
+
+M4 preparation is in progress. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
+
 M3 release candidate: **51 unit tests, 10 browser checks, TypeScript, lint and production build passed locally**. CI is configured; public deployment is not performed.
 
 Read-only Monad Mainnet diagnostics for the Monad Metropolis Hackathon. Target chain ID **143**. Deadline: October 14, 2026, 04:59 Africa/Lagos.
