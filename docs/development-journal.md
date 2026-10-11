@@ -138,3 +138,7 @@ Actual gas calls returned 0x5208 (21,000) for this example; proposed limit 1,000
 
 Limitations: production firewall quotas were not deliberately exhausted; the browser 429 is synthetic. Real Redis outage was not induced. Preview credentials remain unverified. Per-IP limits can affect shared NAT users and counters are regional; Redis enforces the aggregate budget and fails closed if unavailable. Historical blocked-attempt notes below are retained and superseded by this successful release. M5 demo recording may proceed using the reachable production application; do not claim universal gas estimates or independent consensus verification.
 
+
+
+## Pre-M5 branding - 2026-10-11
+Inspected metadata: basic title/description only, no favicon or social assets. Added a static purple/black diagnostic icon family and social card; configured canonical, Open Graph and X metadata. Preserved dashboard and diagnostic code. Added reproducible image generation and focused browser checks. All 70 existing unit tests, TypeScript, lint and production build passed. See docs/branding.md for details and the deferred minimal CLI proposal.
