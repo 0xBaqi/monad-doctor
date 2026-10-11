@@ -93,3 +93,5 @@ Public deployment still needs edge quotas and origin protection; process-local l
 
 
 Redis recovery completed (2026-10-11): corrected credentials passed the single gated attempt. Both live RPC providers and all three deployed diagnostics passed smoke tests. See [current production configuration](docs/protected-deployment.md).
+
+Branding and sharing are production-verified: [social preview](https://monad-doctor.vercel.app/social-preview.png), custom favicon, Open Graph and X metadata. See [branding notes](docs/branding.md).

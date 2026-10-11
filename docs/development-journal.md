@@ -142,3 +142,9 @@ Limitations: production firewall quotas were not deliberately exhausted; the bro
 
 ## Pre-M5 branding - 2026-10-11
 Inspected metadata: basic title/description only, no favicon or social assets. Added a static purple/black diagnostic icon family and social card; configured canonical, Open Graph and X metadata. Preserved dashboard and diagnostic code. Added reproducible image generation and focused browser checks. All 70 existing unit tests, TypeScript, lint and production build passed. See docs/branding.md for details and the deferred minimal CLI proposal.
+
+
+## Branding release verified - 2026-10-11
+Production https://monad-doctor.vercel.app now serves branding commit 168b84304b7be3919caa035e2a2cdfba314425ff (deployment dpl_CW3hzTCAukXT6QqHEA8AkkTNLYcm). Local verification: 70 unit tests, TypeScript, ESLint and production build passed. Hosted CI passed: https://github.com/0xBaqi/monad-doctor/actions/runs/38115036541 . Ten local and ten actual-production branding browser checks passed, including favicon sizes, decoded images, crawler-visible Open Graph/X metadata and mobile tab navigation. See evidence/verification/branding-local.json and branding-production.json.
+
+The unchanged deployment gate passed at 05:31:33 UTC: authenticated HTTP 200 (102 ms), 20 isolated admissions/4 exhaustion rejections, bounded concurrency 4, HTTP 429 with zero Monad RPC calls when exhausted, and simulated outage/malformed fail-closed checks. Production counters were untouched by the gate; exact credential scan passed. No firewall settings were changed. Social preview: https://monad-doctor.vercel.app/social-preview.png . Browser bookmark and social-platform caches may take time to refresh; no third-party scraper rendering is claimed. No CLI implementation has started; docs/branding.md contains a deferred small scope.

@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-11T05:31:33.422Z",
+  "commit": "168b84304b7be3919caa035e2a2cdfba314425ff",
+  "deploymentId": "dpl_CW3hzTCAukXT6QqHEA8AkkTNLYcm",
+  "url": "https://monad-doctor.vercel.app",
+  "status": "READY",
+  "redisGate": {
+    "httpStatus": 200,
+    "initialDurationMs": 102,
+    "admissions": 20,
+    "rejections": 4,
+    "maximumConcurrency": 4,
+    "deniedHttpStatus": 429,
+    "deniedRpcCalls": 0,
+    "simulatedOutageAndMalformedFailClosed": true,
+    "productionCountersTouched": false
+  },
+  "ci": "https://github.com/0xBaqi/monad-doctor/actions/runs/38115036541",
+  "ciStatus": "success"
+}
