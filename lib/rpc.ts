@@ -7,6 +7,7 @@ export type Method = typeof METHODS[number];
 export type Result<T> = { id: number; ok: true; value: T } | { id: number; ok: false; error: RpcError };
 export type Rpc = ReturnType<typeof createRpc>;
 export class BodyLimitError extends Error {}
+export class BodyTimeoutError extends Error {}
 export async function readBounded(body: ReadableStream<Uint8Array> | null, limit: number, timeoutMs = 5000): Promise<string> {
  if (!body) throw new ValidationError('Response body is missing.');
  const reader = body.getReader(), decoder = new TextDecoder('utf-8', { fatal: true });
@@ -15,7 +16,7 @@ export async function readBounded(body: ReadableStream<Uint8Array> | null, limit
  try {
   while (true) {
    const part = await reader.read();
-   if (timedOut) throw new ValidationError('Body read timed out. Retry the request.');
+   if (timedOut) throw new BodyTimeoutError('Body read timed out. Retry the request.');
    if (part.done) return text + decoder.decode();
    size += part.value.byteLength;
    if (size > limit) { void reader.cancel().catch(() => {}); throw new BodyLimitError('Body exceeds size limit.'); }
@@ -55,7 +56,7 @@ export function createRpc(provider: Provider, options: { fetcher?: typeof fetch;
    record.result = value;
    return { id, ok: true, value };
   } catch (error) {
-   if (controller.signal.aborted) return fail({ code: 'TIMEOUT', message: 'RPC timed out. Evidence is incomplete; retry or switch provider.' });
+   if (controller.signal.aborted || error instanceof BodyTimeoutError) return fail({ code: 'TIMEOUT', message: 'RPC timed out. Evidence is incomplete; retry or switch provider.' });
    if (error instanceof BodyLimitError) return fail({ code: 'TOO_LARGE', message: 'RPC response exceeded the size limit.' });
    if (error instanceof ValidationError || error instanceof SyntaxError || error instanceof TypeError && error.message.includes('encoded data')) return fail({ code: 'MALFORMED', message: 'Provider returned malformed or incomplete JSON-RPC data.' });
    return fail({ code: 'NETWORK', message: 'RPC connection failed. Check connectivity or choose another provider.' });

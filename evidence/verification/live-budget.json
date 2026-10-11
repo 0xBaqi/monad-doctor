@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-10T22:52:01.850Z",
+  "namespace": "monad-doctor:validation:da497bb2-c01e-4c30-9948-b99c8b30222c",
+  "productionCountersTouched": false,
+  "cleanup": "Test keys expire automatically (minute 60s, day 24h); no production keys read, modified or deleted.",
+  "results": [
+    {
+      "name": "configuration",
+      "passed": false,
+      "detail": "Validation stopped at this stage; sensitive upstream values and error text withheld."
+    }
+  ]
+}

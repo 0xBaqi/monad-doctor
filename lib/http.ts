@@ -1,6 +1,6 @@
 import { reserveBudget } from './budget.ts';
 import { diagnose } from './engine.ts';
-import { BodyLimitError, readBounded } from './rpc.ts';
+import { BodyLimitError, BodyTimeoutError, readBounded } from './rpc.ts';
 import { parseInput, ValidationError } from './validation.ts';
 let active = 0, windowStart = 0, windowCount = 0;
 function json(value: unknown, status = 200) { return Response.json(value, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } }); }
@@ -38,6 +38,7 @@ export async function handleDiagnostic(request: Request): Promise<Response> {
   const report = await diagnose(input);
   return json(report);
  } catch (e) {
+  if (e instanceof BodyTimeoutError) return json({error:'Request body timed out. Retry with a complete JSON request.'},408);
   if (e instanceof BodyLimitError) return json({ error: 'Request exceeds 16 KiB.' }, 413);
   if (e instanceof ValidationError) return json({ error: e.message }, 400);
   if (e instanceof TypeError && e.message.includes('encoded data')) return json({ error: 'Request body must be valid UTF-8 JSON.' }, 400);
