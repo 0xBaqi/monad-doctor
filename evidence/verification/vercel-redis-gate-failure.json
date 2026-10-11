@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-11T03:25:53.215Z",
+  "deploymentId": "dpl_G3qFPHAtgJmsXKkMcJZUWhrNg351",
+  "deploymentStatus": "ERROR",
+  "inspectorUrl": "https://vercel.com/0x-baqi/monad-doctor/G3qFPHAtgJmsXKkMcJZUWhrNg351",
+  "namespace": "monad-doctor:validation:827bfa1e-88cc-4e1c-9f40-79fe67f0223c",
+  "productionCountersTouched": false,
+  "results": [
+    {
+      "name": "Exact Redis credentials absent from source, reports, logs and client bundles",
+      "passed": true
+    },
+    {
+      "name": "authentication-and-initial-reservation",
+      "passed": false,
+      "detail": "The production reserveBudget call did not return allowed. Current sanitized logs do not distinguish configuration, authentication, transport or command failure."
+    }
+  ],
+  "notRun": [
+    "concurrent reservations",
+    "exhaustion rejection",
+    "live HTTP denial check",
+    "production browser acceptance"
+  ],
+  "source": "Actual Vercel build logs retrieved with vercel inspect --logs; no simulated success."
+}

@@ -37,3 +37,15 @@ The Vercel CLI sign-in check succeeded using NODE_USE_SYSTEM_CA=1 after a certif
 ## M4.5 superseding deployment configuration
 
 See [protected deployment setup](protected-deployment.md). The API now requires shared Redis admission in production and on Vercel. The earlier no-environment-variable statement applies only to local development. The verified 0x-baqi Hobby project monad-doctor exists and its per-IP API firewall rule is published (6 requests / 60 seconds). No app deployment has occurred. Global limiter credentials, live atomicity verification, GitHub login/publication and hosted CI remain pending.
+
+## Release attempt ? 2026-10-11 (blocked)
+
+Public repository: https://github.com/0xBaqi/monad-doctor . Reviewed history was pushed normally. Hosted Validate run https://github.com/0xBaqi/monad-doctor/actions/runs/38108185671 passed for e584ba8538bdda4ad0c17b6315f28446e4bd3470. Local verification: 59 tests, TypeScript, ESLint and production build passed.
+
+Vercel project remains 0x-baqi/monad-doctor on Hobby, with the live API firewall rule at six requests per 60 seconds per IP. Production Redis URL/token are Sensitive; Preview has neither and therefore fails closed. Sensitive values cannot be pulled into the local validator. The Vercel build gate runs the isolated validation server-side before publication.
+
+Deployment dpl_G3qFPHAtgJmsXKkMcJZUWhrNg351 failed the gate at 2026-10-11T03:25:53Z. Next.js compilation passed and exact Redis values were absent from scanned source, evidence/logs and client bundles. The first real reserveBudget call did not return allowed. The sanitized log does not identify whether configuration, authentication, network transport or Redis command execution caused it; no credential defect or provider outage is asserted. See evidence/verification/vercel-redis-gate-failure.json. No production counters were touched; only the UUID test namespace was selected. Concurrent/exhaustion checks and deployed browser acceptance did not run.
+
+No working production URL is claimed. The generated deployment URL belongs to an ERROR deployment, not a released application. Per user instruction, no second live Redis attempt or deployment was made after this failure. No paid features, signing or transactions were used.
+
+Next gate: diagnose the first reservation with safe metadata (configuration-validity booleans, HTTP status, timeout/error category; never raw response text or credentials), then verify isolated concurrency/exhaustion before release. Check the dedicated database uses the correct HTTPS REST endpoint and write-capable token, with no accidental whitespace; the present evidence does not prove these are wrong. Keep Vercel variables Sensitive. Preview configuration can be added separately when needed. M5 submission readiness is blocked on the shared-limiter validation and actual production acceptance.

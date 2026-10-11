@@ -2,9 +2,9 @@
 
 Find and fix Monad integration problems before they reach production.
 
-M4.5 protected deployment preparation is in progress. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
+M4.5 release is blocked at live Redis validation. [Public source](https://github.com/0xBaqi/monad-doctor) and [hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38108185671) are available; there is no working production deployment. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
 
-M3 release candidate: **51 unit tests, 10 browser checks, TypeScript, lint and production build passed locally**. CI is configured; public deployment is not performed.
+Current release candidate: **59 unit tests, TypeScript, lint and production build passed locally; hosted CI passed**. The Vercel build gate rejected the first live Redis reservation. Production acceptance has not run. See [verification](docs/verification.md).
 
 Read-only Monad Mainnet diagnostics for the Monad Metropolis Hackathon. Target chain ID **143**. Deadline: October 14, 2026, 04:59 Africa/Lagos.
 
