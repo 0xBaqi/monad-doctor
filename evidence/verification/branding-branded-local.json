@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-10-11T18:44:48.408Z",
+  "base": "http://127.0.0.1:3001",
+  "checks": [
+    {
+      "name": "Document title and description",
+      "passed": true
+    },
+    {
+      "name": "Canonical and Open Graph metadata use production origin",
+      "passed": true
+    },
+    {
+      "name": "X large-image metadata",
+      "passed": true
+    },
+    {
+      "name": "Tab and bookmark ICO contains 16, 32 and 48px images",
+      "passed": true
+    },
+    {
+      "name": "Browser decodes /icon.svg",
+      "passed": true
+    },
+    {
+      "name": "Browser decodes /icon-192.png",
+      "passed": true
+    },
+    {
+      "name": "Browser decodes /apple-touch-icon.png",
+      "passed": true
+    },
+    {
+      "name": "Browser decodes /social-preview.png",
+      "passed": true
+    },
+    {
+      "name": "All diagnostic tabs and mobile layout preserved",
+      "passed": true
+    },
+    {
+      "name": "Metadata is present in crawler HTML without JavaScript",
+      "passed": true
+    }
+  ],
+  "limitations": "Browser resource decoding and icon declarations verified. Existing bookmark caches and external social-platform caches can refresh later; no platform-side preview scrape claimed."
+}

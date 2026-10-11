@@ -1,5 +1,7 @@
 # Protected deployment setup (M4.5)
 
+Current public URL: https://monad-doctor.baronal.xyz . The Vercel URL https://monad-doctor.vercel.app remains a fallback. Earlier release URLs and evidence below are retained as historical observations.
+
 ## Current production release - 2026-10-11
 
 Live application: https://monad-doctor.vercel.app . Deployed source commit: 4075ddfe666fb8d4bbd3e7d3cfc9d92debc1094f. [Hosted CI passed](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827): 70 deterministic tests, TypeScript, ESLint and production build.

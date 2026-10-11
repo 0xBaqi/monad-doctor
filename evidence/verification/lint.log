@@ -2,3 +2,15 @@
 > monad-doctor@0.1.0 lint
 > eslint .
 
+
+C:\Users\NURUDEEN\Projects\monad-doctor\demo\scripts\assemble.mjs
+  14:58  warning  'after' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\NURUDEEN\Projects\monad-doctor\demo\scripts\record-tail.mjs
+  2:28  warning  'mkdir' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\NURUDEEN\Projects\monad-doctor\demo\scripts\record.mjs
+  2:28  warning  'mkdir' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+

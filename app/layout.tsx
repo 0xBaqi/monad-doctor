@@ -3,7 +3,7 @@ import './globals.css';
 const title = 'Monad Doctor | Monad integration diagnostics';
 const description = 'Find and fix Monad integration problems before they reach production. Read-only RPC, gas-limit and transaction lifecycle diagnostics with evidence and actionable fixes.';
 export const metadata: Metadata = {
- metadataBase: new URL('https://monad-doctor.vercel.app'),
+ metadataBase: new URL('https://monad-doctor.baronal.xyz'),
  title, description, applicationName: 'Monad Doctor',
  alternates: { canonical: '/' },
  icons: {

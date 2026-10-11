@@ -1,5 +1,7 @@
 # Branding and sharing
 
+Current public URL: https://monad-doctor.baronal.xyz . The Vercel URL https://monad-doctor.vercel.app remains a fallback. Earlier release URLs and evidence below are retained as historical observations.
+
 The existing lavender dashboard remains unchanged. A purple/black diagnostic cross with a terminal cursor identifies the app in tabs and bookmarks. public/icon.svg is the vector source; scripts/generate-branding.mjs renders the 16/32/48px ICO, 192px PNG, 180px Apple-touch icon and 1200x630 social-preview.png using the existing Playwright development dependency. No new dependencies or remote font requests.
 
 app/layout.tsx defines the title, description, production canonical URL, Open Graph website metadata and X summary_large_image card, including descriptive image alt text. Metadata follows the [Next.js Metadata API](https://nextjs.org/docs/app/api-reference/functions/generate-metadata). No invented social account handles.

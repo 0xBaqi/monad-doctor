@@ -2,7 +2,7 @@
 
 Find and fix Monad integration problems before they reach production.
 
-Live: **https://monad-doctor.vercel.app**. [Public source](https://github.com/0xBaqi/monad-doctor) and [passing hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827). See [deployment evidence](docs/verification.md) and [demo storyboard](docs/demo.md).
+Live: **https://monad-doctor.baronal.xyz**. Fallback: https://monad-doctor.vercel.app. [Public source](https://github.com/0xBaqi/monad-doctor) and [passing hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827). See [deployment evidence](docs/verification.md) and [demo storyboard](docs/demo.md).
 
 Verified release: **70 unit tests, TypeScript, ESLint and production build passing; 12 production browser checks passed across two runs**. Redis authentication, atomic concurrency, exhaustion and fail-closed validation passed before publication.
 
@@ -94,4 +94,4 @@ Public deployment still needs edge quotas and origin protection; process-local l
 
 Redis recovery completed (2026-10-11): corrected credentials passed the single gated attempt. Both live RPC providers and all three deployed diagnostics passed smoke tests. See [current production configuration](docs/protected-deployment.md).
 
-Branding and sharing are production-verified: [social preview](https://monad-doctor.vercel.app/social-preview.png), custom favicon, Open Graph and X metadata. See [branding notes](docs/branding.md).
+Branding and sharing are production-verified: [social preview](https://monad-doctor.baronal.xyz/social-preview.png), custom favicon, Open Graph and X metadata. See [branding notes](docs/branding.md).
