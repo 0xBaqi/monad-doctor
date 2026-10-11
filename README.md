@@ -90,3 +90,6 @@ Each finding now includes expandable verification guidance. Sharing exports use 
 GitHub Actions runs a lockfile install (lifecycle scripts disabled), TypeScript, ESLint, synthetic unit tests and the production build on Node 24.18.0. No live RPC or user secrets are needed. Run npm ci --ignore-scripts then npm run verify to reproduce locally. npm run live:smoke separately performs only three health RPC requests per approved provider. Hosted CI cannot be claimed passed until the repository is pushed and Actions runs. No remote is created automatically.
 
 Public deployment still needs edge quotas and origin protection; process-local limits do not aggregate across serverless instances. No deployment is included in M3.
+
+
+Redis recovery (2026-10-11): publication remains blocked by an observed Upstash HTTP 401 (114 ms). Local verification passes with 70 tests. See [recovery evidence and setup steps](docs/protected-deployment.md#redis-gate-recovery---2026-10-11). No working production deployment is claimed.

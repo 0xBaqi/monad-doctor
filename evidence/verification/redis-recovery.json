@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-10-11T03:51:30.587Z",
+  "deploymentId": "dpl_2oCLn5erm4fGjEca9kqksSAFqRvB",
+  "deploymentStatus": "ERROR",
+  "inspectorUrl": "https://vercel.com/0x-baqi/monad-doctor/2oCLn5erm4fGjEca9kqksSAFqRvB",
+  "productionCountersTouched": false,
+  "diagnostics": [
+    {
+      "category": "http_authentication",
+      "httpStatus": 401,
+      "durationMs": 114
+    }
+  ],
+  "credentialLeakScan": "passed",
+  "attemptsThisRecovery": 1,
+  "notRun": [
+    "concurrent reservations",
+    "exhaustion rejection",
+    "production acceptance"
+  ],
+  "source": "Actual Vercel build-gate output. No raw response, endpoint or token recorded."
+}

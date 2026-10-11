@@ -1,12 +1,14 @@
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {mkdir,writeFile,readFile,readdir} from 'node:fs/promises';
-import {reserveBudget} from '../lib/budget.ts';
+import {reserveBudget, type BudgetDiagnostic} from '../lib/budget.ts';
 import {handleDiagnostic} from '../lib/http.ts';
 const namespace='monad-doctor:validation:'+randomUUID();
 const endpoint=process.env.UPSTASH_REDIS_REST_URL,token=process.env.UPSTASH_REDIS_REST_TOKEN;
 const results:{name:string;passed:boolean;detail?:string}[]=[];
 const nativeFetch=globalThis.fetch;
+const diagnostics: BudgetDiagnostic[]=[];
+const observe=(value:BudgetDiagnostic)=>{diagnostics.push(value);};
 let stage='configuration';
 const env={...process.env,NODE_ENV:'production'};
 const isolated:typeof fetch=async(url,init)=>{
@@ -16,15 +18,15 @@ const isolated:typeof fetch=async(url,init)=>{
 };
 async function inspectFiles(dir:string){for(const entry of await readdir(dir,{withFileTypes:true})){const p=dir+'/'+entry.name;if(entry.isDirectory())await inspectFiles(p);else {const data=await readFile(p);assert.ok(!data.includes(Buffer.from(token!)));assert.ok(!data.includes(Buffer.from(endpoint!)));}}}
 try {
- if(!endpoint||!token){results.push({name:'Required environment presence',passed:false,detail:JSON.stringify({urlPresent:Boolean(endpoint),tokenPresent:Boolean(token)})});throw new Error('Missing configuration');}stage='credential-leak-scan';
+ if(!endpoint||!token){await reserveBudget(env,isolated,observe);results.push({name:'Required environment presence',passed:false,detail:JSON.stringify({urlPresent:Boolean(endpoint),tokenPresent:Boolean(token)})});throw new Error('Missing configuration');}stage='credential-leak-scan';
  await inspectFiles('.next/static');await inspectFiles('evidence');
  async function scanSource(dir:string){for(const entry of await readdir(dir,{withFileTypes:true})){if(['node_modules','.next','.git','.vercel','.qa'].includes(entry.name)||entry.name.startsWith('.env'))continue;const path=dir+'/'+entry.name;if(entry.isDirectory())await scanSource(path);else{const data=await readFile(path);assert.ok(!data.includes(Buffer.from(token!)));assert.ok(!data.includes(Buffer.from(endpoint!)));}}}
  await scanSource('.');
  results.push({name:'Exact Redis credentials absent from source, reports, logs and client bundles',passed:true});
  stage='authentication-and-initial-reservation';const started=Date.now();
- assert.deepEqual(await reserveBudget(env,isolated),{status:'allowed'});results.push({name:'Actual Redis authenticated and accepted first isolated reservation',passed:true});
+ assert.deepEqual(await reserveBudget(env,isolated,observe),{status:'allowed'});results.push({name:'Actual Redis authenticated and accepted first isolated reservation',passed:true});
  stage='concurrent-reservations';const admissions=[];
- for(let n=0;n<23;n+=4){const batch=await Promise.all(Array.from({length:Math.min(4,23-n)},()=>reserveBudget(env,isolated)));admissions.push(...batch);}
+ for(let n=0;n<23;n+=4){const batch=await Promise.all(Array.from({length:Math.min(4,23-n)},()=>reserveBudget(env,isolated,observe)));admissions.push(...batch);}
  assert.ok(Date.now()-started<55000);assert.equal(admissions.filter(a=>a.status==='allowed').length,19);assert.equal(admissions.filter(a=>a.status==='exhausted').length,4);assert.equal(admissions.filter(a=>a.status==='unavailable').length,0);
  results.push({name:'Atomic shared quota: 20 total admissions and 4 rejections, concurrency bounded at 4',passed:true});
  stage='denied-http-no-rpc';const previous={NODE_ENV:process.env.NODE_ENV};Object.assign(process.env,{NODE_ENV:'production'});let outbound=0;
@@ -35,4 +37,4 @@ try {
  results.push({name:'Simulated outages and malformed replies fail closed using production configuration',passed:true});
  stage='complete';
 }catch {results.push({name:stage,passed:false,detail:'Validation stopped at this stage; sensitive upstream values and error text withheld.'});process.exitCode=1;}
-finally{globalThis.fetch=nativeFetch;const dir='evidence/verification';await mkdir(dir,{recursive:true});const report={checkedAt:new Date().toISOString(),namespace,productionCountersTouched:false,cleanup:'Test keys expire automatically (minute 60s, day 24h); no production keys read, modified or deleted.',results};await writeFile(dir+'/live-budget.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));}
+finally{globalThis.fetch=nativeFetch;const dir='evidence/verification';await mkdir(dir,{recursive:true});const report={checkedAt:new Date().toISOString(),namespace,productionCountersTouched:false,diagnostics,cleanup:'Test keys expire automatically (minute 60s, day 24h); no production keys read, modified or deleted.',results};await writeFile(dir+'/live-budget.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));}
