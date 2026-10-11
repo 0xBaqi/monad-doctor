@@ -1,5 +1,18 @@
 # Protected deployment setup (M4.5)
 
+## Current production release - 2026-10-11
+
+Live application: https://monad-doctor.vercel.app . Deployed source commit: 4075ddfe666fb8d4bbd3e7d3cfc9d92debc1094f. [Hosted CI passed](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827): 70 deterministic tests, TypeScript, ESLint and production build.
+
+After the owner corrected the matching Production REST credentials, one gated deployment attempt passed at 05:06:07 UTC. Authentication returned HTTP 200 in 101 ms. Isolated concurrency (maximum 4) admitted 20 reservations and rejected 4; the exhausted HTTP boundary returned 429 with zero Monad RPC calls. Injected outage/malformed replies failed closed. Exact credential scanning passed. Production counters were not touched by gate tests. The existing live firewall remains enabled at 6 requests/60 seconds/IP; the shared budget and all API safeguards are unchanged. No paid resources were enabled. See [gate evidence](../evidence/verification/redis-release-gate.json).
+
+Production acceptance passed 12 checks across two runs: desktop/keyboard navigation, primary RPC health, actual JSON download, gas estimate, re-estimated correction, 390px mobile layout, successful transaction inclusion/execution/finality, unknown transaction, malformed hash HTTP 400, secondary RPC health, synthetic 429 UI handling, and no browser JavaScript errors. The initial browser script stopped after 9 passes because its exact provider-label locator included the wrong accessible name; the locator was corrected and only the remaining 3 checks ran. This was a harness failure, not an upstream timeout. [Initial acceptance](../evidence/verification/production-acceptance.json) and [remaining checks](../evidence/verification/production-remaining.json) preserve that distinction.
+
+Actual gas calls returned 0x5208 (21,000) for this example; proposed limit 1,000,000 then 21,000. No transaction was submitted and no actual fee saving is claimed. Estimates remain state-dependent. Both live providers succeeded in this sample; this does not establish that earlier intermittent failures are resolved. Machine-validated sanitized exports for gas and transaction reports accompany the downloaded health report in evidence/live/production-2026-10-11T05-10-35-199Z/.
+
+Limitations: production firewall quotas were not deliberately exhausted; the browser 429 is synthetic. Real Redis outage was not induced. Preview credentials remain unverified. Per-IP limits can affect shared NAT users and counters are regional; Redis enforces the aggregate budget and fails closed if unavailable. Historical blocked-attempt notes below are retained and superseded by this successful release. M5 demo recording may proceed using the reachable production application; do not claim universal gas estimates or independent consensus verification.
+
+
 ## Verified destinations and blockers
 
 Vercel CLI user: adewaleagboola444-8813. Scope 0x-baqi, display name 0xBaqi, role OWNER, Hobby plan. A new monad-doctor project was created only after confirming it was absent. No unrelated project was modified and no application deployment has occurred. The CLI linked this checkout and generated ignored .vercel metadata and an ignored .env.local OIDC credential; neither belongs in Git or reports. Do not print that file.

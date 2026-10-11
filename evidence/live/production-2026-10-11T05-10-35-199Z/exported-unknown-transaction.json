@@ -1,0 +1,137 @@
+{
+  "exportVersion": 1,
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provenance": "Actual RPC observations when collected by the app; deterministic fixtures must be labeled separately. Calldata omitted for sharing.",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-11T05:12:12.818Z",
+  "completedAt": "2026-10-11T05:12:12.899Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ],
+      "explanation": {
+        "checked": "The selected provider chain ID was compared with Monad Mainnet 143 (0x8f).",
+        "unknown": "Chain identity alone does not establish provider freshness, correct execution, or finality.",
+        "why": "A response from the wrong network cannot diagnose a Monad Mainnet integration.",
+        "verify": "After correcting network configuration, rerun RPC health. Confirm network.mainnet and inspect latest/finalized evidence; failed requests remain unknown."
+      }
+    },
+    {
+      "id": "tx.outcome-unknown",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "Transaction outcome is unknown",
+      "detail": "No usable receipt was returned. Monad does not return pending transactions through eth_getTransactionByHash. Missing data cannot distinguish pending, dropped, unknown, or unavailable history.",
+      "nextStep": "Confirm the hash and network, then retry. Do not mark this transaction failed solely because the lookup is null.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ],
+      "explanation": {
+        "checked": "Transaction, receipt, finalized-head and available block-membership evidence were evaluated separately.",
+        "unknown": "Null data does not establish pending, dropped or failed status. Receipt failure does not identify its cause. Finality is provider-attested, not an independent consensus proof.",
+        "why": "Inclusion, execution success and consensus finality answer different questions; a failed transaction can still be finalized.",
+        "verify": "Rerun the same public hash and provider, then compare the other provider if evidence conflicts. Check tx.inclusion, tx.execution and tx.finalized separately. Retrying cannot change an already finalized execution failure."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T05:12:12.818Z",
+      "durationMs": 26,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-11T05:12:12.844Z",
+      "durationMs": 32,
+      "result": null
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-11T05:12:12.876Z",
+      "durationMs": 12,
+      "result": null
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T05:12:12.888Z",
+      "durationMs": 11,
+      "result": {
+        "number": "0x6b2cfe5",
+        "hash": "0x9c1722536a10ff73d24f69d8ad4b2c9f5c4e80bd50cdca994c3690b2e16ccf86",
+        "parentHash": "0xf8edd46c09796bb8b1bfc258bd98516541b829f0dc7da850e59d264c53f87ab4",
+        "timestamp": "0x6acb1aab",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x36a40a642f7f3b9264c8272dbac95ea04e99b5ea73e8ae6cbb95255ef37d7979",
+          "0x55f20afa4adba3bd5b25390da1d589d258d78ea4662f5d2b8976755ede4a4e7e",
+          "0x3bbf355c5c5b3caeb87beb2911926d9f5b8f7eee51a805bcc96af2dfa3f850b8",
+          "0xeb5f629d5739456dff10ebd1eca7d21616911e06fcdff5855b2c2c530ecf9ae6",
+          "0xfb11ac5182e9b25eacb50b0041448654d9813e667f6f84bdf40091efd6fe2f27",
+          "0x1d4e6e933c74e1cbddcec7103e55f7b812bd21bd9c4ecccf1c18d9276fa8ef0c",
+          "0xaeff7f4a6c60d97c824567ce72e126ea7f8d9f4ef525542b767cc104ef291997",
+          "0x61373e8011653638a7ef1cad9f7ba665df65f22a79b76c3dc382ba126359cdf4",
+          "0x67f3a32857b3469f2940384d9d7525602e987b78d3e32e0a90cc0186c18a68e2",
+          "0xefa60297f6164273d1936513d8a683e71bad3aca7644b815ca9f9b593bcbc3a8",
+          "0x86f464f763a0cb099ab79cd745164041689d01e32af6bd5191826623ef37de28",
+          "0xee3d1401d3cd7024dd44a4da82c84a36df62642187b26cf1e35f5bba159f5734",
+          "0x59d1777ef51ffc07d29d899f623d1fbfd3bc08672e7808fbc3a2b82610ecb120",
+          "0x9853c2236c5a0d8c2edcba2bacaf0e73f082e50215cde4743263339cb1817954",
+          "0x137acd2a9bcc9c6d973620fbd1bc1372866d5ffaecfb87ba2bea8e441a14d459",
+          "0xb9d507e2d16913d69bd527badb309f58f3e22f09c819907191b8963fac40eadd",
+          "0xdae7c319fdc02f3039cd52743837e9a817aa8fbc519c17891aa109eed1b9834d",
+          "0x4f997b9622716772f5191093943f4be34a5c340329352addd6ab4f574efedb11"
+        ]
+      }
+    }
+  ],
+  "reproduction": {
+    "steps": [
+      "Select the recorded mode and provider.",
+      "Re-enter the sanitized inputs; supply calldata locally for gas analysis.",
+      "Run again and compare rule IDs, evidence and timestamps. Changed state can change results."
+    ],
+    "calldataIncluded": false,
+    "containsPublicAddresses": true
+  }
+}

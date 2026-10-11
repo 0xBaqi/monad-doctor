@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-11T05:06:07.401Z",
+  "source": "Actual Vercel build-gate output",
+  "deploymentId": "dpl_CThxCHkeYrU7zaU2osWE4FTQB6yc",
+  "productionUrl": "https://monad-doctor.vercel.app",
+  "deploymentState": "READY",
+  "commit": "4075ddfe666fb8d4bbd3e7d3cfc9d92debc1094f",
+  "attempts": 1,
+  "productionCountersTouched": false,
+  "namespace": "monad-doctor:validation:b95c0467-2067-4353-9591-0ae441f16576",
+  "authentication": {
+    "category": "allowed",
+    "httpStatus": 200,
+    "durationMs": 101
+  },
+  "concurrency": {
+    "maximum": 4,
+    "allowed": 20,
+    "exhausted": 4,
+    "unavailable": 0
+  },
+  "exhaustedHttpBoundary": {
+    "status": 429,
+    "monadRpcCalls": 0
+  },
+  "syntheticOutageAndMalformedFailClosed": true,
+  "exactCredentialLeakScan": "passed",
+  "firewall": {
+    "status": "Enabled",
+    "requests": 6,
+    "seconds": 60,
+    "scope": "per IP"
+  },
+  "ci": {
+    "result": "success",
+    "url": "https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827"
+  },
+  "limits": [
+    "Production firewall quota was not deliberately exhausted.",
+    "Outage and malformed-response tests used injected synthetic failures, not a real Redis outage.",
+    "Prior failure evidence is retained."
+  ]
+}

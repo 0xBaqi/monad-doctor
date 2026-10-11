@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-10-11T05:16:09.159Z",
+  "checks": [
+    {
+      "name": "Live secondary RPC health on production",
+      "passed": true
+    },
+    {
+      "name": "Synthetic 429 handling in deployed UI; not a live firewall exhaustion claim",
+      "passed": true
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "limitation": "Original script stopped at an incorrect exact label locator after 9 passing checks. This run corrects the locator and runs only remaining checks."
+}

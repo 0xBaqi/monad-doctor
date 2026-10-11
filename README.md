@@ -2,9 +2,9 @@
 
 Find and fix Monad integration problems before they reach production.
 
-M4.5 release is blocked at live Redis validation. [Public source](https://github.com/0xBaqi/monad-doctor) and [hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38108185671) are available; there is no working production deployment. See [demo storyboard](docs/demo.md) and [Vercel deployment requirements](docs/deployment.md). No public URL is claimed.
+Live: **https://monad-doctor.vercel.app**. [Public source](https://github.com/0xBaqi/monad-doctor) and [passing hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827). See [deployment evidence](docs/verification.md) and [demo storyboard](docs/demo.md).
 
-Current release candidate: **59 unit tests, TypeScript, lint and production build passed locally; hosted CI passed**. The Vercel build gate rejected the first live Redis reservation. Production acceptance has not run. See [verification](docs/verification.md).
+Verified release: **70 unit tests, TypeScript, ESLint and production build passing; 12 production browser checks passed across two runs**. Redis authentication, atomic concurrency, exhaustion and fail-closed validation passed before publication.
 
 Read-only Monad Mainnet diagnostics for the Monad Metropolis Hackathon. Target chain ID **143**. Deadline: October 14, 2026, 04:59 Africa/Lagos.
 
@@ -92,4 +92,4 @@ GitHub Actions runs a lockfile install (lifecycle scripts disabled), TypeScript,
 Public deployment still needs edge quotas and origin protection; process-local limits do not aggregate across serverless instances. No deployment is included in M3.
 
 
-Redis recovery (2026-10-11): publication remains blocked by an observed Upstash HTTP 401 (114 ms). Local verification passes with 70 tests. See [recovery evidence and setup steps](docs/protected-deployment.md#redis-gate-recovery---2026-10-11). No working production deployment is claimed.
+Redis recovery completed (2026-10-11): corrected credentials passed the single gated attempt. Both live RPC providers and all three deployed diagnostics passed smoke tests. See [current production configuration](docs/protected-deployment.md).

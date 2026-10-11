@@ -1,0 +1,232 @@
+{
+  "exportVersion": 1,
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provenance": "Actual RPC observations when collected by the app; deterministic fixtures must be labeled separately. Calldata omitted for sharing.",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-11T05:11:59.901Z",
+  "completedAt": "2026-10-11T05:12:00.011Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ],
+      "explanation": {
+        "checked": "The selected provider chain ID was compared with Monad Mainnet 143 (0x8f).",
+        "unknown": "Chain identity alone does not establish provider freshness, correct execution, or finality.",
+        "why": "A response from the wrong network cannot diagnose a Monad Mainnet integration.",
+        "verify": "After correcting network configuration, rerun RPC health. Confirm network.mainnet and inspect latest/finalized evidence; failed requests remain unknown."
+      }
+    },
+    {
+      "id": "tx.execution",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Receipt reports successful execution",
+      "detail": "Receipt status is 0x1 at block 112381781. Execution outcome and consensus finality are separate. Failure cause is not determined from status alone.",
+      "nextStep": "Check finality below before relying on settlement.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ],
+      "explanation": {
+        "checked": "Transaction, receipt, finalized-head and available block-membership evidence were evaluated separately.",
+        "unknown": "Null data does not establish pending, dropped or failed status. Receipt failure does not identify its cause. Finality is provider-attested, not an independent consensus proof.",
+        "why": "Inclusion, execution success and consensus finality answer different questions; a failed transaction can still be finalized.",
+        "verify": "Rerun the same public hash and provider, then compare the other provider if evidence conflicts. Check tx.inclusion, tx.execution and tx.finalized separately. Retrying cannot change an already finalized execution failure."
+      }
+    },
+    {
+      "id": "tx.inclusion",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Block inclusion confirmed by RPC",
+      "detail": "Receipt block hash and transaction membership match the block lookup. Inclusion is separate from execution and finality.",
+      "nextStep": "Review execution and finality separately.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ],
+      "explanation": {
+        "checked": "Transaction, receipt, finalized-head and available block-membership evidence were evaluated separately.",
+        "unknown": "Null data does not establish pending, dropped or failed status. Receipt failure does not identify its cause. Finality is provider-attested, not an independent consensus proof.",
+        "why": "Inclusion, execution success and consensus finality answer different questions; a failed transaction can still be finalized.",
+        "verify": "Rerun the same public hash and provider, then compare the other provider if evidence conflicts. Check tx.inclusion, tx.execution and tx.finalized separately. Retrying cannot change an already finalized execution failure."
+      }
+    },
+    {
+      "id": "tx.finalized",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized according to this RPC",
+      "detail": "Receipt block hash and transaction membership match the block lookup, and its height is at or below the sampled finalized head. This relies on the selected RPC; it is not an independently verified consensus proof.",
+      "nextStep": "Use finalized evidence for settlement. This check does not establish the separate Verified execution-root state.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ],
+      "explanation": {
+        "checked": "Transaction, receipt, finalized-head and available block-membership evidence were evaluated separately.",
+        "unknown": "Null data does not establish pending, dropped or failed status. Receipt failure does not identify its cause. Finality is provider-attested, not an independent consensus proof.",
+        "why": "Inclusion, execution success and consensus finality answer different questions; a failed transaction can still be finalized.",
+        "verify": "Rerun the same public hash and provider, then compare the other provider if evidence conflicts. Check tx.inclusion, tx.execution and tx.finalized separately. Retrying cannot change an already finalized execution failure."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T05:11:59.901Z",
+      "durationMs": 28,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+      ],
+      "observedAt": "2026-10-11T05:11:59.929Z",
+      "durationMs": 28,
+      "result": {
+        "hash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+        "blockHash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "blockNumber": "0x6b2cf55",
+        "gas": "0x0",
+        "from": "0x6f49a8f621353f12378d0046e7d7e4b9b249dc9e",
+        "to": "0x0000000000000000000000000000000000001000"
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+      ],
+      "observedAt": "2026-10-11T05:11:59.957Z",
+      "durationMs": 31,
+      "result": {
+        "transactionHash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+        "blockHash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "blockNumber": "0x6b2cf55",
+        "status": "0x1",
+        "gasUsed": "0x0",
+        "effectiveGasPrice": "0x0"
+      }
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T05:11:59.988Z",
+      "durationMs": 12,
+      "result": {
+        "number": "0x6b2cfbb",
+        "hash": "0x6f22ec7a55ac2d0b0c18c347de9a78ce90124b40e00731cfc1ad1bae25a26e7b",
+        "parentHash": "0xe35aa7c9bcdc74eaa6e22b885e09e380056055796855db349133b8d3641642af",
+        "timestamp": "0x6acb1a9f",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x15051783d2f805825690e193d47ff2415851943c7949396ef5190d61bd36c6a5",
+          "0x5163b5e6a529408fef730f1ce92b0b5bcdf9c3ab8ce05361d838649a32911d15",
+          "0xebdfc1f62d6bda08012cc6be985fd47bacde2a478d08e8e02328c77ebcf05902",
+          "0xeca7d9b2786b73cf2e2a1f8d263d648a98e7e519588f748f656f075e11e69ec8",
+          "0x57a6fdedd85c026cc5a082ca5836c8e01ca4551848ca0b8c466c7b2880f74472",
+          "0xc7d52f2d7dc4455a12400f1813e75c25be9a8883e240d12eb95811bf55f44f4e",
+          "0x6ead543801aaff4ff9bf33ad26dc5fe96e4e892235c81d3397694ce81db638a9",
+          "0x06b3a70579c8031bcddc1f5032dd5250a82e7b214b17e60c49b4a833f70bbf60",
+          "0xfb3b4ca65186417a14cc479f16cc41db18c4f704457559abb2a49c30fdb5e0e3",
+          "0x10b2611b61ff69acafdcd0369f89e2722114f880f4727368f61799ff3772721c",
+          "0xbad2578805d5eaf2e9d1b0dbd17aca973cd0f6fc20e517f056f19974e83d262f",
+          "0x67e25c17adcfb100c9ff9a81a487f052183e464f835e35757fccf36e8fad5773",
+          "0xed1a7c52f4f1c122fb320bcc93d827635554c79bab42722857ebb19c264e0c13",
+          "0xeb1ba3bb565d2230918bac07275d5c9a091eb108d10e9549eec878d60f910de8",
+          "0x381fbeb60a236a53f69324ac3cf1af33cb5222fba739220cec34793cddef638b"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "0x6b2cf55",
+        false
+      ],
+      "observedAt": "2026-10-11T05:12:00.000Z",
+      "durationMs": 11,
+      "result": {
+        "number": "0x6b2cf55",
+        "hash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "parentHash": "0x335e98eba7e9428cbe27727422ec59de3f8f83b156ceb83b59d37a2d9ac836b7",
+        "timestamp": "0x6acb1a80",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+          "0xd53245e0ece20ef6ddf7cebda7951efca3a27106cdb49d5ad4d7dafb1ca7e8f3",
+          "0x4a792efe46069d1e1fd30267354bf7257bb0f4a52ee3368618a8e5bc688eefc3",
+          "0x60368cf00c26f24f4fa3aaf3281f52ff9f1cc89b9b9db2d4064c6170690fdffc",
+          "0xe1e4cc41b4644b1a361d14e1110df0abcf76684e3e193797a0e290123dd82ab6",
+          "0xb634f8a865effd5578b6f15984792b79ac0cf02037ebcc0d932bc2fa0dd51961",
+          "0x1ef8397b2e8ff6edcf52f7446bf9e3e357709ce1f3e99b51cad0a49c809ce4e5",
+          "0x4a2b26d237cb7c14b3a5174800095fcada6691107132e6878ef4c75a8fdbece5",
+          "0x043be2f9c45094d19915a5fb1185b1c9c2dc4509a96e162a22096564b6dfb58e",
+          "0x1e3718d12360a437a897601df1178f88ba6bb3ae1fb0f3c61997a2d4e91d60f5",
+          "0xa4e3efcad8525b5b593d664f6ed7c27db7919621a9f055dadd25825ac3fda7e5",
+          "0xc346e58a05a736f6e1ef418c93a49ecd22eea135e0bc96a85534b60bec72483c",
+          "0xe324216d8849cdc05b035105574cfb642c57e58cc0428afcab98a3969105b9b9",
+          "0xef105a154f80ef8614cf1e9d684c84e210c734e5e458fa83c1d2752e9ba14cb2",
+          "0xe1a954ef412cc1370d531a2461f6ce527442a2e43e56d5bc5111a7fe0265ee47"
+        ]
+      }
+    }
+  ],
+  "reproduction": {
+    "steps": [
+      "Select the recorded mode and provider.",
+      "Re-enter the sanitized inputs; supply calldata locally for gas analysis.",
+      "Run again and compare rule IDs, evidence and timestamps. Changed state can change results."
+    ],
+    "calldataIncluded": false,
+    "containsPublicAddresses": true
+  }
+}
