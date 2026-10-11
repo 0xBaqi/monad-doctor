@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-11T19:00:21.602Z",
+  "base": "https://monad-doctor.vercel.app",
+  "checks": [],
+  "limitations": "This attempt does not verify fallback assets.",
+  "outcome": "Navigation timed out waiting for networkidle; no checks ran."
+}

@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-10-11T18:55:56.589Z",
+  "sourceCommit": "990eac672857cb4e611e2dc43ad755a83fa448d2",
+  "deploymentId": "dpl_8tufk8JXvUuXC6kCWXemuGWtCPww",
+  "deploymentUrl": "https://monad-doctor-d6z579vy9-0x-baqi.vercel.app",
+  "primaryUrl": "https://monad-doctor.baronal.xyz",
+  "fallbackUrl": "https://monad-doctor.vercel.app",
+  "hostedCi": {
+    "url": "https://github.com/0xBaqi/monad-doctor/actions/runs/38165174278",
+    "conclusion": "success"
+  },
+  "gate": {
+    "checkedAt": "2026-10-11T18:52:31.615Z",
+    "authentication": {
+      "category": "allowed",
+      "httpStatus": 200,
+      "durationMs": 97
+    },
+    "admitted": 20,
+    "exhausted": 4,
+    "maxConcurrency": 4,
+    "deniedHttpStatus": 429,
+    "deniedMonadRpcCalls": 0,
+    "simulatedOutageAndMalformedFailClosed": true,
+    "exactCredentialScanPassed": true,
+    "productionCountersTouched": false
+  },
+  "configurationChanges": {
+    "dns": false,
+    "firewall": false,
+    "redis": false,
+    "diagnostics": false,
+    "demo": false
+  },
+  "limitations": "Gate used an isolated expiring Redis namespace. No production quota exhaustion was attempted.",
+  "verifiedAliases": [
+    "https://monad-doctor.baronal.xyz",
+    "https://monad-doctor.vercel.app"
+  ],
+  "firewall": {
+    "ruleId": "rule_monad_doctor_diagnostic_per_ip_quota_246QC3",
+    "enabled": true,
+    "requests": 6,
+    "windowSeconds": 60,
+    "scope": "per-IP on /api/diagnose",
+    "unchanged": true
+  },
+  "productionChecks": {
+    "brandedAcceptance": 12,
+    "brandedBranding": 10,
+    "fallbackBranding": 10,
+    "fallbackHealthPassed": true
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "base": "https://monad-doctor.baronal.xyz",
+  "checkedAt": "2026-10-11T18:57:36.550Z",
+  "checks": [
+    {
+      "name": "Actual production desktop and keyboard skip navigation",
+      "passed": true
+    },
+    {
+      "name": "Live primary RPC health through deployed shared admission",
+      "passed": true
+    },
+    {
+      "name": "Validated JSON download from production UI",
+      "passed": true
+    },
+    {
+      "name": "Live gas-limit diagnostic preserves actual estimate and evidence",
+      "passed": true
+    },
+    {
+      "name": "Gas correction re-estimated without sending a transaction",
+      "passed": true
+    },
+    {
+      "name": "Production mobile report fits 390px",
+      "passed": true
+    },
+    {
+      "name": "Live sampled transaction separates inclusion execution and finality",
+      "passed": true
+    },
+    {
+      "name": "Unknown transaction remains unknown",
+      "passed": true
+    },
+    {
+      "name": "Malformed hash returns visible production 400",
+      "passed": true
+    },
+    {
+      "name": "Live secondary RPC health on production",
+      "passed": true
+    },
+    {
+      "name": "Synthetic 429 handling in deployed UI (not a live firewall claim)",
+      "passed": true
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "evidenceDir": "evidence/live/branded-2026-10-11T18-55-23-118Z",
+  "limits": "Requests paced at least 13 seconds apart. Production quotas not deliberately exhausted; live edge 429 not claimed. Synthetic 429 is intercepted in the browser only."
+}

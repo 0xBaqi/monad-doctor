@@ -1,5 +1,7 @@
 # Protected deployment setup (M4.5)
 
+Latest release: branded-domain source commit 990eac6, production deployment dpl_8tufk8JXvUuXC6kCWXemuGWtCPww. See the final branded-domain section in [verification](verification.md) for actual checks and limitations.
+
 Current public URL: https://monad-doctor.baronal.xyz . The Vercel URL https://monad-doctor.vercel.app remains a fallback. Earlier release URLs and evidence below are retained as historical observations.
 
 ## Current production release - 2026-10-11

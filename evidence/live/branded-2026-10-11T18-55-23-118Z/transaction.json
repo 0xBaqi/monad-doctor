@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-11T18:56:41.987Z",
+  "completedAt": "2026-10-11T18:56:42.095Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "tx.execution",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Receipt reports successful execution",
+      "detail": "Receipt status is 0x1 at block 112381781. Execution outcome and consensus finality are separate. Failure cause is not determined from status alone.",
+      "nextStep": "Check finality below before relying on settlement.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    },
+    {
+      "id": "tx.inclusion",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Block inclusion confirmed by RPC",
+      "detail": "Receipt block hash and transaction membership match the block lookup. Inclusion is separate from execution and finality.",
+      "nextStep": "Review execution and finality separately.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    },
+    {
+      "id": "tx.finalized",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized according to this RPC",
+      "detail": "Receipt block hash and transaction membership match the block lookup, and its height is at or below the sampled finalized head. This relies on the selected RPC; it is not an independently verified consensus proof.",
+      "nextStep": "Use finalized evidence for settlement. This check does not establish the separate Verified execution-root state.",
+      "evidence": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T18:56:41.987Z",
+      "durationMs": 27,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+      ],
+      "observedAt": "2026-10-11T18:56:42.014Z",
+      "durationMs": 32,
+      "result": {
+        "hash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+        "blockHash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "blockNumber": "0x6b2cf55",
+        "gas": "0x0",
+        "from": "0x6f49a8f621353f12378d0046e7d7e4b9b249dc9e",
+        "to": "0x0000000000000000000000000000000000001000"
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db"
+      ],
+      "observedAt": "2026-10-11T18:56:42.046Z",
+      "durationMs": 23,
+      "result": {
+        "transactionHash": "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+        "blockHash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "blockNumber": "0x6b2cf55",
+        "status": "0x1",
+        "gasUsed": "0x0",
+        "effectiveGasPrice": "0x0"
+      }
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T18:56:42.069Z",
+      "durationMs": 10,
+      "result": {
+        "number": "0x6b55002",
+        "hash": "0xf1b4273831aadd992ab0e59d6f095da49062a03f7ef1bfb78222879d48786f4a",
+        "parentHash": "0xfa28c0a461c00523e43d8f29658e2f763d89d0786541303003f690deb2a1ddd4",
+        "timestamp": "0x6acbdbe9",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xbc3dc929a5d095476ddc1f55862ec9f2ad73f0cd1c18df9c96f37ffff2f4e9a2",
+          "0x461bdb7036d566df38bc1fe81e72a99ff46cad96bff6ce9d7b718d997792218b",
+          "0x12a64006fadc9edb9087311369718a4687cf86389be93a64bdf0287e366a1750",
+          "0xaebdfe370963c32ca081d700cfbb4b4b706fb50641e79b6fe28433e6149a9a3a",
+          "0x08b1fd717716f8a97d0e030b47a3c6e36655a1adbda7d271379b66485b49cbae",
+          "0xb9331c5e842be49d72a9c1a5344ff6513d39cc9bfd90e7b4b76d0b1265b63ac6",
+          "0x526be21e9ab1c71a672ef214bce20ebc46c1c8cd09877347e4dc916858b7fe92",
+          "0x62ee85748b00aa9c7450cffa5e56d8932fc48931a767463551cbcd7e54c9b212",
+          "0xe51d6770638bf5eba6e172b94065d33737b519399dabeaf6305e51b5bec020c0",
+          "0x0a21965973d39f321803d85317a1fb717db69de7563233a6e1625ab5a51c6238",
+          "0xa922f3346f3688bfebfddf9cdd2ac6d8b7dcf80bee17ac4b2ecf4ae93b07e7d4",
+          "0xa8ee415a38afc039dcc15f5beef925e9e83c0d39b3163b06fd3f97b2aaf1593f",
+          "0x24e5d90f98e960184aaf14b2ecdc2b54dfb9fcfb7997ba510442087a8c1b3ea9",
+          "0x08a7be15090f50f103d27b5cbb62e2c489650c1003f062b82fc38271c1318196",
+          "0x762f39853204300661c9b47793f5611b2140d9a9c5c9d32f3c5f9b7d930499e1",
+          "0x35336f741abe9c254891c5b78eaaea80c36c08cec671902d96b309387271ff63",
+          "0x15c5347d27d839e1134e226c04429dbdc086821d6a8f2462a616ca7a0a8d0535",
+          "0x2df035bee32d0ce1c34711b7b4f5608d8b3435a9f8380f97dd0e52414019afed",
+          "0xb06d95b91b6d4309f29ce0e589ec8b39d04f9d1c5718db5b28a1aea1fb32dbbe",
+          "0xf400972252f9057e50f2311211bb58ef65102fbda61b3b7fdaf9cfd2a32fbdea"
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "0x6b2cf55",
+        false
+      ],
+      "observedAt": "2026-10-11T18:56:42.079Z",
+      "durationMs": 16,
+      "result": {
+        "number": "0x6b2cf55",
+        "hash": "0xeaa87a13cd370321367767c478df8f23fdaad426d2fd5987abee916809f5e8e3",
+        "parentHash": "0x335e98eba7e9428cbe27727422ec59de3f8f83b156ceb83b59d37a2d9ac836b7",
+        "timestamp": "0x6acb1a80",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x4c282c10e069e89fb73885dbb52b3aae7e5c6cfcd8026e4fe57197e9616415db",
+          "0xd53245e0ece20ef6ddf7cebda7951efca3a27106cdb49d5ad4d7dafb1ca7e8f3",
+          "0x4a792efe46069d1e1fd30267354bf7257bb0f4a52ee3368618a8e5bc688eefc3",
+          "0x60368cf00c26f24f4fa3aaf3281f52ff9f1cc89b9b9db2d4064c6170690fdffc",
+          "0xe1e4cc41b4644b1a361d14e1110df0abcf76684e3e193797a0e290123dd82ab6",
+          "0xb634f8a865effd5578b6f15984792b79ac0cf02037ebcc0d932bc2fa0dd51961",
+          "0x1ef8397b2e8ff6edcf52f7446bf9e3e357709ce1f3e99b51cad0a49c809ce4e5",
+          "0x4a2b26d237cb7c14b3a5174800095fcada6691107132e6878ef4c75a8fdbece5",
+          "0x043be2f9c45094d19915a5fb1185b1c9c2dc4509a96e162a22096564b6dfb58e",
+          "0x1e3718d12360a437a897601df1178f88ba6bb3ae1fb0f3c61997a2d4e91d60f5",
+          "0xa4e3efcad8525b5b593d664f6ed7c27db7919621a9f055dadd25825ac3fda7e5",
+          "0xc346e58a05a736f6e1ef418c93a49ecd22eea135e0bc96a85534b60bec72483c",
+          "0xe324216d8849cdc05b035105574cfb642c57e58cc0428afcab98a3969105b9b9",
+          "0xef105a154f80ef8614cf1e9d684c84e210c734e5e458fa83c1d2752e9ba14cb2",
+          "0xe1a954ef412cc1370d531a2461f6ce527442a2e43e56d5bc5111a7fe0265ee47"
+        ]
+      }
+    }
+  ]
+}

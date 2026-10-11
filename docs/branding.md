@@ -1,5 +1,7 @@
 # Branding and sharing
 
+Latest release: branded-domain source commit 990eac6, production deployment dpl_8tufk8JXvUuXC6kCWXemuGWtCPww. See the final branded-domain section in [verification](verification.md) for actual checks and limitations.
+
 Current public URL: https://monad-doctor.baronal.xyz . The Vercel URL https://monad-doctor.vercel.app remains a fallback. Earlier release URLs and evidence below are retained as historical observations.
 
 The existing lavender dashboard remains unchanged. A purple/black diagnostic cross with a terminal cursor identifies the app in tabs and bookmarks. public/icon.svg is the vector source; scripts/generate-branding.mjs renders the 16/32/48px ICO, 192px PNG, 180px Apple-touch icon and 1200x630 social-preview.png using the existing Playwright development dependency. No new dependencies or remote font requests.

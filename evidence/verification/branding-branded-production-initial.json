@@ -1,0 +1,7 @@
+{
+  "checkedAt": "2026-10-11T18:55:20.977Z",
+  "base": "https://monad-doctor.baronal.xyz",
+  "checks": [],
+  "limitations": "Initial navigation timed out after 30 seconds waiting for networkidle. No asset checks ran in this attempt. Subsequent actual-domain checks are recorded separately.",
+  "outcome": "Initial verification attempt did not pass; retained for transparency."
+}

@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-10-11T18:55:22.756Z",
+  "base": "https://monad-doctor.vercel.app",
+  "checks": [
+    {
+      "name": "Document title and description",
+      "passed": true
+    },
+    {
+      "name": "Canonical and Open Graph metadata use production origin",
+      "passed": true
+    },
+    {
+      "name": "X large-image metadata",
+      "passed": true
+    },
+    {
+      "name": "Tab and bookmark ICO contains 16, 32 and 48px images",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/favicon.ico\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    },
+    {
+      "name": "Browser decodes /icon.svg",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/icon.svg\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    },
+    {
+      "name": "Browser decodes /icon-192.png",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/icon-192.png\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    },
+    {
+      "name": "Browser decodes /apple-touch-icon.png",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/apple-touch-icon.png\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    },
+    {
+      "name": "Browser decodes /social-preview.png",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/social-preview.png\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    },
+    {
+      "name": "All diagnostic tabs and mobile layout preserved",
+      "passed": true
+    },
+    {
+      "name": "Metadata is present in crawler HTML without JavaScript",
+      "passed": false,
+      "error": "apiRequestContext.get: unable to verify the first certificate; if the root CA is installed locally, try running Node.js with --use-system-ca\nCall log:\n\u001b[2m  - → GET https://monad-doctor.vercel.app/\u001b[22m\n\u001b[2m    - user-agent: Twitterbot/1.0\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n"
+    }
+  ],
+  "limitations": "Browser metadata loaded, but Node-backed asset requests lacked the local system CA configuration. Subsequent checks used node --use-system-ca, without disabling TLS verification.",
+  "outcome": "Initial verification attempt did not pass; retained for transparency."
+}

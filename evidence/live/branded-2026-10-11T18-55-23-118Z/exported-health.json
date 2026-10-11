@@ -1,0 +1,177 @@
+{
+  "exportVersion": 1,
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provenance": "Actual RPC observations when collected by the app; deterministic fixtures must be labeled separately. Calldata omitted for sharing.",
+  "provider": "primary",
+  "mode": "health",
+  "startedAt": "2026-10-11T18:55:58.262Z",
+  "completedAt": "2026-10-11T18:55:58.355Z",
+  "input": {
+    "mode": "health",
+    "provider": "primary"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ],
+      "explanation": {
+        "checked": "The selected provider chain ID was compared with Monad Mainnet 143 (0x8f).",
+        "unknown": "Chain identity alone does not establish provider freshness, correct execution, or finality.",
+        "why": "A response from the wrong network cannot diagnose a Monad Mainnet integration.",
+        "verify": "After correcting network configuration, rerun RPC health. Confirm network.mainnet and inspect latest/finalized evidence; failed requests remain unknown."
+      }
+    },
+    {
+      "id": "rpc.latest",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Latest block is readable",
+      "detail": "Block 112545651; gas limit 150000000. Request latency: 12 ms. Latest is the proposed view, not proof of finality.",
+      "nextStep": "Use finalized for settlement; latency describes this request only.",
+      "evidence": [
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ],
+      "explanation": {
+        "checked": "Read-only RPC response availability, validated shape, or sampled block views; see the rule ID and evidence references for this check.",
+        "unknown": "A failed request cannot distinguish a provider outage from local connectivity. Sequential samples are not an atomic snapshot; freshness depends on the server clock.",
+        "why": "Incomplete or stale evidence can make an integration appear healthy or broken without enough support.",
+        "verify": "Retry RPC health with the same provider and compare the second provider. Inspect new timestamps, chain ID and finalized/latest evidence. Confirm the specific warning clears; elapsed time alone proves nothing."
+      }
+    },
+    {
+      "id": "rpc.heads",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized head is readable",
+      "detail": "Finalized: 112545649. Latest sampled afterward: 112545651. These requests are not an atomic snapshot.",
+      "nextStep": "Keep finality separate from execution success.",
+      "evidence": [
+        2,
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ],
+      "explanation": {
+        "checked": "Read-only RPC response availability, validated shape, or sampled block views; see the rule ID and evidence references for this check.",
+        "unknown": "A failed request cannot distinguish a provider outage from local connectivity. Sequential samples are not an atomic snapshot; freshness depends on the server clock.",
+        "why": "Incomplete or stale evidence can make an integration appear healthy or broken without enough support.",
+        "verify": "Retry RPC health with the same provider and compare the second provider. Inspect new timestamps, chain ID and finalized/latest evidence. Confirm the specific warning clears; elapsed time alone proves nothing."
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T18:55:58.262Z",
+      "durationMs": 41,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T18:55:58.303Z",
+      "durationMs": 40,
+      "result": {
+        "number": "0x6b54f71",
+        "hash": "0x30f173693aeca23f842c9d3282c27d6c8c2c4dae6368e104c32e8ceceebd1104",
+        "parentHash": "0x428ade452482071e2ea9caca7a700ba297a6326f846fc60492a76ff639c02210",
+        "timestamp": "0x6acbdbbd",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0xa920b24d7fc1f08415a54d76c23ad74a9acd35e3f44da093bd8d18b01d307a11",
+          "0x429cc7c96d349f633020f03dbe04319d3f1a42ef9ac8f6a68c2e3000a326cd5d",
+          "0x81713181bcbddcb8fc10ba5508289428fd2591ee07c702c337168c5b37788fcb",
+          "0x5e1fa61c81f473b988a1f20b52cb5e19c74c8490ae80553e481ebf62a037bb6e",
+          "0x9749a3a6c14595f1112942b1ec59b35baa054bbadebebd3b0e54edeb634e253c",
+          "0x042c8fbd05e5e33654d14180391c7e4f0ae85070c090ad59d7f6d50568438bf9",
+          "0xf074cc9e93423ef80193c913ee5bef87e139d49424b4558fbdb0da7c59d0b976",
+          "0x864a46f506c3bc7a789ce81928e203379250cc5b0c08efe94b8a92fd48ea788c",
+          "0xb506e06ef8419a5bd591e255cc0afab1e59f6a4edc4a46755992e7f960a828be",
+          "0x32d24e412470a3e2a0b3e91918a3cb1a4ea7978ab85dfaecb4c5146496041e33",
+          "0x09e25fcf4e861629a98ac1efdb0593eb76e8ea427488dc20e678feb64da9ed18",
+          "0xca0728ba69c8e5ef7963b706c50010d8941818a23e8c1502b59599d87abe98f8",
+          "0x5ae90b97bb5024933dddc6707bc6efc0c401c1d7c1e6c12cbaed85dc885ef5d6",
+          "0x7ed1e30ab8598ab705f974b0cd2e7c30453d87e948d41607cc85ed53a0f4a1d0",
+          "0xb2d3d801d273102c49c0da4fe727fe5c3300a7805c910c3cb8926f58f6c483ac",
+          "0xc73ec874811e5f91eb7100b7f485cb977f6e94479659984dd8f70821b437165c",
+          "0x21e6f8cc0c8e9c24608f348f42e62e49bc74c6568650cdf573aa635d224b75bc",
+          "0x377049b86a59d24fd2df9487f1e7f7dbf1812343873c93e20b3f47d36dd24b2a",
+          "0x44821e4dea176c4e1204b0b7f682974b50bc98435f77c87778adf94a07a450da",
+          "0x59ba94e93d2a68585ce3f06ea4a0a2bd75161c8fd393b52197e4750ab5e8cb3b",
+          "0x216e805e8457bebdbc8af2dab971bed8d37aa8cda3ffb066dec98040de43b974",
+          "0xd583c7186bf9e3f63fd9cebfdb91d85f21b3ff4a381c57b076fef44c99056ae2",
+          "0x2641679c3c2227ffbf1025da4acc5aba333cf42ddfddf0b32524428f5f2369e6"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-11T18:55:58.343Z",
+      "durationMs": 12,
+      "result": {
+        "number": "0x6b54f73",
+        "hash": "0xd04c670fef656bc48ce5936804b6cc215da630d50f80362acb25e8997c814355",
+        "parentHash": "0xac4c244590b6f62afb1b3291a44e49bf64f5c11ff3be2540953036f898070e51",
+        "timestamp": "0x6acbdbbe",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x38baa8e25b85e5fb6956bbabda056b57237de6982cf5eb049c2802c22e9eabea",
+          "0x4d40febd09275d358e898618878d6815d6107826c044ca7c0758dacec7ebeca5",
+          "0xed4907d368d6f933c8c5ba4b44efa2fecb34181bf1f46cb66e61f339217ba011",
+          "0xf898699bb9dce47ac97d2993317e6243c225b39e4e5e640cfaaba23fcf56b36b",
+          "0x912ede0f73303489d35cff35df8e1bab075b0faceaa555d4397e4ea1b30a2862",
+          "0xff2a6b97dde0ea828f4a60cfa90674d9e4d6eca88a66eb2c24230ce238e5619d",
+          "0x50d5373667cc3c3cecf8291c50d5cf3b30c591333c46116fa2f3fcb8b8c9b8e3",
+          "0xe60df7d412825bd6bae39944b6c9a736bfddde0ca56c25c3c426ec7c3a21e322",
+          "0xbd0ee17978a222fd701bdb1e77e212df6810cace584659b29b00433d58e45cd5",
+          "0x6994d986baab762537cd5446810dca68feb42cadddbe3c6e538d112a1e81574e",
+          "0x3167acc342e1ede9cfc748ca842d83476b4646e74ac6bb63db3cd096f1bcb901",
+          "0x30ab2df5814605dca215e52dece16ebca33316f13d2578d6187e1840bb71213b",
+          "0xc84aee478adda97ce22144fab8518b4f14503279a2b396d22f8ede5c00bec9bb",
+          "0xb374ac02d7f5975337c240657c00c4fa5d94f596c6c82caa6955dcb3e1f579ce",
+          "0xa0061a76ce4f2e8959a18e741741f72db60a82abf6aececfd925dd072e40c2dd",
+          "0x4e20cf3597ca1bcf6e236c2cf18d1c4699e2fdc46754bdede51ab71350296518",
+          "0xd7d412e180d6f552c8b588c73344bdf77ce7475386778f0a0147e93d45f067a0"
+        ]
+      }
+    }
+  ],
+  "reproduction": {
+    "steps": [
+      "Select the recorded mode and provider.",
+      "Re-enter the sanitized inputs; supply calldata locally for gas analysis.",
+      "Run again and compare rule IDs, evidence and timestamps. Changed state can change results."
+    ],
+    "calldataIncluded": false,
+    "containsPublicAddresses": true
+  }
+}

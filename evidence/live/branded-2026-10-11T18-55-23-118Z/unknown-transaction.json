@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provider": "primary",
+  "mode": "transaction",
+  "startedAt": "2026-10-11T18:56:50.105Z",
+  "completedAt": "2026-10-11T18:56:50.186Z",
+  "input": {
+    "mode": "transaction",
+    "provider": "primary",
+    "hash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "tx.outcome-unknown",
+      "severity": "warning",
+      "basis": "unknown",
+      "title": "Transaction outcome is unknown",
+      "detail": "No usable receipt was returned. Monad does not return pending transactions through eth_getTransactionByHash. Missing data cannot distinguish pending, dropped, unknown, or unavailable history.",
+      "nextStep": "Confirm the hash and network, then retry. Do not mark this transaction failed solely because the lookup is null.",
+      "evidence": [
+        2,
+        3,
+        4
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T18:56:50.105Z",
+      "durationMs": 27,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getTransactionByHash",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-11T18:56:50.132Z",
+      "durationMs": 28,
+      "result": null
+    },
+    {
+      "id": 3,
+      "method": "eth_getTransactionReceipt",
+      "params": [
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "observedAt": "2026-10-11T18:56:50.160Z",
+      "durationMs": 16,
+      "result": null
+    },
+    {
+      "id": 4,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T18:56:50.176Z",
+      "durationMs": 10,
+      "result": {
+        "number": "0x6b5501d",
+        "hash": "0x75279550026a37a52e12caeeb1ff13d8304354c92e6235dd02897d1c5da8fb96",
+        "parentHash": "0x8896e628fe314181ce78404ed5060ae09144dc2c83d08ad69b3d9a2d01f3ad5e",
+        "timestamp": "0x6acbdbf1",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x39035b126d57d4b5ffcddb031f2451eed99e7455eedd9b48627e9a50d2e98814",
+          "0x953271b7646d082ca6214cc8f7f764fa8f124fc6196fd438c31ce5c69a09a3fe",
+          "0x673bba93147808ce73e785aa41405a7957c0950dcf00daae512e4b27bd73f37d",
+          "0x845891bdfd8c5143a7ee0cc4db88426cef73bacf131d04396c2dbe902ebdbbd4",
+          "0x6026c6c8eba3b436843e590dae4bf331358314a980ae95bcb30cc05ac2958b26",
+          "0x689376aa7d5bccc1281a7fb96b984c3cf3f065358a72a3428d2a2d17d810b155",
+          "0xbf9b1df8d8ca9b97db1879f711ecfd07e8315a1ef7fae6076b2034f21559253e",
+          "0xccc141e3fb18d999525f4c0b6bdac0a31d9cb1f66fe42ba9bf72d7a2033aec58",
+          "0x09f45006c16756c7f88bfb41b57a0c005be42c34e4c0fe149bec55c9ddd3a32f",
+          "0x69af249cb0e95aca25ae007ea7230bbe01f9e1224db929868e1e1f4bd3d195a0",
+          "0x4528ee0925c3940dd92bbadb4a7782eeb279c449f8f30efba0672312b2b9072d",
+          "0xf153a9b02f88541c8662a53fa0466f8fb41b2f20664f6a8387fdfcaf135c0404",
+          "0x11f51b8dfd80cf85278c7809b2ffcad85e79a9c77a6e84c45ea72d3a3a8a7ac0",
+          "0xf547f1bc53a31e34cf8514ce09e163e9f3cd187021c00741ef32294380e8bc0b",
+          "0xa09c3fdc845381a895cbde01b6ac9b061c2ffc35ba3e62601dcc4ae5cca0791d",
+          "0x975b533feb1819ae3344095c35f19c032f15ed52cb52b6bb59b66e740878c723",
+          "0x5ef0504e6fce7fe4876e98777eb638ed632c1f135c36bb8565bc19ea965700d8",
+          "0x0fa7b9bf3bac739a3e1823244a79cb92d6667be39a32521a89910afefe904146",
+          "0xbd004e1de3d9bdbe7779d341eb58363eb5f3e60f38a0046871a753d951ea226e",
+          "0xdde66d44ab70a227d924903baeef6cf122dc8edb6081c33927b4a58a93ad4e15",
+          "0x7aadce417959cefaf91e777086f1c011900f50870d0d5a708b6976689a599aee",
+          "0x62c1b426a4c856574ea037f50300c5b758c3306d41193831da7eea16e3ba48fd",
+          "0x73cc097cbff24a6ba23de5c115798e2e650e63e46c644ef8542dd58a5d2d1cd1",
+          "0x96f67eddeae9ab61adec5487ff15da5fd645d2a9937cd21fa436b9dca3aa7cb4",
+          "0x8a28ceb0c428c3ff764670b7b750ec04bc8de95473ebb95613fb457ff339497a",
+          "0x504b3b28ddcccb493e780e52f11edeadd2f9b53fe657f01f72bfca60e276722e",
+          "0x489c5648b9d19adfe6f45e39cc46d18ffa8095fb890eaef7fa5b705e2e22646c",
+          "0xf8029c324c8a0a561145f077698265b92c7423870f05593c8859c0762c4addc4",
+          "0xb6b8c38f984376d33eee7a0a24a1aafa13f74eb01d6c846e82083de4796d2fb1",
+          "0x469ff8daa894fc48ff13bc2909542a711cc8afc1c06616c3bc0946c1c841232a"
+        ]
+      }
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 
 Find and fix Monad integration problems before they reach production.
 
-Live: **https://monad-doctor.baronal.xyz**. Fallback: https://monad-doctor.vercel.app. [Public source](https://github.com/0xBaqi/monad-doctor) and [passing hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38113612827). See [deployment evidence](docs/verification.md) and [demo storyboard](docs/demo.md).
+Live: **https://monad-doctor.baronal.xyz**. Fallback: https://monad-doctor.vercel.app. [Public source](https://github.com/0xBaqi/monad-doctor) and [passing hosted CI](https://github.com/0xBaqi/monad-doctor/actions/runs/38165174278). See [deployment evidence](docs/verification.md) and [demo storyboard](docs/demo.md).
 
-Verified release: **70 unit tests, TypeScript, ESLint and production build passing; 12 production browser checks passed across two runs**. Redis authentication, atomic concurrency, exhaustion and fail-closed validation passed before publication.
+Verified release: **70 unit tests, TypeScript, ESLint and production build passing; 12 branded-domain acceptance checks plus 10 branded-domain metadata/asset checks passed**. Redis authentication, atomic concurrency, exhaustion and fail-closed validation passed before publication.
 
 Read-only Monad Mainnet diagnostics for the Monad Metropolis Hackathon. Target chain ID **143**. Deadline: October 14, 2026, 04:59 Africa/Lagos.
 

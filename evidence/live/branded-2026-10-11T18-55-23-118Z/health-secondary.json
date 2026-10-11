@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "ruleVersion": "m3.0",
+  "provider": "secondary",
+  "mode": "health",
+  "startedAt": "2026-10-11T18:57:16.358Z",
+  "completedAt": "2026-10-11T18:57:16.529Z",
+  "input": {
+    "mode": "health",
+    "provider": "secondary"
+  },
+  "findings": [
+    {
+      "id": "network.mainnet",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Monad Mainnet confirmed",
+      "detail": "This provider returned chain ID 143 (0x8f).",
+      "nextStep": "Continue with the evidence below.",
+      "evidence": [
+        1
+      ],
+      "sources": [
+        "https://docs.monad.xyz/ai/current-facts"
+      ]
+    },
+    {
+      "id": "rpc.latest",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Latest block is readable",
+      "detail": "Block 112545910; gas limit 150000000. Request latency: 46 ms. Latest is the proposed view, not proof of finality.",
+      "nextStep": "Use finalized for settlement; latency describes this request only.",
+      "evidence": [
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview"
+      ]
+    },
+    {
+      "id": "rpc.heads",
+      "severity": "pass",
+      "basis": "observed",
+      "title": "Finalized head is readable",
+      "detail": "Finalized: 112545908. Latest sampled afterward: 112545910. These requests are not an atomic snapshot.",
+      "nextStep": "Keep finality separate from execution success.",
+      "evidence": [
+        2,
+        3
+      ],
+      "sources": [
+        "https://docs.monad.xyz/reference/json-rpc/overview",
+        "https://docs.monad.xyz/monad-arch/consensus/block-states"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": 1,
+      "method": "eth_chainId",
+      "params": [],
+      "observedAt": "2026-10-11T18:57:16.358Z",
+      "durationMs": 73,
+      "result": "0x8f"
+    },
+    {
+      "id": 2,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "finalized",
+        false
+      ],
+      "observedAt": "2026-10-11T18:57:16.431Z",
+      "durationMs": 52,
+      "result": {
+        "number": "0x6b55074",
+        "hash": "0xd5419c8155ef47167785f574baf741d6586c550a8e88fd44864883dc830c4c86",
+        "parentHash": "0xd2315497f03fb91a2be2eb9e8e5f8c07d9fb49d9da17e5f1171d9bd09d280ca3",
+        "timestamp": "0x6acbdc0b",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x571f755284b0c3a5c58d3b67afb522b50c2d385901b1cc5fc79cbb4751520606",
+          "0xa7a8165ff5f28c40e13fda907f50a776e327e9d3459350ca34df06a5c0d90755",
+          "0xda456f87562262ba3f612cd65a59f2b10ea1959eff918602fa40e316c61cd857",
+          "0xf729c27de6bba5938eff9116b4d33ee9b34075eff13392ed6e0243ade804292f",
+          "0xefe9d4d7c4dc9227e891ef1c90c77522df0e3c246bdddb0ca966d23d9dd34db8",
+          "0x59442e5360fbd17c1ba23c2f1e796f873154f5e1e43d96ae3ae4461a73e784c1",
+          "0xee01b4ce7021d7f595c062b71c50886c9f3a7b667867cf37f44f7a5739821ce3",
+          "0x081bab898af80baea16c4ec7aebae0e1bf2dc18234c4156b8ec55a1039afe9f6",
+          "0xee6b76a7a35f52dd8169103edd7e55abaf311ad49d3f46fe502bf7e896fccae2",
+          "0x695c1c54e69dcbc4fdaac79a4aeb34a7a0347538311922ceeb18e33fef846c64",
+          "0xa46388f1b52bbb2152665f2748a02e4a68225de5404f4fc73d6682ced52c02f4",
+          "0xe3503ac2a591f67b04bedde9cc771d9be66feceaecc5850b557877aabf4c4fe6",
+          "0x07a4966a63ed4db5d7229c89dd72ffe525d1c80cee1d8c8e25cb0f40991bfb3c"
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "method": "eth_getBlockByNumber",
+      "params": [
+        "latest",
+        false
+      ],
+      "observedAt": "2026-10-11T18:57:16.483Z",
+      "durationMs": 46,
+      "result": {
+        "number": "0x6b55076",
+        "hash": "0xfcbf9a849664e826bdb0bb66fecde5394a3fb372a5abbd92e6c34875b77dbae4",
+        "parentHash": "0xbc44cab99c312958ef4e05d9d90b392c1c4ec3fc653d6831e275e6fdbdac8a05",
+        "timestamp": "0x6acbdc0c",
+        "gasLimit": "0x8f0d180",
+        "baseFeePerGas": "0x174876e800",
+        "transactions": [
+          "0x7c3fe9d8a32bcad01e49f4c639f16f3336f2ed59370f9b135ae52cc0aae30d8d",
+          "0xdf08bfbeb1f480396508f091b8436adcbb52a46c357707089dace4173e01d824",
+          "0x89a19e67199614413dece11054feb726000dde8448e22ea1b596eaaece486e71",
+          "0x842d3ab5661bd0326d37a82a92546afbaad2a5a2d665a0aefc0d6918b30764b4",
+          "0xfb716d5f6bdd437c51a592db78a92026555d69e3955fcdecccbbb1eb7b3cceef",
+          "0x30d04f0e82defac453da854fc2aba6d33d8a122ac70e20b71f77d2dba67792b5",
+          "0x449a137cf9b39cbd48b3208a506365d7c671f7b661ba9c675164bd928732790c",
+          "0x95735f7b02bf74f724556001546a84a13e0222545b310492672adc5793aa0d56",
+          "0x3991c5381878ad5848d10b282e75ee410db045666490f93c342872e33a9a68b4",
+          "0x8adf0a6788103e3dc027e01d78d4636db13a06c4ccaf997c7657c338a5e4d319",
+          "0x43143161e9c97384425e06fe57810aaa84338c1f5bd5387d47fdf43b99b4b25a",
+          "0x3e9e0a64dd3a062438937af87db6ec60fef1fd23f5b03ff729df5cea44454999",
+          "0x125369718ff62263827f4172157ffaf21325b690225072d81a9a7d50ebed8702",
+          "0x2b0d3fedeb7106a17b83ca23f169f30afe2febae38eebce2eec9044d46233e5c",
+          "0x71386bf04102e88059940085d6fb8d7b45eb791729169d7a68252f74ef3ee492",
+          "0x6cd3ce4c6aff18de52272dc292f06741286dba097ad09cbbfdbfbe54e00d22d8",
+          "0xbfda4d1c3d2b2fe8c4117df5050c3b4eaa46403742816879e1706ca9013aa6e1",
+          "0x5e15f1b5921c83dae0a35f2613a004fada9d7267f1986191e23e73cfc173dec1",
+          "0x6da8455e6b209213d3112510132b2c34132736d3e19e64851356a2d7746d91f9",
+          "0xa2bdfb531ef784862dd0653c4f66b5ff646a03e80814ca2b704ae830817af56e",
+          "0x2a614f2b55789d3bcfea2f4d975e98881d97e87d2f958bc57004489b3e344c6a",
+          "0xafadf8386662c03f66d01f90766c412450bbd0d9ebf5e4256f814522af0e4799",
+          "0x89230b7a3f932aeb0a3f9dfc1b1b8de63d93ac3441147317805c80b0704df7f7",
+          "0x9ba4c83db73dbe07b11e22943437880feb6c1f5affe669c851c10f0ed993a6bb",
+          "0xc3e9e48359ab398c51d68a4345c3fe0d3f5b3b3c729020d1da3cc5235ee97da0"
+        ]
+      }
+    }
+  ]
+}
