@@ -1,11 +1,12 @@
 import { SOURCES, type Input, type Report } from './model.ts';
 import { createRpc, type Rpc } from './rpc.ts';
-import { parseBlock, parseInput, parseReceipt, parseTransaction, quantity } from './validation.ts';
+import { parseBlock, parseInput, parseReceipt, parseTransaction, quantity, ValidationError } from './validation.ts';
 import { finding, gasRules, lifecycleRules, freshness } from './rules.ts';
 export async function diagnose(raw: unknown, options: { rpc?: Rpc; now?: () => number } = {}): Promise<Report> {
  const input: Input = parseInput(raw), now = options.now ?? Date.now;
  const rpc = options.rpc ?? createRpc(input.provider);
- const report: Report = { schemaVersion: 1, ruleVersion: 'm3.0', provider: input.provider, mode: input.mode, startedAt: new Date(now()).toISOString(), completedAt: '', input, findings: [], evidence: rpc.evidence };
+ if (rpc.provider !== input.provider) throw new ValidationError('RPC collector provider disagrees with the input provider.');
+ const report: Report = { schemaVersion: 1, ruleVersion: 'm3.1', provider: input.provider, mode: input.mode, startedAt: new Date(now()).toISOString(), completedAt: '', input, findings: [], evidence: rpc.evidence };
  const finish = () => {
   for (const e of rpc.evidence) if (e.error) report.findings.push(finding('rpc.' + e.id + '.' + e.error.code.toLowerCase(), 'warning', 'unknown', e.method + ': evidence unavailable', e.error.message, 'Retry or choose another provider. Successful checks in this report remain visible.', [e.id], [SOURCES.rpc]));
   report.completedAt = new Date(now()).toISOString(); return report;
@@ -21,6 +22,7 @@ export async function diagnose(raw: unknown, options: { rpc?: Rpc; now?: () => n
   // Query finalized first: a later latest response should not be behind it.
   const finalized = await rpc.call('eth_getBlockByNumber', ['finalized', false], parseBlock);
   const latest = await rpc.call('eth_getBlockByNumber', ['latest', false], parseBlock);
+  if (finalized.ok && finalized.value) report.findings.push(...freshness(finalized.value, now(), [finalized.id], 'rpc.finalized'));
   if (latest.ok && latest.value) {
    const b = latest.value;
    report.findings.push(finding('rpc.latest', 'pass', 'observed', 'Latest block is readable', 'Block ' + BigInt(b.number) + '; gas limit ' + BigInt(b.gasLimit) + '. Request latency: ' + rpc.evidence.find(e => e.id === latest.id)!.durationMs + ' ms. Latest is the proposed view, not proof of finality.', 'Use finalized for settlement; latency describes this request only.', [latest.id], [SOURCES.rpc]));

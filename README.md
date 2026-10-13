@@ -54,6 +54,8 @@ The lockfile pins the tested dependencies. Tests use Node's built-in runner and 
 
 Each finding includes observed/inferred/unknown classification, rule ID, evidence references, official documentation links, and a next step. Request times are observations, not deterministic inputs to unit assertions.
 
+CLI M2 adversarial refinements use rule version `m3.1`: directly contradictory finalized ancestry, impossible block/receipt gas accounting, separate finalized-head freshness and collector-provider attribution checks. Conflicts use error severity and unknown basis with explicit conflict rule IDs. Reports remain single-provider observations; cross-provider disagreements are preserved in separate reports and are not automatically reconciled. See the [adversarial audit and verification](docs/m2-adversarial.md) and [report semantics](docs/reports.md).
+
 ## Architecture
 
 `app/` contains the dashboard and one POST route. `lib/` contains validation, an allowlisted RPC client, pure rules, and orchestration. No blockchain SDK, state management library, chart dependency, ORM, or wallet package.

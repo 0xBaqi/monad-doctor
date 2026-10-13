@@ -1,11 +1,13 @@
 import { SOURCES } from "./model.js";
 import { createRpc } from "./rpc.js";
-import { parseBlock, parseInput, parseReceipt, parseTransaction, quantity } from "./validation.js";
+import { parseBlock, parseInput, parseReceipt, parseTransaction, quantity, ValidationError } from "./validation.js";
 import { finding, gasRules, lifecycleRules, freshness } from "./rules.js";
 export async function diagnose(raw, options = {}) {
     const input = parseInput(raw), now = options.now ?? Date.now;
     const rpc = options.rpc ?? createRpc(input.provider);
-    const report = { schemaVersion: 1, ruleVersion: 'm3.0', provider: input.provider, mode: input.mode, startedAt: new Date(now()).toISOString(), completedAt: '', input, findings: [], evidence: rpc.evidence };
+    if (rpc.provider !== input.provider)
+        throw new ValidationError('RPC collector provider disagrees with the input provider.');
+    const report = { schemaVersion: 1, ruleVersion: 'm3.1', provider: input.provider, mode: input.mode, startedAt: new Date(now()).toISOString(), completedAt: '', input, findings: [], evidence: rpc.evidence };
     const finish = () => {
         for (const e of rpc.evidence)
             if (e.error)
@@ -25,6 +27,8 @@ export async function diagnose(raw, options = {}) {
         // Query finalized first: a later latest response should not be behind it.
         const finalized = await rpc.call('eth_getBlockByNumber', ['finalized', false], parseBlock);
         const latest = await rpc.call('eth_getBlockByNumber', ['latest', false], parseBlock);
+        if (finalized.ok && finalized.value)
+            report.findings.push(...freshness(finalized.value, now(), [finalized.id], 'rpc.finalized'));
         if (latest.ok && latest.value) {
             const b = latest.value;
             report.findings.push(finding('rpc.latest', 'pass', 'observed', 'Latest block is readable', 'Block ' + BigInt(b.number) + '; gas limit ' + BigInt(b.gasLimit) + '. Request latency: ' + rpc.evidence.find(e => e.id === latest.id).durationMs + ' ms. Latest is the proposed view, not proof of finality.', 'Use finalized for settlement; latency describes this request only.', [latest.id], [SOURCES.rpc]));

@@ -1,0 +1,2911 @@
+{
+  "milestone": "CLI M2 adversarial diagnostics",
+  "checkedAt": "2026-10-13T11:32:26.461592+00:00",
+  "baselineCommit": "d583bd9963d9fd0e0ccf3a885155938fcbc1e800",
+  "node": "v24.21.0",
+  "next": "16.4.0",
+  "ruleVersion": "m3.1",
+  "fixtures": "tests/fixtures/adversarial.ts",
+  "syntheticRPCOnly": true,
+  "baselineTests": {
+    "tests": 26,
+    "passed": 22,
+    "failed": 4,
+    "failures": [
+      "adjacent-finalized-parent-conflict",
+      "stale-finalized-fresh-latest",
+      "receipt-exceeds-block-limit",
+      "mismatched-collector-identity"
+    ]
+  },
+  "tests": {
+    "tests": 130,
+    "pass": 130,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run cli:build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "lint": {
+    "errors": 0,
+    "warnings": 3,
+    "warningFiles": [
+      "demo/scripts/assemble.mjs",
+      "demo/scripts/record-tail.mjs",
+      "demo/scripts/record.mjs"
+    ]
+  },
+  "compiledCLI": {
+    "synthetic": true,
+    "checks": [
+      {
+        "case": "receipt-present-versus-absent",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "receipt-present-versus-absent",
+        "provider": "secondary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "conflicting-provider-block-hashes",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "conflicting-provider-block-hashes",
+        "provider": "secondary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "conflicting-provider-execution-statuses",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "conflicting-provider-execution-statuses",
+        "provider": "secondary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "transaction-receipt-block-conflict",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "receipt-block-membership-conflict",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "same-height-finalized-hash-conflict",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "adjacent-finalized-parent-conflict",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "adjacent-finalized-parent-match",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "stale-finalized-fresh-latest",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "stale-latest",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "stale-transaction-finalized-head",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "unknown-on-all-providers",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "unknown-on-all-providers",
+        "provider": "secondary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "receipt-timeout",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "truncated-receipt",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "malformed-receipt-status",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "mismatched-envelope-id",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "result-and-error-envelope",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "failed-execution-no-revert-reason",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "gas-exhausted-without-cause-evidence",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "receipt-exceeds-transaction-allowance",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "receipt-exceeds-block-limit",
+        "provider": "primary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "gas-padding",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "gas-estimation-error",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "contradictory-provider-chain-ids",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "contradictory-provider-chain-ids",
+        "provider": "secondary",
+        "exitCode": 1,
+        "equivalent": true
+      },
+      {
+        "case": "provider-recovery",
+        "provider": "primary",
+        "exitCode": 3,
+        "equivalent": true
+      },
+      {
+        "case": "provider-recovery",
+        "provider": "primary",
+        "exitCode": 0,
+        "equivalent": true
+      },
+      {
+        "case": "--version",
+        "exitCode": 0,
+        "passed": true
+      },
+      {
+        "case": "--help",
+        "exitCode": 0,
+        "passed": true
+      },
+      {
+        "case": "tx bad",
+        "exitCode": 2,
+        "passed": true
+      }
+    ]
+  },
+  "localWebRender": {
+    "scope": "Local production HTML render; no RPC requests or browser interaction",
+    "checks": {
+      "Monad Doctor": true,
+      "RPC health": true,
+      "Gas-limit analysis": true,
+      "Transaction lifecycle": true,
+      "Run diagnostic": true,
+      "Ready when you are.": true,
+      "Read-only by design": true
+    }
+  },
+  "collectorIdentity": {
+    "before": {
+      "reportedProvider": "primary",
+      "actualProvider": "secondary",
+      "rpcCalls": 5
+    },
+    "after": {
+      "rejected": true,
+      "rpcCalls": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "receipt-present-versus-absent",
+      "uncertainty": "Absence at B does not refute A or distinguish propagation, changing unfinalized data and missing history.",
+      "mustNotClaim": "Provider agreement, universal finality, or failed/dropped status from B nulls.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "secondary",
+          "rpcCalls": 4,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "conflicting-provider-block-hashes",
+      "uncertainty": "Each self-consistent report is attributable to its provider. These separately collected reports disagree; the engine does not merge them.",
+      "mustNotClaim": "Cross-provider consensus or independently verified finality.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "secondary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "conflicting-provider-execution-statuses",
+      "uncertainty": "Status disagreement across separate providers is unresolved. Finality coverage does not turn failed execution into success.",
+      "mustNotClaim": "A single agreed status or a failure cause.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "secondary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "transaction-receipt-block-conflict",
+      "uncertainty": "The receipt and transaction disagree, so execution/finality conclusions are suppressed.",
+      "mustNotClaim": "Successful, failed or finalized transaction from contradictory evidence.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "receipt-block-membership-conflict",
+      "uncertainty": "A block lacking the requested transaction does not substantiate this receipt.",
+      "mustNotClaim": "Confirmed inclusion, execution or finality.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "same-height-finalized-hash-conflict",
+      "uncertainty": "Receipt status remains an attributed observation; settlement is contradicted at the sampled height.",
+      "mustNotClaim": "Finality from mismatched finalized/canonical hashes.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finality-unknown",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finality-unknown",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "adjacent-finalized-parent-conflict",
+      "uncertainty": "The immediately following finalized block does not name the receipt block as its parent.",
+      "mustNotClaim": "Provider-attested finality in the face of direct ancestry contradiction.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finality-unknown",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "adjacent-finalized-parent-match",
+      "uncertainty": "Even matching ancestry is provider-attested, not cryptographically verified.",
+      "mustNotClaim": "Independent consensus verification.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "stale-finalized-fresh-latest",
+      "uncertainty": "Local clock and provider lag are possible; age alone cannot establish network failure.",
+      "mustNotClaim": "A fresh finalized sample merely because latest is fresh.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 3,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "rpc.latest",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.heads",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "rpc.finalized.clock-risk",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                2
+              ]
+            },
+            {
+              "id": "rpc.latest",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.heads",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "stale-latest",
+      "uncertainty": "Age is an application heuristic, not a protocol finality threshold.",
+      "mustNotClaim": "Confirmed network outage or loss of historical finality.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 3,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "rpc.latest",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.clock-risk",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.heads",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "rpc.latest",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.clock-risk",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                3
+              ]
+            },
+            {
+              "id": "rpc.heads",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "stale-transaction-finalized-head",
+      "uncertainty": "Historical provider-attested finality is preserved while current freshness is questioned.",
+      "mustNotClaim": "Fresh current state or reversed historical finality.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.clock-risk",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                4
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.clock-risk",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                4
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "unknown-on-all-providers",
+      "uncertainty": "Neither provider can establish execution, pending, dropped or failed status.",
+      "mustNotClaim": "Failed/dropped transaction or universal absence.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "secondary",
+          "rpcCalls": 4,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "receipt-timeout",
+      "uncertainty": "Transaction inclusion may remain visible; unavailable receipt cannot establish execution.",
+      "mustNotClaim": "Execution failure caused by an RPC timeout.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "TIMEOUT"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.timeout",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.timeout",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "truncated-receipt",
+      "uncertainty": "Truncated JSON is unusable receipt evidence.",
+      "mustNotClaim": "Execution or finality from partial JSON.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "MALFORMED"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "malformed-receipt-status",
+      "uncertainty": "Unsupported status cannot be interpreted as successful or failed execution.",
+      "mustNotClaim": "Truthiness-based successful receipt.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "MALFORMED"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "mismatched-envelope-id",
+      "uncertainty": "A reply for another request is not this request evidence.",
+      "mustNotClaim": "Receipt execution from unrelated response.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "MALFORMED"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "result-and-error-envelope",
+      "uncertainty": "A contradictory envelope is rejected instead of selecting its favorable half.",
+      "mustNotClaim": "Execution success by ignoring an error.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "MALFORMED"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.malformed",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "failed-execution-no-revert-reason",
+      "uncertainty": "Fixture scenario is a revert, but status alone cannot establish the opcode/reason.",
+      "mustNotClaim": "Confirmed revert, revert reason, or out-of-gas.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "gas-exhausted-without-cause-evidence",
+      "uncertainty": "gasUsed equals the allowance; that does not establish the failure cause.",
+      "mustNotClaim": "Confirmed out-of-gas from gas equality or receipt status.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "receipt-exceeds-transaction-allowance",
+      "uncertainty": "Impossible gas accounting suppresses execution and finality conclusions.",
+      "mustNotClaim": "An executable finalized receipt despite impossible gas accounting.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "receipt-exceeds-block-limit",
+      "uncertainty": "A matched block cannot support receipt gas greater than its own gas limit.",
+      "mustNotClaim": "Execution or finality from internally impossible block/receipt evidence.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inconsistent",
+              "severity": "error",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "gas-padding",
+      "uncertainty": "21,000 is an estimate for the supplied call and state, not a universal safe minimum.",
+      "mustNotClaim": "Guaranteed execution, guaranteed savings, or actual paid fees.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "gas.protocol-cap",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": []
+            },
+            {
+              "id": "gas.estimate-comparison",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "gas.cost-comparison",
+              "severity": "info",
+              "basis": "inferred",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "gas.protocol-cap",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": []
+            },
+            {
+              "id": "gas.estimate-comparison",
+              "severity": "warning",
+              "basis": "inferred",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "gas.cost-comparison",
+              "severity": "info",
+              "basis": "inferred",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "gas-estimation-error",
+      "uncertainty": "The simulated error text says revert but is untrusted; no on-chain execution or cause is established.",
+      "mustNotClaim": "Fallback estimate, actual failed transaction, confirmed revert, or credential-bearing provider reason.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_estimateGas",
+              "code": "RPC"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "gas.protocol-cap",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": []
+            },
+            {
+              "id": "gas.estimate-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.rpc",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "gas.protocol-cap",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": []
+            },
+            {
+              "id": "gas.estimate-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.rpc",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "contradictory-provider-chain-ids",
+      "uncertainty": "Only the selected provider is checked. Wrong-network evidence stops all dependent RPC work.",
+      "mustNotClaim": "Monad outcome from another chain or agreed chain identity.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "secondary",
+          "rpcCalls": 1,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.wrong-chain",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.wrong-chain",
+              "severity": "error",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    },
+    {
+      "id": "provider-recovery",
+      "uncertainty": "A fresh successful observation supersedes no stored history; the failed earlier report remains separately attributable.",
+      "mustNotClaim": "Earlier failure never happened, or success in the earlier report.",
+      "observations": [
+        {
+          "provider": "primary",
+          "rpcCalls": 4,
+          "rpcErrors": [
+            {
+              "id": 3,
+              "method": "eth_getTransactionReceipt",
+              "code": "RPC"
+            }
+          ],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.rpc",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "info",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "tx.outcome-unknown",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                2,
+                3,
+                4
+              ]
+            },
+            {
+              "id": "rpc.3.rpc",
+              "severity": "warning",
+              "basis": "unknown",
+              "evidence": [
+                3
+              ]
+            }
+          ],
+          "expectationsMet": true
+        },
+        {
+          "provider": "primary",
+          "rpcCalls": 5,
+          "rpcErrors": [],
+          "beforeFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "afterFindings": [
+            {
+              "id": "network.mainnet",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                1
+              ]
+            },
+            {
+              "id": "tx.execution",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.inclusion",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "id": "tx.finalized",
+              "severity": "pass",
+              "basis": "observed",
+              "evidence": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ],
+          "expectationsMet": true
+        }
+      ]
+    }
+  ],
+  "demo": {
+    "entries": 80,
+    "unchanged": true,
+    "excludedFromCommit": true
+  },
+  "environmentNotes": [
+    "Sandbox npm test reported file results only; final rerun executed 130 individual tests.",
+    "Sandbox compiled-CLI subprocess stdout was empty; subprocess-capable rerun passed.",
+    "Sandbox could not connect to the local production server; external read-only render check passed.",
+    "A targeted sandbox lint exceeded 90 seconds after provenance assertions were added; final full ESLint verification uses the subprocess-capable environment."
+  ],
+  "limitations": [
+    "One selected provider per report; no automatic cross-provider aggregation.",
+    "No independent consensus, ancestry-chain or execution-root verification.",
+    "No trace-based REVERT/out-of-gas cause diagnosis.",
+    "Estimates and sequential samples are state-specific; clock freshness is heuristic.",
+    "No new live RPC or full interactive browser acceptance run."
+  ],
+  "published": false,
+  "deployed": false,
+  "pushed": false
+}

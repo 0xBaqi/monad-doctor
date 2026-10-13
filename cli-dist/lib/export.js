@@ -45,7 +45,7 @@ function evidence(e) {
 }
 // Only explicit, validated fields cross the sharing boundary. Never spread a report.
 export function exportReport(report) {
-    if (report.schemaVersion !== 1 || !['m1.1', 'm2.0', 'm3.0'].includes(report.ruleVersion) || report.evidence.length > 10 || report.findings.length > 40)
+    if (report.schemaVersion !== 1 || !['m1.1', 'm2.0', 'm3.0', 'm3.1'].includes(report.ruleVersion) || report.evidence.length > 10 || report.findings.length > 40)
         throw new ValidationError('Unsupported report format.');
     const normalized = parseInput(report.input);
     if (normalized.mode !== report.mode || normalized.provider !== report.provider)

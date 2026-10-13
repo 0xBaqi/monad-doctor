@@ -62,5 +62,5 @@ export function createRpc(provider: Provider, options: { fetcher?: typeof fetch;
    return fail({ code: 'NETWORK', message: 'RPC connection failed. Check connectivity or choose another provider.' });
   } finally { clearTimeout(timer); record.durationMs = Math.max(0, now() - begin); }
  }
- return { call, evidence };
+ return { provider, call, evidence };
 }

@@ -90,5 +90,5 @@ export function createRpc(provider, options = {}) {
             record.durationMs = Math.max(0, now() - begin);
         }
     }
-    return { call, evidence };
+    return { provider, call, evidence };
 }

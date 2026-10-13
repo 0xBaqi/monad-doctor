@@ -35,7 +35,7 @@ try {
  await page.getByRole('button',{name:'Export JSON'}).click();
  const download=await pendingDownload;await download.saveAs(evidenceDir+'/downloaded-report.json');
  const exported=JSON.parse(await readFile(evidenceDir+'/downloaded-report.json','utf8'));
- assert.equal(exported.mode,'health');assert.equal(exported.exportVersion,1);assert.ok(exported.findings[0].explanation.verify);assert.equal(exported.ruleVersion,'m3.0');assert.ok(exported.evidence.length>0);
+ assert.equal(exported.mode,'health');assert.equal(exported.exportVersion,1);assert.ok(exported.findings[0].explanation.verify);assert.equal(exported.ruleVersion,'m3.1');assert.ok(exported.evidence.length>0);
  assert.ok(!JSON.stringify(exported).includes('https://rpc.monad.xyz'));record('JSON export downloads normalized evidence');
  await page.getByRole('button',{name:/Gas-limit analysis/}).click();
  await page.getByRole('button',{name:/Load padding example/}).click();
