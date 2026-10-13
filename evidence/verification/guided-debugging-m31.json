@@ -1,0 +1,201 @@
+{
+  "milestone": "M3.1 guided debugging (presentation only)",
+  "baseline": "ede2b59d8761746d42e6b3d668f481253aaa7988",
+  "verifiedAt": "2026-10-13T15:19:44.899021+00:00",
+  "node": "v24.21.0",
+  "ruleVersion": "m3.1 (unchanged)",
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 164,
+      "passed": 164,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "existingTests": 130,
+      "newPresentationTests": 34
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 5,
+      "warningScope": "Pre-existing .qa scripts (2) and preserved demo scripts (3)"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js scripts/guided-browser.mjs tests/presentation.test.ts",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js scripts/browser-check.mjs",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "command": "npm run cli:build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "Optimized production build, TypeScript and all three routes generated"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "browser": {
+    "command": "npm run qa:guided",
+    "exitCode": 0,
+    "server": "Local optimized production build on 127.0.0.1:3146",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1100
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "passed": 22,
+    "failed": 0,
+    "diagnosticSubmissions": 13,
+    "liveRpcCalls": 0,
+    "javascriptErrors": [],
+    "evidence": "Synthetic reports from the real M2 engine; no live RPC requests",
+    "checks": [
+      {
+        "name": "Desktop initial render, zero diagnostics and no horizontal overflow",
+        "passed": true
+      },
+      {
+        "name": "All symptoms and technical modes navigate without requests and focus the form",
+        "passed": true
+      },
+      {
+        "name": "Invalid input has associated inline error and keyboard focus, no request",
+        "passed": true
+      },
+      {
+        "name": "Unknown transaction preserves unknown outcome and three separate lifecycle questions",
+        "passed": true
+      },
+      {
+        "name": "Completion focuses report and announces a concise status",
+        "passed": true
+      },
+      {
+        "name": "Evidence link opens original observation, retains provenance and focuses target without requests",
+        "passed": true
+      },
+      {
+        "name": "Contradictory receipt takes priority and does not invent execution or finality",
+        "passed": true
+      },
+      {
+        "name": "Finality contradiction preserves the separate observed execution finding",
+        "passed": true
+      },
+      {
+        "name": "Failed execution remains distinct from finality and unknown cause",
+        "passed": true
+      },
+      {
+        "name": "Gas separates limit, estimate and conditional cost; evidence hides calldata",
+        "passed": true
+      },
+      {
+        "name": "Downloaded JSON equals the unchanged M2 export format with both calldata fields redacted",
+        "passed": true
+      },
+      {
+        "name": "Edited inputs/provider mark previous snapshot; export retains captured context with no request",
+        "passed": true
+      },
+      {
+        "name": "Estimation failure retains unknown headroom and never supplies a guaranteed fee",
+        "passed": true
+      },
+      {
+        "name": "Loading disables duplicate submission/navigation; stale observation precedes ordinary passes",
+        "passed": true
+      },
+      {
+        "name": "429 respects Retry-After and sends no automatic retry",
+        "passed": true
+      },
+      {
+        "name": "Protected HTML response produces access-denial copy without exposing response content",
+        "passed": true
+      },
+      {
+        "name": "503 admission failure preserves previous report and establishes no new outcome",
+        "passed": true
+      },
+      {
+        "name": "HTTP 200 with malformed report is rejected rather than interpreted as success",
+        "passed": true
+      },
+      {
+        "name": "Transport failure establishes no new outcome and preserves the captured previous report",
+        "passed": true
+      },
+      {
+        "name": "Mobile 390px has no overflow, labelled inputs, adequate symptom targets and keyboard skip navigation",
+        "passed": true
+      },
+      {
+        "name": "Mobile successful lifecycle remains provider-attested and renders without overflow",
+        "passed": true
+      },
+      {
+        "name": "No browser JavaScript errors",
+        "passed": true
+      }
+    ]
+  },
+  "preserved": {
+    "corePathsUnchanged": [
+      "lib/engine.ts",
+      "lib/model.ts",
+      "lib/rules.ts",
+      "lib/rpc.ts",
+      "lib/http.ts",
+      "lib/budget.ts",
+      "lib/export.ts",
+      "lib/validation.ts",
+      "lib/guidance.ts",
+      "cli"
+    ],
+    "demoFileCount": 74,
+    "demoHashesUnchanged": true,
+    "productionSettingsChanged": false,
+    "deployments": 0,
+    "pushes": 0
+  },
+  "environmentRecovery": [
+    "Sandboxed test workers hid individual results; normal isolated workers passed outside sandbox.",
+    "Sandboxed build worker output could not be parsed; clean unsandboxed build exited 0.",
+    "ESLint needed a longer bounded run on the mounted filesystem.",
+    "Chromium and missing runtime libraries were provisioned temporarily under /tmp without project dependency or system package changes.",
+    "A build that printed success but exited SIGTERM was rejected; the clean rerun exited 0.",
+    "Next dev generated AGENTS.md temporarily; it was removed after stopping dev, and next-env.d.ts matches baseline."
+  ],
+  "limitations": [
+    "No deployment or live M3 production acceptance was performed.",
+    "Browser diagnostics use deterministic reports from the actual M2 engine, not live RPC.",
+    "Accessibility assertions cover labels, focus, announcements, reduced motion, target sizes and layout; no complete WCAG audit or human screen-reader/usability study.",
+    "The existing live qa:browser harness was updated for inline validation and linted, but was not run against production."
+  ]
+}

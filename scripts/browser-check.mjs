@@ -64,10 +64,13 @@ try {
  const tx=await run('transaction');
  assert.ok(tx.findings.some(f=>f.id==='tx.finalized'));record('Lifecycle form confirms real finalized transaction');
  await page.getByLabel(/^Transaction hash/).fill('0xbad');
- const rejected=page.waitForResponse(r=>r.url()===base+'/api/diagnose'&&r.request().method()==='POST');
+ let invalidRequests=0;
+ const trackInvalid=r=>{if(r.url()===base+'/api/diagnose'&&r.method()==='POST')invalidRequests++;};
+ page.on('request',trackInvalid);
  await page.getByRole('button',{name:'Run diagnostic'}).click();
- assert.equal((await rejected).status(),400);
- await page.getByRole('alert').filter({hasText:'Transaction hash must be'}).waitFor();record('Malformed hash produces meaningful visible error');
+ await page.locator('#hash-error').filter({hasText:'Transaction hash must be'}).waitFor();
+ assert.equal(invalidRequests,0);page.off('request',trackInvalid);
+ record('Malformed hash produces meaningful inline error without a diagnostic request');
  assert.deepEqual(errors,[]);record('No browser JavaScript errors');
 } catch(e) { checks.push({name:'Browser run',passed:false,error:e.message});await page.screenshot({path:'evidence/verification/browser-failure.png',fullPage:true});process.exitCode=1; }
 finally { await browser.close();await writeFile('evidence/verification/browser-checks.json',JSON.stringify({base,checkedAt:new Date().toISOString(),checks,errors,evidenceDir},null,2)+'\n');console.log(JSON.stringify(checks,null,2)); }

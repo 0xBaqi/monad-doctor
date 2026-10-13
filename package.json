@@ -25,6 +25,7 @@
     "live": "node --use-system-ca --experimental-strip-types scripts/live-check.ts",
     "verify": "node scripts/verify.mjs",
     "qa:browser": "node --use-system-ca scripts/browser-check.mjs",
+    "qa:guided": "node --use-system-ca --experimental-strip-types scripts/guided-browser.mjs",
     "live:smoke": "node --use-system-ca --experimental-strip-types scripts/smoke.ts",
     "doctor": "node --use-system-ca cli-dist/cli/index.js",
     "cli:build": "tsc -p tsconfig.cli.json",
