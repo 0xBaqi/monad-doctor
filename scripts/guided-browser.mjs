@@ -75,6 +75,7 @@ try {
   await page.waitForFunction(() => document.activeElement?.id === 'diagnostic-title');
   assert.equal(await page.locator('#diagnostic-title').evaluate(el => el === document.activeElement), true);
  }
+ await page.getByText('Technical modes', { exact: true }).click();
  await page.getByRole('button', { name: /Transaction lifecycle/ }).click();
  assert.equal(requests.length, 0); record('All symptoms and technical modes navigate without requests and focus the form');
  await page.locator('#hash').fill('0x1');
@@ -118,6 +119,7 @@ try {
  assert.match(await result.innerText(), /Failure cause is not determined/); record('Failed execution remains distinct from finality and unknown cause');
  scenario = 'gas-padding'; await select('gas'); await run();
  for (const name of ['Proposed limit (gas units)', 'RPC estimate at sampled state', 'Conditional cost, not an actual fee']) await result.getByRole('heading', { name, exact: true }).waitFor();
+ await result.locator('article').filter({ has: page.locator('code').filter({ hasText: /^gas\.cost-comparison$/ }) }).locator('summary').first().click();
  assert.match(await result.innerText(), /not an actual charge or guaranteed saving/);
  await result.getByRole('link', { name: 'Evidence #3', exact: true }).first().click();
  assert.ok(!(await result.innerText()).includes('deadbeef')); record('Gas separates limit, estimate and conditional cost; evidence hides calldata');

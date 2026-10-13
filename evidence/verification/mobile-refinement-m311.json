@@ -1,0 +1,212 @@
+{
+  "baseline": "0a25be2cc59a925289ffa32fda71077830c82f75",
+  "m2Baseline": "ede2b59d8761746d42e6b3d668f481253aaa7988",
+  "ruleVersion": "m3.1",
+  "checks": {
+    "npm test": {
+      "passed": 169,
+      "failed": 0,
+      "skipped": 0
+    },
+    "npm run typecheck": "PASS",
+    "npm run lint": {
+      "exitCode": 0,
+      "errors": 0,
+      "preexistingWarnings": 5
+    },
+    "focused lint": {
+      "exitCode": 0,
+      "warnings": 0
+    },
+    "npm run cli:build": "PASS",
+    "npm run build": "PASS; final clean optimized build",
+    "git diff --check": "PASS"
+  },
+  "browser": {
+    "guided": {
+      "passed": 23,
+      "failed": 0,
+      "mockDiagnosticSubmissions": 14
+    },
+    "layout": {
+      "passed": 21,
+      "widths": [
+        320,
+        390,
+        1440
+      ],
+      "mockDiagnosticSubmissions": 21,
+      "validatedRedactedDownloads": 21
+    },
+    "legacy": {
+      "passed": 10,
+      "failed": 0,
+      "mockDiagnosticSubmissions": 4
+    },
+    "javascriptErrors": 0,
+    "liveRpcCalls": 0
+  },
+  "measurements": [
+    {
+      "id": "healthy",
+      "width": 320,
+      "reportHeight": 1286,
+      "overflow": false
+    },
+    {
+      "id": "gas-padding",
+      "width": 320,
+      "reportHeight": 1924,
+      "overflow": false
+    },
+    {
+      "id": "gas-estimation-error",
+      "width": 320,
+      "reportHeight": 1818,
+      "overflow": false
+    },
+    {
+      "id": "receipt-present-versus-absent",
+      "width": 320,
+      "reportHeight": 1905,
+      "overflow": false
+    },
+    {
+      "id": "unknown-on-all-providers",
+      "width": 320,
+      "reportHeight": 1735,
+      "overflow": false
+    },
+    {
+      "id": "receipt-timeout",
+      "width": 320,
+      "reportHeight": 1964,
+      "overflow": false
+    },
+    {
+      "id": "transaction-receipt-block-conflict",
+      "width": 320,
+      "reportHeight": 1699,
+      "overflow": false
+    },
+    {
+      "id": "healthy",
+      "width": 390,
+      "reportHeight": 1230,
+      "overflow": false
+    },
+    {
+      "id": "gas-padding",
+      "width": 390,
+      "reportHeight": 1740,
+      "overflow": false
+    },
+    {
+      "id": "gas-estimation-error",
+      "width": 390,
+      "reportHeight": 1700,
+      "overflow": false
+    },
+    {
+      "id": "receipt-present-versus-absent",
+      "width": 390,
+      "reportHeight": 1705,
+      "overflow": false
+    },
+    {
+      "id": "unknown-on-all-providers",
+      "width": 390,
+      "reportHeight": 1509,
+      "overflow": false
+    },
+    {
+      "id": "receipt-timeout",
+      "width": 390,
+      "reportHeight": 1804,
+      "overflow": false
+    },
+    {
+      "id": "transaction-receipt-block-conflict",
+      "width": 390,
+      "reportHeight": 1558,
+      "overflow": false
+    },
+    {
+      "id": "healthy",
+      "width": 1440,
+      "reportHeight": 1094,
+      "overflow": false
+    },
+    {
+      "id": "gas-padding",
+      "width": 1440,
+      "reportHeight": 1361,
+      "overflow": false
+    },
+    {
+      "id": "gas-estimation-error",
+      "width": 1440,
+      "reportHeight": 1366,
+      "overflow": false
+    },
+    {
+      "id": "receipt-present-versus-absent",
+      "width": 1440,
+      "reportHeight": 1311,
+      "overflow": false
+    },
+    {
+      "id": "unknown-on-all-providers",
+      "width": 1440,
+      "reportHeight": 1143,
+      "overflow": false
+    },
+    {
+      "id": "receipt-timeout",
+      "width": 1440,
+      "reportHeight": 1359,
+      "overflow": false
+    },
+    {
+      "id": "transaction-receipt-block-conflict",
+      "width": 1440,
+      "reportHeight": 1141,
+      "overflow": false
+    }
+  ],
+  "comparisonMethod": "Same deterministic engine fixture reports. Before: local optimized M3.1 build. M2: unchanged public production frontend assets with every diagnostic POST intercepted and mocked. Refined: final local optimized build. No production diagnostic or RPC calls. Screenshots inspected directly.",
+  "demo": {
+    "files": 74,
+    "allHashesUnchanged": true
+  },
+  "unchanged": [
+    "diagnostic engine",
+    "presentation mapping",
+    "schema",
+    "validation",
+    "RPC collector",
+    "CLI",
+    "API admission",
+    "Redis quotas",
+    "provider allowlist",
+    "export serializer",
+    "rule version"
+  ],
+  "limitations": [
+    "Chromium only; no Safari or human screen-reader audit",
+    "Unknown/contradictory reports remain taller than M2 to preserve distinct lifecycle outcomes and uncertainty",
+    "Report height is a layout measurement, not a measured task-completion improvement"
+  ],
+  "environmentNotes": [
+    "Initial ESLint scan failed when a transient .agents directory disappeared; full rerun passed",
+    "Initial focused lint timed out; bounded longer rerun passed",
+    "Isolated M2 source build timed out; comparison used actual unchanged optimized M2 production frontend with mocked diagnostics",
+    "Final build repeated after an in-flight CSS edit; emitted CSS confirmed and browser suites rerun against final build"
+  ],
+  "releaseActions": {
+    "push": false,
+    "deploy": false,
+    "promote": false,
+    "productionSettingsChanged": false
+  }
+}

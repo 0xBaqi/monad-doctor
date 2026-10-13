@@ -28,6 +28,7 @@ try {
  const health=await run('health');
  assert.ok(health.findings.some(f=>f.id==='network.mainnet'));
  await page.getByRole('heading',{name:'Monad Mainnet confirmed'}).waitFor();record('Health form returns actual Mainnet evidence');
+ await page.getByRole('region',{name:'Diagnostic results'}).locator('article > details > summary').first().click();
  await page.getByText('Understand and verify this finding',{exact:true}).first().click();
  await page.getByText('What remains unknown',{exact:true}).first().waitFor();
  await page.getByText('How to verify',{exact:true}).first().waitFor();record('Finding guidance explains unknowns and verification');
@@ -37,6 +38,7 @@ try {
  const exported=JSON.parse(await readFile(evidenceDir+'/downloaded-report.json','utf8'));
  assert.equal(exported.mode,'health');assert.equal(exported.exportVersion,1);assert.ok(exported.findings[0].explanation.verify);assert.equal(exported.ruleVersion,'m3.1');assert.ok(exported.evidence.length>0);
  assert.ok(!JSON.stringify(exported).includes('https://rpc.monad.xyz'));record('JSON export downloads normalized evidence');
+ await page.getByText('Technical modes',{exact:true}).click();
  await page.getByRole('button',{name:/Gas-limit analysis/}).click();
  await page.getByRole('button',{name:/Load padding example/}).click();
  const before=await run('gas-before');
