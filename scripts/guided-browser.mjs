@@ -31,18 +31,39 @@ await page.route('**/api/diagnose', async route => {
 const record = name => { checks.push({ name, passed: true }); console.log('PASS: ' + name); };
 const result = page.getByRole('region', { name: 'Diagnostic results' });
 async function select(mode) {
+ const count = requests.length;
  const label = { transaction: "My transaction isn't showing up.", gas: 'My gas limit or fee looks wrong.', health: 'My RPC results look unexpected.' }[mode];
  await page.getByRole('button', { name: label, exact: true }).click();
  const input = reports[scenario].input;
  await page.getByLabel('RPC provider').selectOption(input.provider);
  if (mode === 'transaction') await page.locator('#hash').fill(input.hash);
  if (mode === 'gas') for (const field of ['from', 'to', 'value', 'data', 'gasLimit']) await page.locator('#' + field).fill(field === 'gasLimit' ? input.gasLimit : input.call[field]);
+ assert.equal(requests.length, count);
 }
 async function run() {
  const count = requests.length;
+ const diagnostic = request => request.url() === base + '/api/diagnose' && request.method() === 'POST';
+ // Register before the click: an idle old report is not evidence of completion.
+ const requested = page.waitForRequest(diagnostic);
+ const completed = networkFailure
+  ? page.waitForEvent('requestfailed', { predicate: diagnostic })
+  : page.waitForResponse(response => diagnostic(response.request()));
  await page.getByRole('button', { name: 'Run diagnostic' }).click();
- await page.waitForFunction(() => document.querySelector('[aria-busy="true"]') === null);
+ const request = await requested;
+ const responseOrFailure = await completed;
+ if (networkFailure) assert.equal(responseOrFailure, request);
+ else {
+  assert.equal(responseOrFailure.request(), request);
+  await responseOrFailure.finished();
+ }
+ const expectedError = networkFailure ? 'Unable to reach the diagnostic server' :
+  status === 429 ? 'Request limit reached' : status === 401 ? 'Access denied' :
+  status === 503 ? 'admission is unavailable' : body === '{}' ? 'invalid or incompatible report' : null;
+ if (expectedError) await page.getByRole('alert').filter({ hasText: expectedError }).waitFor();
+ else await result.getByRole('heading', { name: reports[scenario].findings[0].title, exact: true }).waitFor();
+ await page.waitForFunction(() => document.querySelector('[aria-label="Diagnostic results"]').getAttribute('aria-busy') === 'false');
  assert.equal(requests.length, count + 1);
+ assert.equal(request.postDataJSON().provider, reports[scenario].input.provider);
 }
 try {
  await page.goto(base, { waitUntil: 'networkidle', timeout: 90000 });
@@ -76,6 +97,12 @@ try {
  assert.equal(await page.locator('#evidence-2').evaluate(el => el === document.activeElement), true);
  assert.equal(await page.locator('#evidence-2').locator('..').locator('pre').textContent(), JSON.stringify(exportReport(reports[scenario]).evidence[1], null, 2));
  assert.equal(requests.length, count); record('Evidence link opens original observation, retains provenance and focuses target without requests');
+ scenario = 'receipt-timeout'; await select('transaction'); await run();
+ for (const label of ['Inclusion', 'Execution', 'Provider-attested finality']) {
+  const slot = result.getByRole('heading', { name: label, exact: true }).locator('..');
+  assert.match(await slot.innerText(), label === 'Inclusion' ? /RPC reports block inclusion · observed/ : /Transaction found; outcome unavailable · unknown/);
+ }
+ record('Receipt timeout preserves observed inclusion with unknown execution and finality');
  scenario = 'transaction-receipt-block-conflict'; await select('transaction'); await run();
  assert.equal(await result.locator('article').first().locator('code').textContent(), 'tx.inconsistent');
  assert.match(await result.innerText(), /Contradictory · unknown/);
@@ -94,12 +121,14 @@ try {
  assert.match(await result.innerText(), /not an actual charge or guaranteed saving/);
  await result.getByRole('link', { name: 'Evidence #3', exact: true }).first().click();
  assert.ok(!(await result.innerText()).includes('deadbeef')); record('Gas separates limit, estimate and conditional cost; evidence hides calldata');
+ const beforeExport = requests.length;
  const downloadEvent = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export JSON' }).click();
  const download = await downloadEvent; await download.saveAs(output + '/gas-export.json');
  const exported = JSON.parse(await readFile(output + '/gas-export.json', 'utf8'));
  assert.deepEqual(exported, exportReport(reports[scenario]));
  assert.equal(exported.input.call.data, '[redacted]');
  assert.equal(exported.evidence.find(e => e.method === 'eth_estimateGas').params[0].data, '[redacted]');
+ assert.equal(requests.length, beforeExport);
  record('Downloaded JSON equals the unchanged M2 export format with both calldata fields redacted');
  const beforeEdit = requests.length;
  await page.locator('#gasLimit').fill('999999');
@@ -110,6 +139,7 @@ try {
  const oldExportEvent = page.waitForEvent('download'); await page.getByRole('button', { name: 'Export JSON' }).click();
  const oldExport = await oldExportEvent; await oldExport.saveAs(output + '/previous-export.json');
  assert.deepEqual(JSON.parse(await readFile(output + '/previous-export.json', 'utf8')), exported);
+ assert.equal(requests.length, beforeEdit);
  record('Edited inputs/provider mark previous snapshot; export retains captured context with no request');
  scenario = 'gas-estimation-error'; await select('gas'); await run();
  await result.getByRole('heading', { name: 'No usable gas estimate', exact: true }).waitFor();
@@ -153,6 +183,7 @@ try {
  await page.screenshot({ path: output + '/mobile.png', fullPage: true });
  await page.setViewportSize({ width: 1440, height: 1100 }); await page.screenshot({ path: output + '/desktop.png', fullPage: true });
  record('Mobile successful lifecycle remains provider-attested and renders without overflow');
+ assert.equal(requests.length, 14); // Only the fourteen explicit submissions above.
  assert.deepEqual(errors, []); record('No browser JavaScript errors');
  await writeFile(output + '/results.json', JSON.stringify({ target: base, evidence: 'Synthetic reports from the real M2 engine; no live RPC requests', checks, diagnosticSubmissions: requests.length, errors }, null, 2) + '\n');
  console.log(JSON.stringify({ passed: checks.length, failed: 0, diagnosticSubmissions: requests.length, liveRpcCalls: 0, output }));

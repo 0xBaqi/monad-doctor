@@ -22,10 +22,16 @@ export function guidedSummary(report: Report) {
  const unknown = ordered.filter(f => f.basis === 'unknown');
  // No inferred certainty for unknown IDs: preserve their original text and basis.
  const outcome = (label: string, ids: string[]) => ({ label, finding: ordered.find(f => ids.includes(f.id)) });
+ // Severity ranks overall attention, not the meaning of a lifecycle dimension.
+ // Relevant contradictions win; supported dimension findings precede generic unknowns.
+ const lifecycle = (label: string, ids: string[]) => ({ label, finding:
+  ordered.find(f => isContradiction(f) && ['tx.inconsistent', ...ids].includes(f.id)) ??
+  ids.map(id => ordered.find(f => f.id === id)).find(f => f !== undefined) ??
+  ordered.find(f => f.id === 'tx.outcome-unknown') });
  const outcomes = report.mode === 'transaction' ? [
-  outcome('Inclusion', ['tx.inclusion', 'tx.inconsistent', 'tx.outcome-unknown']),
-  outcome('Execution', ['tx.execution', 'tx.inconsistent', 'tx.outcome-unknown']),
-  outcome('Provider-attested finality', ['tx.finalized', 'tx.provisional', 'tx.finality-unknown', 'tx.inconsistent', 'tx.outcome-unknown']),
+  lifecycle('Inclusion', ['tx.inclusion']),
+  lifecycle('Execution', ['tx.execution']),
+  lifecycle('Provider-attested finality', ['tx.finality-unknown', 'tx.finalized', 'tx.provisional']),
  ] : report.mode === 'gas' ? [
   outcome('Proposed limit (gas units)', ['gas.protocol-cap']),
   outcome('RPC estimate at sampled state', ['gas.estimate-comparison', 'gas.estimate-over-cap', 'gas.estimate-unknown']),

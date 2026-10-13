@@ -1,0 +1,130 @@
+{
+  "milestone": "M3.1 adversarial review fixes",
+  "baseline": "6e373f9c4f62fbfca2a4d4276fac30662cc474d4",
+  "verifiedAt": "2026-10-13T18:24:55.382062+00:00",
+  "ruleVersion": "m3.1 (unchanged)",
+  "fixes": [
+    {
+      "finding": "P2",
+      "cause": "Global severity ordering selected generic outcome uncertainty ahead of observed inclusion.",
+      "correction": "Relevant typed contradictions precede dimension-specific findings; generic outcome unknown is the fallback. Original finding objects and complete list are preserved."
+    },
+    {
+      "finding": "P3",
+      "cause": "Absence of a busy state could describe the old report before the new request started.",
+      "correction": "Register request and response/failure waits before submission; match request identity, await response completion and rendered report/error, then assert counts and selected provider. No new sleeps."
+    }
+  ],
+  "regressions": [
+    "Receipt timeout: observed inclusion with unknown execution and finality",
+    "Contradictory inclusion",
+    "Fully unknown transaction",
+    "Provider-attested confirmed lifecycle",
+    "Competing observed inclusion and contradiction",
+    "Unknown/future finding IDs",
+    "Unchanged finding list and original finding references"
+  ],
+  "checks": [
+    {
+      "command": "Focused presentation regressions against temporary original module",
+      "expectedFailure": true,
+      "tests": 39,
+      "passed": 38,
+      "failed": 1,
+      "failure": "Receipt-timeout inclusion precedence"
+    },
+    {
+      "command": "Focused presentation tests after fix",
+      "exitCode": 0,
+      "tests": 39,
+      "passed": 39,
+      "failed": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 169,
+      "passed": 169,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "todo": 0,
+      "newTests": 5
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 5,
+      "warningScope": "Pre-existing .qa scripts (2) and preserved demo scripts (3)"
+    },
+    {
+      "command": "npm run cli:build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "Optimized production build, TypeScript and three routes generated"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "browser": {
+    "suite": "npm run qa:guided",
+    "consecutiveRuns": 3,
+    "checksPassedPerRun": [
+      23,
+      23,
+      23
+    ],
+    "checksFailed": 0,
+    "diagnosticSubmissionsPerRun": [
+      14,
+      14,
+      14
+    ],
+    "javascriptErrors": [
+      [],
+      [],
+      []
+    ],
+    "viewports": [
+      "1440x1100",
+      "390x844"
+    ],
+    "delayedResponse": "Existing bounded 300ms mock exercises pending state",
+    "exactRequestAssertions": "One per explicit submission; zero on selection/editing/evidence/export; fourteen total; selected provider preserved; no automatic retry",
+    "liveRpcCalls": 0
+  },
+  "legacyBrowser": {
+    "checksPassed": 10,
+    "checksFailed": 0,
+    "javascriptErrors": [],
+    "method": "Existing harness logic with temporary Chromium path, output paths and local diagnose route interception using real-engine deterministic mocks; original live-check labels do not represent live RPC checks.",
+    "liveRpcCalls": 0
+  },
+  "preserved": {
+    "demoFileCount": 74,
+    "demoHashesUnchanged": true,
+    "engineSchemaValidationRpcExportCliSecurityPathsUnchanged": true,
+    "productionSettingsChanged": false,
+    "deployments": 0,
+    "pushes": 0
+  },
+  "environment": [
+    "Initial sandboxed focused test workers hid individual results; unsandboxed deterministic runs passed.",
+    "Initial full lint exceeded 240 seconds; the bounded 600-second unsandboxed rerun passed. An optional focused lint attempt also exceeded its 60-second bound.",
+    "Existing temporary Chromium and runtime libraries under /tmp were reused; no dependency changes."
+  ],
+  "limitations": [
+    "Browser requests were deterministic mocks; no live RPC or production acceptance.",
+    "Accessibility checks cover layout, labels, keyboard focus and announcements; no complete human screen-reader audit."
+  ]
+}

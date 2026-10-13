@@ -34,6 +34,44 @@ for (const fixture of fixtures) test(`guided presentation: ${fixture.id}`, async
  }
 });
 
+for (const [id, expected] of [
+ ['receipt-timeout', ['tx.inclusion', 'tx.outcome-unknown', 'tx.outcome-unknown']],
+ ['transaction-receipt-block-conflict', ['tx.inconsistent', 'tx.inconsistent', 'tx.inconsistent']],
+ ['unknown-on-all-providers', ['tx.outcome-unknown', 'tx.outcome-unknown', 'tx.outcome-unknown']],
+ ['receipt-present-versus-absent', ['tx.inclusion', 'tx.execution', 'tx.finalized']],
+] as const) test(`lifecycle dimension precedence: ${id}`, async () => {
+ const fixture = fixtures.find(f => f.id === id)!;
+ const sample = fixture.samples[0];
+ const report = await diagnose({ ...fixture.input, provider: sample.provider }, { rpc: mockRpc(sample), now: () => NOW });
+ const before = structuredClone(report);
+ const summary = guidedSummary(report);
+ assert.deepEqual(summary.outcomes.map(o => o.finding?.id), expected);
+ if (id === 'receipt-timeout') {
+  assert.equal(summary.outcomes[0].finding?.basis, 'observed');
+  for (const o of summary.outcomes.slice(1)) assert.equal(o.finding?.basis, 'unknown');
+  assert.ok(!report.findings.some(f => ['tx.execution', 'tx.finalized', 'tx.provisional'].includes(f.id)));
+ }
+ for (const o of summary.outcomes) assert.ok(o.finding && report.findings.includes(o.finding));
+ assert.deepEqual(new Set(summary.ordered), new Set(report.findings));
+ assert.deepEqual(report, before);
+});
+
+test('lifecycle contradictions override competing observed inclusion and future IDs add no outcomes', async () => {
+ const fixture = fixtures.find(f => f.id === 'receipt-timeout')!;
+ const sample = fixture.samples[0];
+ const report = await diagnose(fixture.input, { rpc: mockRpc(sample), now: () => NOW });
+ const conflictFixture = fixtures.find(f => f.id === 'transaction-receipt-block-conflict')!;
+ const conflictReport = await diagnose(conflictFixture.input, { rpc: mockRpc(conflictFixture.samples[0]), now: () => NOW });
+ const conflict = conflictReport.findings.find(f => f.id === 'tx.inconsistent')!;
+ const future: Finding = { ...conflict, id: 'future.lifecycle' };
+ report.findings.push(conflict, future);
+ const before = structuredClone(report.findings);
+ const summary = guidedSummary(report);
+ for (const o of summary.outcomes) assert.equal(o.finding, conflict);
+ assert.ok(summary.ordered.includes(future));
+ assert.deepEqual(report.findings, before);
+});
+
 test('guided summary: unknown rule IDs retain original findings without a manufactured outcome', async () => {
  const report = await diagnose(TRANSACTION, { rpc: mockRpc({ provider: 'primary', expected: [], forbidden: [] }), now: () => NOW });
  const future: Finding = { id: 'future.rule', severity: 'error', basis: 'unknown', title: 'Future unknown result', detail: 'Unavailable evidence.', nextStep: 'Inspect recorded evidence.', evidence: [], sources: [] };
