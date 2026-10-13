@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "monad-doctor": "cli-dist/cli/index.js"
+  },
+  "files": [
+    "cli/**",
+    "cli-dist/**",
+    "lib/**",
+    "README.md"
+  ],
   "engines": {
     "node": ">=24"
   },
@@ -16,7 +25,10 @@
     "live": "node --use-system-ca --experimental-strip-types scripts/live-check.ts",
     "verify": "node scripts/verify.mjs",
     "qa:browser": "node --use-system-ca scripts/browser-check.mjs",
-    "live:smoke": "node --use-system-ca --experimental-strip-types scripts/smoke.ts"
+    "live:smoke": "node --use-system-ca --experimental-strip-types scripts/smoke.ts",
+    "doctor": "node --use-system-ca cli-dist/cli/index.js",
+    "cli:build": "tsc -p tsconfig.cli.json",
+    "prepack": "npm run cli:build"
   },
   "dependencies": {
     "next": "^16.0.0",

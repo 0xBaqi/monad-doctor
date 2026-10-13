@@ -19,6 +19,22 @@ npm run dev
 
 Open http://127.0.0.1:3000. Local development requires no wallet, private keys, API credentials, database, or environment file. Production diagnostics now require a configured fail-closed shared limiter; see [protected deployment setup](docs/protected-deployment.md).
 
+## Terminal CLI (M1)
+
+The CLI requires Node.js 24 or newer. From this checkout, run `npm ci` then `npm run doctor -- health`; for the installed executable, run `npm link` and use `monad-doctor`. When changing CLI or shared diagnostic TypeScript, run `npm run cli:build`; packaging runs that build automatically. The package stays private and is not published.
+
+```sh
+npm run doctor -- --help
+npm run doctor -- health
+npm run doctor -- health --json
+npm run doctor -- gas --limit 1000000 --from 0x1111111111111111111111111111111111111111 --to 0x2222222222222222222222222222222222222222
+npm run doctor -- tx 0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+```
+
+Gas requires the sender and recipient. Calldata defaults to `0x` and value to `0` wei; provide `--data` and `--value` when needed. The estimate applies to the supplied call at one provider sampled finalized block. It is not a guaranteed safe execution limit. The proposed gas limit and sampled price yield a conditional cost observation under Monad's gas model.
+
+`--provider primary|secondary` selects one of the two allowlisted public Monad RPC endpoints. Human reports go to stdout; `--json` emits only the existing validated, redacted export schema (calldata is omitted). Errors and argument diagnostics go to stderr. Exit codes are 0 for completed diagnostics without error findings, 1 for diagnostic error findings, 2 for invalid invocation, 3 for provider/transport failure, and 4 for internal failure. Warning and unknown findings can still complete with code 0. Transaction finality is provider-attested; consensus is not independently verified. The CLI does not use the public website or its admission limiter.
+
 ```sh
 npm test
 npm run typecheck
