@@ -175,12 +175,43 @@ for (const scenario of ['ordinary', 'frozen', 'null-prototype', 'partial', 'cont
  assert.equal(JSON.stringify(result), JSON.stringify(reconcileHealthSnapshots(a, b)));
  assert.equal(JSON.stringify(a), before);
 });
-test('health reconciliation: latest timeout keeps the existing finalized dependency policy', () => {
+test('health reconciliation: latest timeout cannot conceal incompatible finalized claims', () => {
  const b = replaceObservation(snapshot('secondary'), 'finalized', observed({ ...FINALIZED, hash: hash('e') }, 10));
  assert.equal(reconcileHealthSnapshots(snapshot('primary'), b).rows[3].relation, 'contradiction');
  const result = reconcileHealthSnapshots(snapshot('primary'), replaceObservation(b, 'latest', error));
- assert.equal(result.rows[3].relation, 'incomplete'); assert.equal(result.rows[3].reason, 'incomplete_block_bundle');
+ assert.equal(result.rows[3].relation, 'contradiction'); assert.equal(result.rows[3].reason, 'incompatible_finalized_claims');
+ assert.equal(result.rows[3].dependencies.length, 4);
+ assert.ok(result.rows[3].dependencies.every(r => [1, 2].includes(r.evidenceId)));
  assert.deepEqual(result.rows[3].right.observation, observed({ ...FINALIZED, hash: hash('e') }, 10));
+});
+
+for (const kind of ['error', 'null', 'skipped', 'missing'] as const) test('health reconciliation: direct finalized disagreement survives unrelated latest ' + kind, () => {
+ const a = snapshot('primary'), b = mutable(replaceObservation(snapshot('secondary'), 'finalized', observed({ ...FINALIZED, hash: hash('e') }, 10)));
+ let changed: HealthSnapshot = b;
+ if (kind === 'missing') { delete b.observations.latest; b.collections[0].evidence.pop(); }
+ else changed = replaceObservation(b, 'latest', kind === 'error' ? error : kind === 'null' ? absent : skipped);
+ const ab = reconcileHealthSnapshots(a, changed), ba = reconcileHealthSnapshots(changed, a);
+ assert.equal(ab.rows[3].relation, 'contradiction'); assert.equal(ba.rows[3].relation, 'contradiction');
+ assert.equal(ab.rows[1].relation, 'incomplete'); assert.equal(ab.guarantees.consensusVerified, false);
+});
+for (const side of ['primary', 'secondary'] as const) for (const slot of ['chain', 'finalized'] as const) test(`health reconciliation: removing required ${side} ${slot} weakens finalized contradiction`, () => {
+ let a = snapshot('primary'), b = replaceObservation(snapshot('secondary'), 'finalized', observed({ ...FINALIZED, hash: hash('e') }, 10));
+ if (side === 'primary') a = replaceObservation(a, slot, error); else b = replaceObservation(b, slot, error);
+ assert.equal(reconcileHealthSnapshots(a, b).rows[3].relation, 'incomplete');
+});
+test('health reconciliation: direct finalized contradiction preserves internal integrity warnings', () => {
+ let b = replaceObservation(snapshot('secondary'), 'finalized', observed({ ...FINALIZED, hash: hash('e') }, 10));
+ b = replaceObservation(b, 'latest', observed({ ...LATEST, number: '0x63' }, 20));
+ const r = reconcileHealthSnapshots(snapshot('primary'), b);
+ assert.equal(r.rows[3].relation, 'contradiction'); assert.ok(r.integrityIssues.some(i => i.code === 'finalized_ahead_of_latest'));
+ assert.ok(r.rows.slice(1, 3).every(r => r.relation === 'not_comparable'));
+ const weakened = reconcileHealthSnapshots(snapshot('primary'), replaceObservation(b, 'latest', error));
+ assert.equal(weakened.rows[3].relation, 'contradiction'); assert.ok(weakened.rows.slice(1, 3).every(r => r.relation === 'incomplete'));
+});
+test('health reconciliation: removing local inconsistency cannot manufacture a positive finalized match', () => {
+ const a = snapshot('primary'), b = replaceObservation(snapshot('secondary'), 'latest', observed({ ...LATEST, number: '0x63' }, 20));
+ assert.equal(reconcileHealthSnapshots(a, b).rows[3].relation, 'not_comparable');
+ assert.equal(reconcileHealthSnapshots(a, replaceObservation(b, 'latest', error)).rows[3].relation, 'incomplete');
 });
 test('health reconciliation: later latest behind finalized invalidates dependent rows, retaining evidence', () => {
  const b = replaceObservation(snapshot('secondary'), 'latest', observed({ ...LATEST, number: '0x63' }, 20));

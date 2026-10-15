@@ -1,6 +1,6 @@
 # M4.1A: pure health reconciliation
 
-This isolated module consumes supplied observations. It collects nothing and has no networking, scheduling, API, UI, export or CLI integration. Existing diagnostic rule version `m3.1`, report schema 1 and export version 1 are unchanged. Its separate reconciliation rule version is `m4.1a`.
+This isolated module consumes supplied observations. It collects nothing and has no networking, scheduling, API, UI, export or CLI integration. Existing diagnostic rule version `m3.1`, report schema 1 and export version 1 are unchanged. Its initial reconciliation rule version was `m4.1a`; the separately documented M4.1B direct-claim exception versions it as `m4.1b`.
 
 ## Interfaces
 
@@ -27,11 +27,11 @@ This is a narrow health projection: block number, hash, parent hash and timestam
 
 Unknown chain identity yields `incomplete`. A known wrong chain makes dependent block rows `not_comparable`, even if both providers return the same wrong chain ID. A network field match is not a network-validity verdict.
 
-**Conservative block-bundle policy:** every block row requires both providers' complete, consistent requested block bundles: latest and finalized, plus historical when requested. Known integrity issues take precedence and produce `not_comparable`; missing/null/error/skipped bundle members produce `incomplete`. Original observations remain visible in copied snapshots and row views.
+**Conservative block-bundle policy:** positive block conclusions require both providers' complete, consistent requested block bundles: latest and finalized, plus historical when requested. Known integrity issues produce `not_comparable`; missing/null/error/skipped bundle members produce `incomplete`. Original observations remain visible in copied snapshots and row views. The narrow M4.1B exception below takes precedence only for incompatible finalized claims.
 
 This intentionally sacrifices some possible partial field comparisons. It prevents replacing an observation with an error from erasing a local contradiction and upgrading another block row to a usable match. Network comparison remains independent. There is no overall success verdict, confidence score or relation-to-severity mapping.
 
-**Unresolved M4.1B dependency issue:** a latest-head timeout currently makes finalized identity `incomplete` even when both finalized claims are usable and have conflicting hashes. The claims remain in the result. Decide explicitly in M4.1B whether finalized comparison can safely use narrower dependencies while retaining conservative error-replacement behavior. This validation patch does not change the complete-bundle policy or any relation/contradiction rule.
+**M4.1B dependency decision:** usable expected-network finalized claims at the same height with different hashes produce `contradiction` even if unrelated latest observations are unavailable or other retained provider evidence is inconsistent. This reports incompatible claims, not trustworthy chain state. Internal integrity issues remain present. Only this contradiction row uses the narrower two-chain/two-finalized dependencies. Positive conclusions keep the complete-bundle policy, so erasing conflicting context cannot manufacture a match. See [the offline coordinator contract](health-coordinator-m41b.md).
 
 Missing, null and unavailable blocks never become height zero. Both nulls do not establish a matching block identity. Differences in finalized positions do not become identity contradictions. Matching unrelated rows cannot suppress explicit contradictory rows or integrity issues.
 
@@ -48,7 +48,7 @@ The module checks:
 
 Ordering uses supplied `startedOffsetMs` and `durationMs` intervals relative to the run's monotonic origin. `observedAt` must be a valid canonical UTC timestamp, but wall-clock skew cannot change order. Only strictly separated intervals establish order: touching, overlapping, equal zero-duration or reversed intervals do not establish “sampled later” contradictions. The function does not read the current clock.
 
-An integrity issue quarantines the requested block bundle; it does not delete evidence or change original observations into errors. Input/reference/context violations reject the invocation with `ValidationError`; structurally valid but contradictory provider claims produce a result with explicit issues.
+An integrity issue quarantines positive block conclusions; it does not delete evidence, change original observations into errors, or conceal the M4.1B direct finalized-claim contradiction. Input/reference/context violations reject the invocation with `ValidationError`; structurally valid but contradictory provider claims produce a result with explicit issues.
 
 ## Guarantees and limitations
 

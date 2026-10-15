@@ -1,14 +1,14 @@
 import type { Provider } from './model.ts';
 import { hex, object, quantity, ValidationError } from './validation.ts';
 
-export const HEALTH_RECONCILIATION_VERSION = 'm4.1a' as const;
+export const HEALTH_RECONCILIATION_VERSION = 'm4.1b' as const;
 type Pair = readonly [Provider, Provider];
 type Slot = 'chain' | 'latest' | 'finalized' | 'historical';
 type BlockSlot = Exclude<Slot, 'chain'>;
 export type HealthBlock = Readonly<{ number: string; hash: string; parentHash: string; timestamp: string }>;
 export type HealthEvidenceRef = Readonly<{ runId: string; provider: Provider; collectionId: string; evidenceId: number }>;
 export type HealthComparisonInput = Readonly<{ mode: 'health'; providers: Pair; historicalHeight?: string }>;
-export type HealthRpcError = 'TIMEOUT' | 'RATE_LIMIT' | 'HTTP' | 'RPC' | 'MALFORMED' | 'NETWORK' | 'TOO_LARGE' | 'BUDGET';
+export type HealthRpcError = 'TIMEOUT' | 'CANCELLED' | 'RATE_LIMIT' | 'HTTP' | 'RPC' | 'MALFORMED' | 'NETWORK' | 'TOO_LARGE' | 'BUDGET';
 export type SkipReason = 'deadline' | 'budget' | 'cancelled' | 'dependency' | 'not_requested';
 // Relative offsets share the declared run's monotonic origin. Wall timestamps
 // are provenance only; clock adjustments must not invent sampling order.
@@ -123,7 +123,7 @@ function observation(raw: unknown, chain: boolean): HealthObservation<string | H
   case 'null': fields(x, ['kind', 'observedAt', 'startedOffsetMs', 'durationMs']); return { kind: 'null', ...timing(x) };
   case 'error': {
    fields(x, ['kind', 'code', 'observedAt', 'startedOffsetMs', 'durationMs']);
-   if (typeof x.code !== 'string' || !['TIMEOUT', 'RATE_LIMIT', 'HTTP', 'RPC', 'MALFORMED', 'NETWORK', 'TOO_LARGE', 'BUDGET'].includes(x.code)) fail('Invalid error code.');
+   if (typeof x.code !== 'string' || !['TIMEOUT', 'CANCELLED', 'RATE_LIMIT', 'HTTP', 'RPC', 'MALFORMED', 'NETWORK', 'TOO_LARGE', 'BUDGET'].includes(x.code)) fail('Invalid error code.');
    return { kind: 'error', code: x.code as HealthRpcError, ...timing(x) };
   }
   case 'skipped':
@@ -234,12 +234,17 @@ export function reconcileHealthSnapshots(leftInput: HealthSnapshot, rightInput: 
   if (slot === 'chain') decision = av === undefined || bv === undefined ? { relation: 'incomplete', reason: 'missing_network_identity' } : decide(av, bv);
   else if ([value(chainLeft), value(chainRight)].some(v => typeof v === 'string' && v !== '0x8f')) decision = { relation: 'not_comparable', reason: 'wrong_network' };
   else if (value(chainLeft) === undefined || value(chainRight) === undefined) decision = { relation: 'incomplete', reason: 'missing_network_identity' };
+  // Incompatible normalized claims remain observable even when their surrounding
+  // provider evidence is incomplete or inconsistent. This does not validate
+  // either claim. Positive conclusions retain the original bundle prerequisites.
+  else if (subject.kind === 'finalized_head_identity' && blockValue(a) && blockValue(b) && blockValue(a)!.number === blockValue(b)!.number && blockValue(a)!.hash !== blockValue(b)!.hash) decision = { relation: 'contradiction', reason: 'incompatible_finalized_claims' };
   else if (issues.length) decision = { relation: 'not_comparable', reason: 'provider_evidence_inconsistent' };
   // Fixed integrity dependencies prevent an error from erasing a conflicting
   // observation and thereby upgrading another block row to a match.
   else if ([left, right].some(s => slots.some(slot => blockValue(view(s, slot)) === undefined))) decision = { relation: 'incomplete', reason: 'incomplete_block_bundle' };
   else decision = decide(av!, bv!);
-  rows.push({ subject, ...decision, comparedFields, left: a, right: b, dependencies: slot === 'chain' ? [chainLeft.ref, chainRight.ref].filter((r): r is HealthEvidenceRef => Boolean(r)) : dependencies, scope });
+  const direct = subject.kind === 'finalized_head_identity' && decision.relation === 'contradiction';
+  rows.push({ subject, ...decision, comparedFields, left: a, right: b, dependencies: slot === 'chain' || direct ? [chainLeft.ref, chainRight.ref, ...(direct ? [a.ref, b.ref] : [])].filter((r): r is HealthEvidenceRef => Boolean(r)) : dependencies, scope });
  }
  row({ kind: 'network_identity', expectedChainId: '0x8f' }, 'chain', 'network_field', ['chainId'], (a, b) => ({ relation: a === b ? 'match' : 'contradiction', reason: a === b ? 'equal_fields' : 'incompatible_network_claims' }));
  for (const slot of ['latest', 'finalized'] as const) row({ kind: slot === 'latest' ? 'latest_head_position' : 'finalized_head_position' }, slot, 'sampled_head_positions', ['number'], (a, b) => ({ relation: (a as HealthBlock).number === (b as HealthBlock).number ? 'match' : 'difference', reason: (a as HealthBlock).number === (b as HealthBlock).number ? 'equal_fields' : 'different_positions' }));
