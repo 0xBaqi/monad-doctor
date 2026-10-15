@@ -103,11 +103,84 @@ test('health reconciliation: rejects different run and input contexts or duplica
  assert.throws(() => reconcileHealthSnapshots(snapshot('primary'), snapshot('secondary', true)), /context mismatch/);
  assert.throws(() => reconcileHealthSnapshots(snapshot('primary'), snapshot('primary')), /context mismatch/);
 });
-test('health reconciliation: normalizes case and provider-pair order without altering inputs', () => {
- const b = mutable(snapshot('secondary')); b.input.providers = ['secondary', 'primary'];
+test('health reconciliation: normalizes hex case without altering inputs', () => {
+ const b = mutable(snapshot('secondary'));
  if (b.collections[0].evidence[0].observation.kind === 'value') b.collections[0].evidence[0].observation.value = '0x8F';
  const f = b.collections[0].evidence[1].observation; if (f.kind === 'value' && typeof f.value === 'object') f.value.hash = f.value.hash.toUpperCase().replace('0X', '0x');
  assert.ok(reconcileHealthSnapshots(snapshot('primary'), b).rows.every(r => r.relation === 'match'));
+});
+
+for (const fault of ['provider-first-hole', 'provider-second-hole', 'collection-hole', 'evidence-hole', 'selector-hole', 'flag-hole', 'null-collection', 'null-evidence', 'nested-array-collection', 'extra-array-property'] as const) test('health data boundary: rejects ' + fault, () => {
+ const a = mutable(snapshot('primary'));
+ if (fault === 'provider-first-hole') delete (a.input.providers as unknown[])[0];
+ if (fault === 'provider-second-hole') delete (a.input.providers as unknown[])[1];
+ if (fault === 'collection-hole') { a.collections = new Array(1); a.observations = {}; }
+ if (fault === 'evidence-hole') delete a.collections[0].evidence[0];
+ const params = a.collections[0]?.evidence[1]?.request.params as unknown[] | undefined;
+ if (fault === 'selector-hole') delete params![0];
+ if (fault === 'flag-hole') delete params![1];
+ if (fault === 'null-collection') Object.assign(a.collections, { 0: null });
+ if (fault === 'null-evidence') Object.assign(a.collections[0].evidence, { 0: null });
+ if (fault === 'nested-array-collection') Object.assign(a.collections, { 0: [] });
+ if (fault === 'extra-array-property') Object.assign(a.collections, { extra: 'not JSON array data' });
+ assert.throws(() => validateHealthSnapshot(a));
+});
+test('health data boundary: requires the explicitly ordered approved provider pair', () => {
+ const a = mutable(snapshot('primary')); a.input.providers.reverse();
+ assert.throws(() => validateHealthSnapshot(a), /ordered approved provider pair/);
+ assert.deepEqual(validateHealthSnapshot(snapshot('primary')).input.providers, ['primary', 'secondary']);
+});
+
+for (const location of ['root-provider', 'input', 'provider-array', 'provider-entry', 'collection-entry', 'collection-evidence', 'evidence-id', 'request', 'params', 'param-entry', 'observation', 'kind', 'timestamp', 'duration', 'offset', 'block-value', 'block-number', 'block-hash', 'block-parent', 'block-timestamp', 'reference-id'] as const) test('health data boundary: rejects accessor at ' + location + ' without invoking it', () => {
+ const a = mutable(snapshot('primary')), collection = a.collections[0], entry = collection.evidence[1];
+ const observation = entry.observation;
+ assert.ok(observation.kind === 'value' && typeof observation.value === 'object');
+ const targets: Record<typeof location, [object, string]> = {
+  'root-provider': [a, 'provider'], input: [a, 'input'], 'provider-array': [a.input, 'providers'], 'provider-entry': [a.input.providers, '0'],
+  'collection-entry': [a.collections, '0'], 'collection-evidence': [collection, 'evidence'], 'evidence-id': [entry, 'evidenceId'],
+  request: [entry, 'request'], params: [entry.request, 'params'], 'param-entry': [entry.request.params, '0'],
+  observation: [entry, 'observation'], kind: [observation, 'kind'], timestamp: [observation, 'observedAt'], duration: [observation, 'durationMs'], offset: [observation, 'startedOffsetMs'],
+  'block-value': [observation, 'value'], 'block-number': [observation.value, 'number'], 'block-hash': [observation.value, 'hash'], 'block-parent': [observation.value, 'parentHash'], 'block-timestamp': [observation.value, 'timestamp'],
+  'reference-id': [a.observations.finalized!, 'evidenceId'],
+ };
+ const [target, key] = targets[location], original = Object.getOwnPropertyDescriptor(target, key)!.value;
+ let reads = 0;
+ Object.defineProperty(target, key, { enumerable: true, configurable: true, get() { reads++; return location === 'timestamp' && reads > 4 ? 'UNVALIDATED_TIMESTAMP' : original; } });
+ assert.throws(() => reconcileHealthSnapshots(a, snapshot('secondary')), /data (properties|entries)/);
+ assert.equal(reads, 0);
+});
+for (const fault of ['custom-object-prototype', 'array-subclass-prototype', 'date', 'symbol-property', 'nonenumerable-property', 'setter-only'] as const) test('health data boundary: rejects unsupported ' + fault, () => {
+ const a = mutable(snapshot('primary'));
+ if (fault === 'custom-object-prototype') Object.setPrototypeOf(a.collections[0], { inherited: true });
+ if (fault === 'array-subclass-prototype') Object.setPrototypeOf(a.input.providers, Object.create(Array.prototype));
+ if (fault === 'date') Object.assign(a, { observations: new Date(0) });
+ if (fault === 'symbol-property') Object.defineProperty(a, Symbol('extra'), { value: 1, enumerable: true });
+ if (fault === 'nonenumerable-property') Object.defineProperty(a, 'extra', { value: 1 });
+ let writes = 0;
+ if (fault === 'setter-only') Object.defineProperty(a.input, 'mode', { enumerable: true, set() { writes++; } });
+ assert.throws(() => validateHealthSnapshot(a)); assert.equal(writes, 0);
+});
+for (const scenario of ['ordinary', 'frozen', 'null-prototype', 'partial', 'contradictory'] as const) test('health data boundary: accepted ' + scenario + ' snapshots round-trip and serialize deterministically', () => {
+ let a = mutable(snapshot('primary', true));
+ if (scenario === 'partial') a = mutable(replaceObservation(a, 'finalized', error));
+ if (scenario === 'contradictory') a = mutable(replaceObservation(a, 'latest', observed({ ...LATEST, number: '0x63' }, 20)));
+ if (scenario === 'null-prototype') { Object.setPrototypeOf(a, null); Object.setPrototypeOf(a.collections[0].evidence[1].observation, null); }
+ if (scenario === 'frozen') {
+  const freeze = (x: unknown) => { if (x && typeof x === 'object') { Object.values(x).forEach(freeze); Object.freeze(x); } };
+  freeze(a);
+ }
+ const before = JSON.stringify(a), validated = validateHealthSnapshot(a);
+ assert.deepEqual(validateHealthSnapshot(JSON.parse(JSON.stringify(validated))), validated);
+ const b = snapshot('secondary', true), result = reconcileHealthSnapshots(a, b);
+ assert.equal(JSON.stringify(result), JSON.stringify(reconcileHealthSnapshots(a, b)));
+ assert.equal(JSON.stringify(a), before);
+});
+test('health reconciliation: latest timeout keeps the existing finalized dependency policy', () => {
+ const b = replaceObservation(snapshot('secondary'), 'finalized', observed({ ...FINALIZED, hash: hash('e') }, 10));
+ assert.equal(reconcileHealthSnapshots(snapshot('primary'), b).rows[3].relation, 'contradiction');
+ const result = reconcileHealthSnapshots(snapshot('primary'), replaceObservation(b, 'latest', error));
+ assert.equal(result.rows[3].relation, 'incomplete'); assert.equal(result.rows[3].reason, 'incomplete_block_bundle');
+ assert.deepEqual(result.rows[3].right.observation, observed({ ...FINALIZED, hash: hash('e') }, 10));
 });
 test('health reconciliation: later latest behind finalized invalidates dependent rows, retaining evidence', () => {
  const b = replaceObservation(snapshot('secondary'), 'latest', observed({ ...LATEST, number: '0x63' }, 20));

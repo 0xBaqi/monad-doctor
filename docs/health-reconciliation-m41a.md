@@ -6,7 +6,9 @@ This isolated module consumes supplied observations. It collects nothing and has
 
 `validateHealthSnapshot(unknown)` validates, normalizes, copies and deeply freezes a `HealthSnapshot`. `reconcileHealthSnapshots(left, right)` validates both snapshots, checks their shared context, and returns a deeply frozen `HealthReconciliation` containing copied snapshots, integrity issues and field-level rows.
 
-Snapshots declare the same opaque run ID, health input, distinct approved provider pair, and optional explicit historical height. Pair order is normalized; left/right result attribution follows argument order. Each snapshot owns collections and slot references for chain identity, latest, finalized and optional historical block observations.
+Snapshots declare the same opaque run ID, health input, explicitly ordered approved provider pair `['primary', 'secondary']`, and optional explicit historical height. Reversed input pairs are rejected; left/right result attribution still follows snapshot argument order. Each snapshot owns collections and slot references for chain identity, latest, finalized and optional historical block observations.
+
+The normalization boundary accepts ordinary or null-prototype data objects and standard dense arrays. It captures own enumerable data properties using descriptors, rejects accessors without invoking their getters/setters, and validates exactly the captured values. Sparse arrays, extra array properties, symbol/nonenumerable object properties, custom prototypes and exotic objects are rejected. This applies to nested requests, observations, timing, blocks and references. Frozen plain-data inputs remain supported; normalized snapshots remain valid after JSON serialization and parsing. This is a plain-data contract, not a sandbox for executing arbitrary JavaScript objects or Proxy traps.
 
 References are `{ runId, provider, collectionId, evidenceId }`. Collection/run/provider ownership, unique collection IDs, unique IDs within each collection, exact resolution and slot request context are mandatory. IDs can repeat across providers or collections. Unreferenced evidence is rejected rather than silently omitted. At most four collections and ten evidence entries per snapshot are accepted.
 
@@ -28,6 +30,8 @@ Unknown chain identity yields `incomplete`. A known wrong chain makes dependent 
 **Conservative block-bundle policy:** every block row requires both providers' complete, consistent requested block bundles: latest and finalized, plus historical when requested. Known integrity issues take precedence and produce `not_comparable`; missing/null/error/skipped bundle members produce `incomplete`. Original observations remain visible in copied snapshots and row views.
 
 This intentionally sacrifices some possible partial field comparisons. It prevents replacing an observation with an error from erasing a local contradiction and upgrading another block row to a usable match. Network comparison remains independent. There is no overall success verdict, confidence score or relation-to-severity mapping.
+
+**Unresolved M4.1B dependency issue:** a latest-head timeout currently makes finalized identity `incomplete` even when both finalized claims are usable and have conflicting hashes. The claims remain in the result. Decide explicitly in M4.1B whether finalized comparison can safely use narrower dependencies while retaining conservative error-replacement behavior. This validation patch does not change the complete-bundle policy or any relation/contradiction rule.
 
 Missing, null and unavailable blocks never become height zero. Both nulls do not establish a matching block identity. Differences in finalized positions do not become identity contradictions. Matching unrelated rows cannot suppress explicit contradictory rows or integrity issues.
 
@@ -76,7 +80,7 @@ node --experimental-strip-types tests/health-reconciliation.test.ts
 
 Required regression checks are the existing full test script, TypeScript, ESLint, CLI build, production build and `git diff --check`. No live RPC or browser acceptance is needed for this unintegrated pure module.
 
-### Local verification results
+### Initial M4.1A verification results
 
 - New reconciler suite: **55 tests passed**, including a 24-replacement value-to-error property sweep.
 - `npm test`: passed all **13 test files**. Because this environment's child-test reporter aggregates file outcomes, each suite was also executed directly in its own process: **224 tests passed, 0 failed** (169 existing, 55 new).
@@ -88,3 +92,16 @@ Required regression checks are the existing full test script, TypeScript, ESLint
 - Existing source/configuration files are unchanged. All **74 files** in `demo/` matched their initial SHA-256 manifest.
 
 No live RPC requests, browser tests, deployment commands or production changes were performed.
+
+### Validation follow-up verification
+
+The two review findings are fixed at the local plain-data normalization boundary. No comparison classification, complete-bundle policy, contradiction rule or reconciliation-rule version changed. The approved input provider pair now requires explicit canonical order; swapping snapshot arguments remains supported.
+
+- **44 added regressions; 99 reconciler tests passed.** Coverage includes sparse/malformed arrays, canonical provider order, accessors at 21 nested locations with zero getter invocations, unsupported prototypes/properties, ordinary/frozen/null-prototype data, JSON round-trips and repeat serialization. Existing qualified-ID and post-reconciliation mutation tests remain passing. A regression preserves the unresolved latest-timeout/finalized dependency behavior.
+- `npm test`: **13 test files passed**. Direct execution of each suite independently confirmed **268 tests passed, 0 failed**.
+- Typecheck: passed on a bounded 600-second outside-sandbox retry after the initial 240-second attempt timed out without diagnostics.
+- ESLint: passed on a bounded 600-second outside-sandbox retry after the initial 300-second attempt timed out without a result. Final result: **0 errors, 5 existing warnings** in `.qa/` and `demo/`; no warnings in the changed files. The precise cause of the initial timeouts was not established.
+- CLI build: passed.
+- Production build: completed successfully within its 900-second outside-sandbox bound, including compilation, TypeScript, all three static pages and route output.
+- Git diff checks: passed. Changes are limited to this document, the pure reconciler and its tests; existing production engine/rules, collectors, API/security, UI, legacy exports, CLI and configuration are unchanged.
+- SHA-256 comparison confirmed all **74 `demo/` files unchanged**. No live RPC, push, deployment or production-setting changes occurred.

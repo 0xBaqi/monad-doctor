@@ -56,10 +56,38 @@ export type HealthReconciliation = Readonly<{
 }>;
 
 function fail(message: string): never { throw new ValidationError('Health reconciliation: ' + message); }
-function fields(raw: unknown, allowed: string[]) {
+// Capture own data properties without invoking getters. Subsequent validation
+// and projection read only these captured values, including at nested levels.
+function dataObject(raw: unknown): Record<string, unknown> {
  const x = object(raw);
+ const prototype = Object.getPrototypeOf(x);
+ if (prototype !== Object.prototype && prototype !== null) fail('Expected a plain data object.');
+ const copy: Record<string, unknown> = Object.create(null);
+ for (const key of Reflect.ownKeys(x)) {
+  const descriptor = Object.getOwnPropertyDescriptor(x, key)!;
+  if (typeof key !== 'string' || !descriptor.enumerable || !('value' in descriptor)) fail('Expected enumerable data properties.');
+  copy[key] = descriptor.value;
+ }
+ return copy;
+}
+function fields(raw: unknown, allowed: string[]) {
+ const x = dataObject(raw);
  if (Object.keys(x).some(k => !allowed.includes(k))) fail('Unexpected field.');
  return x;
+}
+function dataArray(raw: unknown, maximum: number): unknown[] {
+ if (!Array.isArray(raw) || Object.getPrototypeOf(raw) !== Array.prototype) fail('Expected a standard data array.');
+ const length: unknown = Object.getOwnPropertyDescriptor(raw, 'length')?.value;
+ if (typeof length !== 'number' || !Number.isSafeInteger(length) || length < 0 || length > maximum) fail('Expected a bounded dense array.');
+ const descriptors = Object.getOwnPropertyDescriptors(raw);
+ if (Reflect.ownKeys(descriptors).length !== length + 1) fail('Expected a bounded dense array.');
+ const copy: unknown[] = [];
+ for (let i = 0; i < length; i++) {
+  const descriptor = descriptors[String(i)];
+  if (!descriptor || !descriptor.enumerable || !('value' in descriptor)) fail('Expected explicit array data entries.');
+  copy.push(descriptor.value);
+ }
+ return copy;
 }
 function identifier(v: unknown): string {
  if (typeof v !== 'string' || !/^[a-zA-Z0-9._-]{1,100}$/.test(v)) fail('Invalid identifier.');
@@ -73,10 +101,9 @@ function ref(raw: unknown): HealthEvidenceRef {
 }
 function input(raw: unknown): HealthComparisonInput {
  const x = fields(raw, ['mode', 'providers', 'historicalHeight']);
- if (x.mode !== 'health' || !Array.isArray(x.providers) || x.providers.length !== 2) fail('Invalid health input.');
- const pair = x.providers.map(provider);
- if (pair[0] === pair[1]) fail('Provider pair must be distinct.');
- // Pair order is not a subject difference; result attribution follows argument order.
+ const pair = dataArray(x.providers, 2);
+ if (x.mode !== 'health' || pair.length !== 2 || pair[0] !== 'primary' || pair[1] !== 'secondary') fail('Expected the ordered approved provider pair.');
+ // Input order is canonical; result attribution follows argument order.
  return { mode: 'health', providers: ['primary', 'secondary'], ...(x.historicalHeight === undefined ? {} : { historicalHeight: quantity(x.historicalHeight) }) };
 }
 function block(raw: unknown): HealthBlock {
@@ -90,7 +117,7 @@ function timing(x: Record<string, unknown>): Timing {
  return { observedAt: x.observedAt, startedOffsetMs: x.startedOffsetMs, durationMs: x.durationMs };
 }
 function observation(raw: unknown, chain: boolean): HealthObservation<string | HealthBlock> {
- const x = object(raw);
+ const x = dataObject(raw);
  switch (x.kind) {
   case 'value': fields(x, ['kind', 'value', 'observedAt', 'startedOffsetMs', 'durationMs']); return { kind: 'value', value: chain ? quantity(x.value) : block(x.value), ...timing(x) };
   case 'null': fields(x, ['kind', 'observedAt', 'startedOffsetMs', 'durationMs']); return { kind: 'null', ...timing(x) };
@@ -108,12 +135,12 @@ function observation(raw: unknown, chain: boolean): HealthObservation<string | H
 }
 function evidence(raw: unknown): HealthEvidence {
  const x = fields(raw, ['evidenceId', 'request', 'observation']), req = fields(x.request, ['method', 'params']);
- if (!Array.isArray(req.params)) fail('Invalid request parameters.');
- if (req.method === 'eth_chainId' && req.params.length === 0) {
+ const params = dataArray(req.params, 2);
+ if (req.method === 'eth_chainId' && params.length === 0) {
   return { evidenceId: id(x.evidenceId), request: { method: 'eth_chainId', params: [] }, observation: observation(x.observation, true) as HealthObservation<string> };
  }
- if (req.method !== 'eth_getBlockByNumber' || req.params.length !== 2 || req.params[1] !== false) fail('Invalid health method or parameters.');
- const selector = req.params[0] === 'latest' || req.params[0] === 'finalized' ? req.params[0] : quantity(req.params[0]);
+ if (req.method !== 'eth_getBlockByNumber' || params.length !== 2 || params[1] !== false) fail('Invalid health method or parameters.');
+ const selector = params[0] === 'latest' || params[0] === 'finalized' ? params[0] : quantity(params[0]);
  return { evidenceId: id(x.evidenceId), request: { method: 'eth_getBlockByNumber', params: [selector, false] }, observation: observation(x.observation, false) as HealthObservation<HealthBlock> };
 }
 function freeze<T>(value: T): T {
@@ -126,15 +153,16 @@ function key(r: HealthEvidenceRef): string { return JSON.stringify([r.runId, r.p
 export function validateHealthSnapshot(raw: unknown): HealthSnapshot {
  const x = fields(raw, ['runId', 'provider', 'input', 'collections', 'observations']);
  const runId = identifier(x.runId), owner = provider(x.provider), context = input(x.input);
- if (!Array.isArray(x.collections) || x.collections.length > 4) fail('Invalid collections.');
+ const rawCollections = dataArray(x.collections, 4);
  const collectionIds = new Set<string>(), index = new Map<string, HealthEvidence>(); let count = 0;
- const collections: HealthCollection[] = x.collections.map(rawCollection => {
+ const collections: HealthCollection[] = rawCollections.map(rawCollection => {
   const c = fields(rawCollection, ['runId', 'provider', 'collectionId', 'evidence']);
   if (c.runId !== runId || c.provider !== owner) fail('Collection ownership mismatch.');
   const collectionId = identifier(c.collectionId);
   if (collectionIds.has(collectionId)) fail('Duplicate collection ID.'); collectionIds.add(collectionId);
-  if (!Array.isArray(c.evidence) || (count += c.evidence.length) > 10) fail('Too many evidence entries.');
-  const entries = c.evidence.map(evidence);
+  const rawEntries = dataArray(c.evidence, 10);
+  if ((count += rawEntries.length) > 10) fail('Too many evidence entries.');
+  const entries = rawEntries.map(evidence);
   for (const entry of entries) {
    const k = key({ runId, provider: owner, collectionId, evidenceId: entry.evidenceId });
    if (index.has(k)) fail('Duplicate qualified evidence ID.'); index.set(k, entry);
