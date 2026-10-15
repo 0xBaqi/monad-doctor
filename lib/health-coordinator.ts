@@ -26,12 +26,14 @@ export function boundedHealthResult(report: HealthEnvelope): HealthResult {
 export function startHealthComparison(raw: unknown, dependencies: Dependencies): HealthCoordinatorHandle {
  const runId = dependencies.runId ?? crypto.randomUUID();
  const request = requestInput(raw, runId), clock = dependencies.clock ?? realClock;
- if (typeof dependencies.fetcher !== 'function' || typeof dependencies.admission?.release !== 'function') throw new ValidationError('Comparison transport and admission lease are required.');
+ const admission = dependencies.admission, release = admission?.release;
+ if (typeof dependencies.fetcher !== 'function' || !admission || typeof release !== 'function') throw new ValidationError('Comparison transport and admission lease are required.');
+ const releaseAdmission = release.bind(admission);
  const origin = clock.now();
  if (!Number.isFinite(origin) || origin < 0 || origin + HEALTH_LIMITS.collectionMs > Number.MAX_SAFE_INTEGER) throw new ValidationError('Invalid monotonic origin.');
  const dispatcher = createHealthDispatcher({ runId, alignment: request.alignSharedHeight, clock, origin, wallNow: dependencies.wallNow ?? Date.now, fetcher: dependencies.fetcher });
- if (consumedAdmissions.has(dependencies.admission)) throw new ValidationError('Comparison admission lease was already consumed.');
- consumedAdmissions.add(dependencies.admission);
+ if (consumedAdmissions.has(admission)) throw new ValidationError('Comparison admission lease was already consumed.');
+ consumedAdmissions.add(admission);
  const controller = new AbortController(), deadline = origin + HEALTH_LIMITS.collectionMs;
  let published = false, released = false;
  let resolveResult!: (result: HealthResult) => void, resolveDrained!: () => void, rejectDrained!: (reason: Error) => void;
@@ -109,7 +111,7 @@ export function startHealthComparison(raw: unknown, dependencies: Dependencies):
   await dispatcher.drained();
   if (!released) {
    released = true;
-   try { dependencies.admission.release(); resolveDrained(); }
+   try { releaseAdmission(); resolveDrained(); }
    catch { rejectDrained(new Error('Comparison admission release failed.')); }
   }
  }

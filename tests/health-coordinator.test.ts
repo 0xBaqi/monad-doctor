@@ -191,3 +191,64 @@ test('coordinator cannot reuse admission credit for a second comparison', async 
  await h.result; await h.drained;
  assert.throws(() => startHealthComparison(comparisonRequest(), dependencies), /already consumed/);
 });
+
+test('coordinator captures admission A and its receiver-bound release despite substitution with B', async () => {
+ const admissionA = { releases: 0, release() { assert.equal(this, admissionA); this.releases++; } };
+ const admissionB = { releases: 0, release() { assert.equal(this, admissionB); this.releases++; } };
+ const dependencies = { fetcher: automaticTransport(), clock: new FakeClock(), wallNow, runId: 'bound-admission', admission: admissionA };
+ const handle = startHealthComparison(comparisonRequest(), dependencies);
+ dependencies.admission = admissionB;
+ admissionA.release = () => { throw new Error('A replacement method must not be called'); };
+ assert.throws(() => startHealthComparison(comparisonRequest(), { ...dependencies, admission: admissionA }), /already consumed/);
+ await handle.result; await handle.drained;
+ assert.equal(admissionA.releases, 1); assert.equal(admissionB.releases, 0);
+ handle.cancel(); handle.cancel(); await handle.drained; assert.equal(admissionA.releases, 1);
+ assert.throws(() => startHealthComparison(comparisonRequest(), { ...dependencies, admission: admissionA }), /already consumed/);
+ const next = startHealthComparison(comparisonRequest(), dependencies); await next.result; await next.drained;
+ assert.equal(admissionB.releases, 1);
+});
+
+test('coordinator admission substitution during quarantine cannot release either lease before cleanup', async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(); let releasesA = 0, releasesB = 0, notifications = 0;
+ const admissionA = { release() { releasesA++; } }, admissionB = { release() { releasesB++; } };
+ const dependencies = { clock, fetcher: transport.fetcher, wallNow, runId: 'quarantine-admission', admission: admissionA };
+ const handle = startHealthComparison(comparisonRequest(), dependencies); await clock.flush();
+ await clock.advance(2250); const result = await handle.result, before = JSON.stringify(result);
+ assert.equal(report(result).cleanupPending, true);
+ dependencies.admission = admissionB;
+ handle.cancel(); handle.cancel();
+ const notifiedA = handle.drained.then(() => { notifications++; }), notifiedB = handle.drained.then(() => { notifications++; });
+ await clock.flush(); assert.equal(releasesA, 0); assert.equal(releasesB, 0); assert.equal(notifications, 0);
+ assert.throws(() => startHealthComparison(comparisonRequest(), { ...dependencies, admission: admissionA }), /already consumed/);
+ transport.reply(0, '0x8f'); await clock.flush(); await Promise.all([notifiedA, notifiedB]);
+ assert.equal(releasesA, 1); assert.equal(releasesB, 0); assert.equal(notifications, 2);
+ assert.equal(JSON.stringify(result), before); assert.equal(transport.calls.length, 1);
+ handle.cancel(); await handle.drained; assert.equal(releasesA, 1);
+});
+
+test('coordinator captures the admission property exactly once', async () => {
+ let reads = 0, releasesA = 0, releasesB = 0;
+ const a = { release() { releasesA++; } }, b = { release() { releasesB++; } };
+ const handle = startHealthComparison(comparisonRequest(), { fetcher: automaticTransport(), clock: new FakeClock(), wallNow, runId: 'admission-getter', get admission() { return ++reads === 1 ? a : b; } });
+ await handle.result; await handle.drained;
+ assert.equal(reads, 1); assert.equal(releasesA, 1); assert.equal(releasesB, 0);
+});
+
+for (const fault of ['input', 'clock'] as const) test('coordinator failed construction does not consume or release admission: ' + fault, async () => {
+ let releases = 0; const admission = { release() { releases++; } };
+ const dependencies = { fetcher: automaticTransport(), clock: new FakeClock(), wallNow, runId: 'failed-construction', admission };
+ assert.throws(() => startHealthComparison(fault === 'input' ? {} : comparisonRequest(), { ...dependencies, ...(fault === 'clock' ? { clock: { now() { throw new Error('clock'); }, at: dependencies.clock.at } } : {}) }));
+ assert.equal(releases, 0);
+ const handle = startHealthComparison(comparisonRequest(), dependencies); await handle.result; await handle.drained;
+ assert.equal(releases, 1);
+});
+
+test('coordinator release failure rejects drained once without reusing admission', async () => {
+ let releases = 0;
+ const dependencies = { fetcher: automaticTransport(), clock: new FakeClock(), wallNow, runId: 'release-failure', admission: { release() { releases++; throw new Error('SECRET'); } } };
+ const handle = startHealthComparison(comparisonRequest(), dependencies);
+ const rejected = assert.rejects(handle.drained, /^Error: Comparison admission release failed\.$/);
+ assert.equal((await handle.result).kind, 'comparison'); await rejected;
+ handle.cancel(); handle.cancel(); assert.equal(releases, 1);
+ assert.throws(() => startHealthComparison(comparisonRequest(), dependencies), /already consumed/);
+});

@@ -131,3 +131,125 @@ test('dispatcher destination, methods and wire options are server controlled', a
  assert.deepEqual(call.init.headers, { 'Content-Type': 'application/json' });
  s.transport.reply(0, '0x8f'); await pending; s.dispatcher.close(); await assert.rejects(s.call('C.secondary'));
 });
+
+for (const source of ['timestamp', 'clock', 'timer', 'transport'] as const) test('dispatcher reserves ownership before reentrant ' + source, async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), signal = new AbortController().signal;
+ let entered = false;
+ const attempts: Promise<unknown>[] = [];
+ const reenter = () => {
+  if (entered) return; entered = true;
+  attempts.push(assert.rejects(dispatcher.dispatch('C.primary', 3000, signal), /consumed/));
+  attempts.push(dispatcher.dispatch('C.secondary', 3000, signal).then(e => assert.equal(e.skipReason, 'transport_quarantined')));
+ };
+ const injectedClock = {
+  now: () => { if (source === 'clock') reenter(); return clock.now(); },
+  at: (deadline: number, callback: () => void) => { if (source === 'timer') reenter(); return clock.at(deadline, callback); },
+ };
+ const dispatcher: ReturnType<typeof createHealthDispatcher> = createHealthDispatcher({ runId: 'reenter-' + source, alignment: false, origin: clock.now(), clock: injectedClock,
+  wallNow: () => { if (source === 'timestamp') reenter(); return wallNow(); },
+  fetcher: (url, init) => { if (source === 'transport') reenter(); return transport.fetcher(url, init); },
+ });
+ const first = dispatcher.dispatch('C.primary', 3000, signal); await clock.flush(); await Promise.all(attempts);
+ assert.equal(transport.calls.length, 1); assert.equal(dispatcher.counters().inFlight, 1);
+ let drained = false; void dispatcher.drained().then(() => { drained = true; });
+ await clock.flush(); assert.equal(drained, false);
+ transport.reply(0, '0x8f'); await first; await clock.flush(); assert.equal(drained, true);
+ assert.equal(dispatcher.counters().dispatched, 1); assert.equal(dispatcher.counters().inFlight, 0);
+});
+
+test('dispatcher blocks twelve-attempt amplification and invokes each of eight plan entries once', async () => {
+ const clock = new FakeClock(), signal = new AbortController().signal; let calls = 0;
+ const rejected: Promise<unknown>[] = [];
+ const dispatcher: ReturnType<typeof createHealthDispatcher> = createHealthDispatcher({ runId: 'amplification', alignment: true, origin: clock.now(), clock,
+  wallNow: () => {
+   // Every operation tries the reproduced recursive entry before transport.
+   for (let i = 0; i < 12; i++) rejected.push(assert.rejects(dispatcher.dispatch('C.primary', clock.now() + 2000, signal)));
+   return wallNow();
+  }, fetcher: (url, init) => { calls++; assert.equal(dispatcher.counters().dispatched, calls); return automaticTransport()(url, init); },
+ });
+ dispatcher.bindHistorical('0x63');
+ for (const op of dispatcher.plan) await dispatcher.dispatch(op.id, clock.now() + 2000, signal);
+ await Promise.all(rejected);
+ assert.equal(calls, 8); assert.equal(rejected.length, 96);
+ assert.deepEqual(dispatcher.counters(), { planned: 8, dispatched: 8, completed: 8, skipped: 0, inFlight: 0 });
+ assert.deepEqual(dispatcher.ledger().map(e => e.dispatchOrdinal), [1, 2, 3, 4, 5, 6, 7, 8]);
+});
+
+for (const stage of ['timestamp', 'timer', 'clock'] as const) for (const event of ['cancel', 'deadline'] as const) test(`dispatcher rechecks ${event} after ${stage} callback before invocation`, async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), abort = new AbortController(); let nowReads = 0;
+ const alter = () => { if (event === 'cancel') abort.abort(); else clock.time += HEALTH_LIMITS.collectionMs; };
+ const dispatcher = createHealthDispatcher({ runId: 'pre-dispatch-' + stage + '-' + event, alignment: false, origin: clock.now(),
+  clock: {
+   now: () => { if (stage === 'clock' && ++nowReads === 3) alter(); return clock.now(); },
+   at: (deadline, callback) => { if (stage === 'timer') alter(); return clock.at(deadline, callback); },
+  }, wallNow: () => { if (stage === 'timestamp') alter(); return wallNow(); }, fetcher: transport.fetcher,
+ });
+ const entry = await dispatcher.dispatch('C.primary', 3000, abort.signal);
+ assert.equal(entry.state, 'skipped'); assert.equal(entry.skipReason, event === 'cancel' ? 'cancelled' : 'deadline');
+ assert.equal(transport.calls.length, 0); assert.equal(dispatcher.counters().dispatched, 0); assert.equal(entry.dispatchOrdinal, undefined);
+ await dispatcher.drained(); assert.equal(dispatcher.counters().inFlight, 0);
+});
+
+for (const source of ['timestamp', 'clock-now', 'clock-at'] as const) test('dispatcher preparation exception releases only the reservation: ' + source, async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), signal = new AbortController().signal;
+ let failing = true;
+ const dispatcher = createHealthDispatcher({ runId: 'throw-' + source, alignment: false, origin: clock.now(),
+  clock: { now: () => { if (failing && source === 'clock-now') throw new Error('SECRET'); return clock.now(); },
+   at: (deadline, callback) => { if (failing && source === 'clock-at') throw new Error('SECRET'); return clock.at(deadline, callback); } },
+  wallNow: () => { if (failing && source === 'timestamp') throw new Error('SECRET'); return wallNow(); }, fetcher: transport.fetcher,
+ });
+ await assert.rejects(dispatcher.dispatch('C.primary', 3000, signal), /^Error: Health dispatch preparation failed\.$/);
+ assert.equal(transport.calls.length, 0); assert.equal(dispatcher.counters().dispatched, 0); assert.equal(dispatcher.counters().inFlight, 0);
+ assert.equal(dispatcher.ledger()[0].skipReason, 'preparation_error'); assert.ok(!JSON.stringify(dispatcher.ledger()).includes('SECRET'));
+ await dispatcher.drained(); failing = false;
+ // A failed clock disables further dispatch. A failed timestamp does not.
+ const second = dispatcher.dispatch('C.secondary', 3000, signal);
+ if (source === 'clock-now') assert.equal((await second).skipReason, 'preparation_error');
+ else { transport.reply(0, '0x8f'); await second; }
+});
+
+for (const source of ['now', 'at'] as const) test('dispatcher clock failure after invocation seals conservatively and drains acknowledged cleanup: ' + source, async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), signal = new AbortController().signal; let failing = false;
+ const dispatcher = createHealthDispatcher({ runId: 'post-clock-' + source, alignment: false, origin: clock.now(),
+  clock: { now: () => { if (failing && source === 'now') throw new Error('SECRET'); return clock.now(); },
+   at: (deadline, callback) => { if (failing && source === 'at') throw new Error('SECRET'); return clock.at(deadline, callback); } }, wallNow, fetcher: transport.fetcher,
+ });
+ const pending = dispatcher.dispatch('C.primary', 3000, signal); failing = true; transport.reply(0, '0x8f'); await clock.flush();
+ const entry = await pending; await dispatcher.drained();
+ assert.equal(entry.observation?.kind === 'error' && entry.observation.code, 'NETWORK');
+ assert.equal(entry.cleanupExceeded, true); assert.equal(dispatcher.counters().inFlight, 0); assert.equal(dispatcher.counters().dispatched, 1);
+ assert.equal((await dispatcher.dispatch('C.secondary', 3000, signal)).skipReason, 'preparation_error');
+ assert.ok(!JSON.stringify(entry).includes('SECRET'));
+});
+
+test('dispatcher stale callbacks cannot release the unique lease of a later operation', async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), signal = new AbortController().signal;
+ const callbacks: (() => void)[] = [];
+ const dispatcher = createHealthDispatcher({ runId: 'unique-lease', alignment: false, origin: clock.now(),
+  clock: { now: clock.now, at: (deadline, callback) => { callbacks.push(callback); return clock.at(deadline, callback); } }, wallNow, fetcher: transport.fetcher,
+ });
+ const first = dispatcher.dispatch('C.primary', 3000, signal); transport.reply(0, '0x8f'); await first;
+ const staleCallbacks = callbacks.slice(), second = dispatcher.dispatch('C.secondary', 3000, signal);
+ let drained = false; void dispatcher.drained().then(() => { drained = true; });
+ staleCallbacks.forEach(callback => callback()); await clock.flush();
+ assert.equal(dispatcher.counters().inFlight, 1); assert.equal(drained, false);
+ assert.equal((await dispatcher.dispatch('F.primary', 3000, signal)).skipReason, 'transport_quarantined');
+ assert.equal(transport.calls.length, 2); transport.reply(1, '0x8f'); await second; await clock.flush(); assert.equal(drained, true);
+});
+
+test('dispatcher clock failure during cancellation retains quarantine until ignored abort is acknowledged', async () => {
+ const clock = new FakeClock(), transport = new ControlledTransport(), abort = new AbortController(); let failing = false, drained = false;
+ const dispatcher = createHealthDispatcher({ runId: 'clock-failure-quarantine', alignment: false, origin: clock.now(),
+  clock: { now: () => { if (failing) throw new Error('SECRET'); return clock.now(); }, at: clock.at }, wallNow, fetcher: transport.fetcher,
+ });
+ const pending = dispatcher.dispatch('C.primary', 3000, abort.signal);
+ void dispatcher.drained().then(() => { drained = true; });
+ failing = true; abort.abort(); abort.abort(); await clock.flush();
+ const entry = await pending, before = JSON.stringify(entry);
+ assert.equal(entry.transport, 'quarantined'); assert.equal(dispatcher.ledger()[0].transport, 'quarantined');
+ assert.equal(drained, false); assert.equal(dispatcher.counters().inFlight, 1);
+ assert.equal((await dispatcher.dispatch('C.secondary', 3000, abort.signal)).skipReason, 'transport_quarantined');
+ assert.equal(transport.calls.length, 1);
+ transport.reply(0, '0x8f'); await clock.flush(); await dispatcher.drained();
+ assert.equal(drained, true); assert.equal(dispatcher.counters().inFlight, 0); assert.equal(JSON.stringify(entry), before);
+});

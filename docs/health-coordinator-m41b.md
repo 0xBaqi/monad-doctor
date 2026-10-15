@@ -8,6 +8,8 @@ This is an unexposed internal module. No API route, UI, CLI command, export impo
 
 The handle exposes `result`, `drained` and idempotent `cancel()`. A lease object is single-use, even after draining. A valid comparison releases that lease exactly once, after publication and transport quiescence. Invalid construction does not consume it. Existing HTTP/Redis/WAF admission ownership remains unchanged and disconnected; sharing its capacity safely is a separate integration requirement.
 
+Admission ownership is captured at construction, including the original release method bound to its original receiver. Replacing the dependencies' admission property or changing that method later cannot substitute the released lease. A release failure rejects `drained` without retrying release or making the lease reusable.
+
 The fixed plan contains C (chain), F (finalized), L (latest), and optionally H (shared explicit height), each primary then secondary. Every transport invocation is owned by one dispatcher. Its private plan binds provider, destination, method, parameters, run, collection and evidence ID. No public operation takes an endpoint or arbitrary RPC method. `rpc-providers.ts` is a coordinator-only immutable map mirroring the legacy collector's two destinations. Mocked parity tests verify both providers against the unchanged legacy collector. The proposed shared-map extraction was avoided because it would also change tracked compiled CLI files. Existing collector source, request behavior, budgets, parsing, cancellation and CLI artifacts remain intact; a future shared-map refactor would need to include its generated-artifact implications explicitly.
 
 The coordinator never calls `diagnose`, `createRpc`, or `fetch` directly. It reuses the pure reconciler rather than creating a second diagnostic engine. No wallet, transaction, gas, signing or submission operation is supported.
@@ -22,6 +24,10 @@ The coordinator never calls `diagnose`, `createRpc`, or `fetch` directly. It reu
 - A provider's block operations require its own successful expected chain identity. Wrong/unknown network, rate limiting, missing anchors, deadline exhaustion, cancellation and quarantined capacity have distinct ledger skip causes. A provider rate limit stops its remaining operations for the run; the other provider remains a preplanned participant.
 
 The ledger distinguishes planned, dispatched, completed decisions, skipped operations, and still-in-flight transport. Completed and in-flight counts can overlap: a timeout decision may be complete while its cleanup is not. Skipped operations have no dispatch ordinal. Bound skipped snapshot entries have no fabricated observation timestamp; unbound historical operations have no dangling evidence reference.
+
+Dispatch synchronously reserves operation identity and a unique capacity lease before calling injected clocks, timestamp functions or transports. Same-operation reentry is rejected; other operations cannot overlap the reservation. Credit is charged only immediately before transport invocation, after cancellation and absolute-deadline checks following preparation callbacks. Cancellation/expiry during preparation skips without invoking transport; a thrown preparation callback skips with `preparation_error`, releases the unused reservation and rejects with a sanitized error. Cleanup releases by lease object identity, never by an operation label.
+
+Clock failures while collecting evidence fail closed: timing-dependent evidence becomes unavailable, publication may be quarantined immediately, and acknowledged cleanup can still drain using the last valid monotonic reading for bookkeeping. No further transport is dispatched after a failed monotonic read. Timer-removal exceptions cannot reopen sealed work. This does not establish accurate elapsed time after clock failure, nor guarantee progress from an uncooperative clock, event loop or transport.
 
 Representative deterministic traces:
 
@@ -66,7 +72,11 @@ The internal publication boundary measures the UTF-8 encoded wrapper against 64 
 
 Production transport cancellation and cleanup need separate operational validation. The real admission owner must retain a comparison's capacity until `drained`, including after early HTTP publication; the current legacy handler's unconditional `finally` release cannot simply wrap this lifecycle. No HTTP capacity refactor or Redis reservation happens here. Callers cannot treat an operational `completed` envelope as a universal passing diagnostic verdict, nor `partial` as absence of disagreement. Provider agreement still proves neither independence, current freshness nor independent consensus verification.
 
-## Local verification
+## Ownership regression verification
+
+The follow-up adds 24 deterministic tests: 18 dispatcher and six coordinator cases. Dispatcher coverage includes timestamp/clock/timer/transport reentry, 96 rejected amplification attempts across an eight-invocation plan, pre-dispatch cancellation/expiry, preparation and post-invocation clock exceptions, retained quarantine during a clock failure with ignored abort, and stale callbacks during a later lease. Coordinator coverage includes captured receiver/method ownership, substitution before collection and during quarantine, multiple drain waiters, failed construction, consumed-lease reuse and release failure. No live RPC requests are used; final verification results are reported with the follow-up commit.
+
+## Initial implementation verification
 
 - Dispatcher suite: **26 passed**, including two mocked destination-parity tests against the unchanged legacy collector.
 - Coordinator suite: **22 passed**. Coverage includes serial phase order, eight slow observations, ignored abort, cooperative cancellation, late/grace-deadline races, single-use admission, four retained offline capacity leases, partial results, explicit alignment and size rejection.

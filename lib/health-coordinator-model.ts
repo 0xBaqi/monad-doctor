@@ -7,7 +7,7 @@ export type HealthComparisonRequest = Readonly<{ mode: 'health_comparison'; prov
 export type HealthPhase = 'C' | 'F' | 'L' | 'H';
 export type HealthSlot = 'chain' | 'finalized' | 'latest' | 'historical';
 export type HealthOperation = Readonly<{ id: string; provider: Provider; phase: HealthPhase; slot: HealthSlot; ref: HealthEvidenceRef; request?: HealthEvidence['request'] }>;
-export type HealthSkip = 'dependency' | 'wrong_network' | 'rate_limited' | 'deadline' | 'phase_capacity' | 'budget' | 'cancelled' | 'transport_quarantined' | 'anchor_unavailable' | 'anchor_redundant' | 'anchor_inconsistent';
+export type HealthSkip = 'dependency' | 'preparation_error' | 'wrong_network' | 'rate_limited' | 'deadline' | 'phase_capacity' | 'budget' | 'cancelled' | 'transport_quarantined' | 'anchor_unavailable' | 'anchor_redundant' | 'anchor_inconsistent';
 export type HealthDecision = HealthObservation<string | HealthBlock>;
 export type HealthLedgerEntry = Readonly<{
  id: string; provider: Provider; phase: HealthPhase; slot: HealthSlot;
