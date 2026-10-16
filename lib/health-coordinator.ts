@@ -6,7 +6,7 @@ import { HEALTH_COORDINATOR_VERSION, HEALTH_LIMITS, immutable, type HealthAdmiss
 type Dependencies = { fetcher: typeof fetch; admission: HealthAdmissionLease; clock?: MonotonicClock; wallNow?: () => number; runId?: string };
 const realClock: MonotonicClock = { now: () => performance.now(), at: (deadline, callback) => { const timer = setTimeout(callback, Math.max(0, deadline - performance.now())); return () => clearTimeout(timer); } };
 const consumedAdmissions = new WeakSet<HealthAdmissionLease>();
-function requestInput(raw: unknown, runId: string): HealthComparisonRequest {
+export function parseHealthComparisonRequest(raw: unknown, runId = 'validation'): HealthComparisonRequest {
  if (!raw || typeof raw !== 'object' || ![Object.prototype, null].includes(Object.getPrototypeOf(raw))) throw new ValidationError('Invalid comparison request.');
  const descriptors = Object.getOwnPropertyDescriptors(raw), keys = Reflect.ownKeys(descriptors);
  if (keys.length !== 3 || keys.some(k => typeof k !== 'string' || !['mode', 'providers', 'alignSharedHeight'].includes(k) || !descriptors[k].enumerable || !('value' in descriptors[k]))) throw new ValidationError('Expected comparison data properties.');
@@ -25,7 +25,7 @@ export function boundedHealthResult(report: HealthEnvelope): HealthResult {
 /** No networking occurs on import. A transport and admission lease are required. */
 export function startHealthComparison(raw: unknown, dependencies: Dependencies): HealthCoordinatorHandle {
  const runId = dependencies.runId ?? crypto.randomUUID();
- const request = requestInput(raw, runId), clock = dependencies.clock ?? realClock;
+ const request = parseHealthComparisonRequest(raw, runId), clock = dependencies.clock ?? realClock;
  const admission = dependencies.admission, release = admission?.release;
  if (typeof dependencies.fetcher !== 'function' || !admission || typeof release !== 'function') throw new ValidationError('Comparison transport and admission lease are required.');
  const releaseAdmission = release.bind(admission);
