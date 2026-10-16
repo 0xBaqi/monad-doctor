@@ -1,0 +1,138 @@
+{
+  "checks": [
+    {
+      "name": "390 scope navigation is accessible and request-free",
+      "passed": true
+    },
+    {
+      "name": "390 healthy validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 wrong-network validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 contradiction validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 difference validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 alignment validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 inconsistent validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 null validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 incomplete validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 cancelled validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 pending validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "390 evidence focus, export and stale scope preserve snapshot without requests",
+      "passed": true
+    },
+    {
+      "name": "390 cancellation and late response suppression",
+      "passed": true
+    },
+    {
+      "name": "390 malformed response retains previous snapshot",
+      "passed": true
+    },
+    {
+      "name": "390 protected access denial",
+      "passed": true
+    },
+    {
+      "name": "390 Retry-After without automatic retry",
+      "passed": true
+    },
+    {
+      "name": "1440 scope navigation is accessible and request-free",
+      "passed": true
+    },
+    {
+      "name": "1440 healthy validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 wrong-network validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 contradiction validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 difference validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 alignment validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 inconsistent validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 null validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 incomplete validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 cancelled validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 pending validated report without horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "1440 evidence focus, export and stale scope preserve snapshot without requests",
+      "passed": true
+    },
+    {
+      "name": "1440 cancellation and late response suppression",
+      "passed": true
+    },
+    {
+      "name": "1440 malformed response retains previous snapshot",
+      "passed": true
+    },
+    {
+      "name": "1440 protected access denial",
+      "passed": true
+    },
+    {
+      "name": "1440 Retry-After without automatic retry",
+      "passed": true
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "mocked": true
+}

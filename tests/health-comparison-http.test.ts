@@ -185,9 +185,9 @@ for (const [extra, method, status] of [
  const h = startHealthComparisonHttp(r, s.deps); assert.equal((await h.response).status, status); await h.drained; assert.equal(s.reservations(), 0);
 });
 
-test('production route still rejects comparison inputs and imports no comparison adapter', async () => {
+test('production route retains legacy comparison rejection and uses explicit operation router', async () => {
  const route = readFileSync(new URL('../app/api/diagnose/route.ts', import.meta.url), 'utf8');
- assert.match(route, /maxDuration = 30/); assert.doesNotMatch(route, /health-comparison|health-coordinator/);
+ assert.match(route, /maxDuration = 30/); assert.match(route, /routeDiagnostic/); assert.match(route, /after\(async/);
  assert.throws(() => parseInput(comparisonRequest()));
  const r = await handleDiagnostic(request()); assert.equal(r.status, 400);
 });
@@ -344,6 +344,6 @@ test('request abort inside reservation preparation prevents its deferred transpo
 test('delayed initial scheduling cannot restart the HTTP allowance', async () => {
  const s = setup(); const h = startHealthComparisonHttp(request(), s.deps);
  s.clock.time += 25000; // The deferred runner has not executed yet.
- assert.equal((await h.response).status, 408); await h.drained;
+ assert.equal((await h.response).status, 504); await h.drained;
  assert.equal(s.reservations(), 0); assert.equal(s.rpc.calls.length, 0);
 });

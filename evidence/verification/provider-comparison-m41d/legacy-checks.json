@@ -1,0 +1,100 @@
+{
+  "target": "http://127.0.0.1:3143",
+  "evidence": "Synthetic reports from the real M2 engine; no live RPC requests",
+  "checks": [
+    {
+      "name": "Desktop initial render, zero diagnostics and no horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "All symptoms and technical modes navigate without requests and focus the form",
+      "passed": true
+    },
+    {
+      "name": "Invalid input has associated inline error and keyboard focus, no request",
+      "passed": true
+    },
+    {
+      "name": "Unknown transaction preserves unknown outcome and three separate lifecycle questions",
+      "passed": true
+    },
+    {
+      "name": "Completion focuses report and announces a concise status",
+      "passed": true
+    },
+    {
+      "name": "Evidence link opens original observation, retains provenance and focuses target without requests",
+      "passed": true
+    },
+    {
+      "name": "Receipt timeout preserves observed inclusion with unknown execution and finality",
+      "passed": true
+    },
+    {
+      "name": "Contradictory receipt takes priority and does not invent execution or finality",
+      "passed": true
+    },
+    {
+      "name": "Finality contradiction preserves the separate observed execution finding",
+      "passed": true
+    },
+    {
+      "name": "Failed execution remains distinct from finality and unknown cause",
+      "passed": true
+    },
+    {
+      "name": "Gas separates limit, estimate and conditional cost; evidence hides calldata",
+      "passed": true
+    },
+    {
+      "name": "Downloaded JSON equals the unchanged M2 export format with both calldata fields redacted",
+      "passed": true
+    },
+    {
+      "name": "Edited inputs/provider mark previous snapshot; export retains captured context with no request",
+      "passed": true
+    },
+    {
+      "name": "Estimation failure retains unknown headroom and never supplies a guaranteed fee",
+      "passed": true
+    },
+    {
+      "name": "Loading disables duplicate submission/navigation; stale observation precedes ordinary passes",
+      "passed": true
+    },
+    {
+      "name": "429 respects Retry-After and sends no automatic retry",
+      "passed": true
+    },
+    {
+      "name": "Protected HTML response produces access-denial copy without exposing response content",
+      "passed": true
+    },
+    {
+      "name": "503 admission failure preserves previous report and establishes no new outcome",
+      "passed": true
+    },
+    {
+      "name": "HTTP 200 with malformed report is rejected rather than interpreted as success",
+      "passed": true
+    },
+    {
+      "name": "Transport failure establishes no new outcome and preserves the captured previous report",
+      "passed": true
+    },
+    {
+      "name": "Mobile 390px has no overflow, labelled inputs, adequate symptom targets and keyboard skip navigation",
+      "passed": true
+    },
+    {
+      "name": "Mobile successful lifecycle remains provider-attested and renders without overflow",
+      "passed": true
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "diagnosticSubmissions": 14,
+  "errors": []
+}

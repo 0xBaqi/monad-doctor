@@ -1,20 +1,13 @@
 import { createHealthDispatcher } from './health-dispatcher.ts';
 import { reconcileHealthSnapshots, validateHealthSnapshot, type HealthBlock, type HealthEvidence, type HealthSnapshot } from './health-reconciliation.ts';
+import { parseHealthComparisonRequest } from './health-comparison-request.ts';
+export { parseHealthComparisonRequest } from './health-comparison-request.ts';
 import { ValidationError } from './validation.ts';
-import { HEALTH_COORDINATOR_VERSION, HEALTH_LIMITS, immutable, type HealthAdmissionLease, type HealthAlignment, type HealthComparisonRequest, type HealthCoordinatorHandle, type HealthEnvelope, type HealthLedgerEntry, type HealthResult, type HealthSkip, type MonotonicClock } from './health-coordinator-model.ts';
+import { HEALTH_COORDINATOR_VERSION, HEALTH_LIMITS, immutable, type HealthAdmissionLease, type HealthAlignment, type HealthCoordinatorHandle, type HealthEnvelope, type HealthLedgerEntry, type HealthResult, type HealthSkip, type MonotonicClock } from './health-coordinator-model.ts';
 
 type Dependencies = { fetcher: typeof fetch; admission: HealthAdmissionLease; clock?: MonotonicClock; wallNow?: () => number; runId?: string };
 const realClock: MonotonicClock = { now: () => performance.now(), at: (deadline, callback) => { const timer = setTimeout(callback, Math.max(0, deadline - performance.now())); return () => clearTimeout(timer); } };
 const consumedAdmissions = new WeakSet<HealthAdmissionLease>();
-export function parseHealthComparisonRequest(raw: unknown, runId = 'validation'): HealthComparisonRequest {
- if (!raw || typeof raw !== 'object' || ![Object.prototype, null].includes(Object.getPrototypeOf(raw))) throw new ValidationError('Invalid comparison request.');
- const descriptors = Object.getOwnPropertyDescriptors(raw), keys = Reflect.ownKeys(descriptors);
- if (keys.length !== 3 || keys.some(k => typeof k !== 'string' || !['mode', 'providers', 'alignSharedHeight'].includes(k) || !descriptors[k].enumerable || !('value' in descriptors[k]))) throw new ValidationError('Expected comparison data properties.');
- if (descriptors.mode.value !== 'health_comparison' || typeof descriptors.alignSharedHeight.value !== 'boolean') throw new ValidationError('Invalid comparison request.');
- const normalized = validateHealthSnapshot({ runId, provider: 'primary', input: { mode: 'health', providers: descriptors.providers.value }, collections: [], observations: {} });
- return immutable({ mode: 'health_comparison', providers: normalized.input.providers as readonly ['primary', 'secondary'], alignSharedHeight: descriptors.alignSharedHeight.value });
-}
-
 /** Internal publication boundary, not an importer for external report formats. */
 export function boundedHealthResult(report: HealthEnvelope): HealthResult {
  const result = immutable(structuredClone({ kind: 'comparison' as const, report }));

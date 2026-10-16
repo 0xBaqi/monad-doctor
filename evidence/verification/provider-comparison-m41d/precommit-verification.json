@@ -1,0 +1,200 @@
+{
+  "verificationVersion": 1,
+  "parentCommit": "a80dbe9eb236458884ce4847548ed79c320d5b2f",
+  "verifiedAt": "2026-10-16T21:11:16.930306+00:00",
+  "node": "v24.21.0",
+  "behaviorChangedDuringFinalization": false,
+  "sourceHashAlgorithm": "SHA-256 of verified working-tree bytes",
+  "sourceSha256": {
+    ".github/workflows/validate.yml": "5825c6d4899885f92153d2ba11db60645d5f19461908e37915ee0032abba764f",
+    "app/api/diagnose/route.ts": "e636e1b6eae726635c2ffca6aa86908db3fa0c53fdfddbf8eed731c09290c071",
+    "app/globals.css": "7fc4716f1db2ffb181277405b6eb1528d36050fd399636762f606b588c325cfa",
+    "app/health-comparison-view.tsx": "ff5b52fd86fb6871bcfb2173f1b64edcad140f85b5ba531614c4f99a2e692488",
+    "app/layout.tsx": "b3e2db224fc196b71b7409419b154f6bdb3b3a577345ddf940de491c3f73f463",
+    "app/page.module.css": "27550ccef0ef555de3c627f6d4073ff57862f477bdbe372bec8e170ff2f933eb",
+    "app/page.tsx": "71c36068f0754087f86674254d6e2df06cec5f3f37ea0c93dfe449013a702ff8",
+    "app/report-view.tsx": "18893a2d89282795d4e2e4bec8a802e1d1a35388260fcc18b9e05d4bf6518941",
+    "cli/cli.ts": "198ca0d1a23943901d59041f84b706e8794d0b97d89bc4eb2ba497c4263235cc",
+    "cli/index.ts": "5170bbc449aa9d722c4cf782518b0bebb348cb3ab8d48144413407d2ef9003e5",
+    "eslint.config.mjs": "f1fe9741e7bd448e9fa85fc6fb11dc6d7e380bb5bd12e2487154b08689241c95",
+    "lib/budget.ts": "8dbb4ff308157f84a825d03903e5b94cccd7d46bfcfa3c97b92a9bf823fd82a0",
+    "lib/diagnostic-route.ts": "0060c77ef71bbf23019778ec0946736917fc46fb28a56e8ac8975b5693584120",
+    "lib/engine.ts": "4904efd893bce460ce6ddfff1283180ecbac3d4917d8f26d9d4d9167149ef80a",
+    "lib/export.ts": "f30b0acf4d24b53b21977297011fe0ab340198e7e391ff059d7419d9f7fe82fa",
+    "lib/guidance.ts": "3a9fbb572d62ae1dbc0b79707d823a9f78371def659d88cd2d1264dc75a5e260",
+    "lib/health-comparison-http.ts": "c4fdebf4ea0f6a85e7164a89164bf7550fc407f6bb616c658f24251470ab4f55",
+    "lib/health-comparison-presentation.ts": "61e4802133e8a3bfdea0832d04a8d27468b276feecbc67e148cd8f175fa5e14f",
+    "lib/health-comparison-request.ts": "6c99f7e271c48c95bbcc01564f4974d82eeb941e26675048366f78ee30bc862d",
+    "lib/health-comparison-response.ts": "fbca429e91025a738991c7d3c8583f4978b894f5240eb38008fec2f94f30c381",
+    "lib/health-coordinator-model.ts": "562f04f1e355a807b554ef4da8c0afdb55353c72bcc218b09ef1d27d52c111c3",
+    "lib/health-coordinator.ts": "b3def5bc5f145b9f2d12160274ec300002cc9fd9d6e2521556127874cd4704e2",
+    "lib/health-dispatcher.ts": "9660e9a9a583ca3d95bdb443d7dbf2b5cac2a2ac2ff538ef3fae3c7edd82ca1e",
+    "lib/health-reconciliation.ts": "4ef386356c82854c92fc1fd00be0fc9d58ea696092cd0a9daddacf79adcabd78",
+    "lib/http-capacity.ts": "ca5291306f35e5ccf4f01894006aaa78509595f48ce938ced560eee1518d34d6",
+    "lib/http.ts": "c16e3bdd70e26300102f15540001d96aec3fed17bb5e32de089f55116290ad96",
+    "lib/model.ts": "6c1403c13530c96db7c0e6a3628d6a4475257c1dc86676c542f9653240bbf73f",
+    "lib/presentation.ts": "45b5fb920ad66ed3d6104b3716c583c0c0808ec9ab9432521e48cb497969b425",
+    "lib/rpc-providers.ts": "9c44d7284169ae182d86f29d4b9e9d6be1ee1f912ad6d96e0b0532fd6ad00c26",
+    "lib/rpc.ts": "59c65665dabe49638fabb52830fbed816366ca0cf34c1caacb53fc50e755e6c5",
+    "lib/rules.ts": "d05cf8ba1f22dde6ff62887fe0fc97715810e13713edbd1364dd6881116da8b0",
+    "lib/tracked-budget.ts": "bbd0e57ccf10d208aad27ffde7358f9a7b74bf145aa0551cad9fad1029edf93e",
+    "lib/validation.ts": "a1e048ab8c3954f86d7b54be8a3db5bc6c9b72752f027d7725c7f7ce33ce05e5",
+    "next-env.d.ts": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b",
+    "next.config.ts": "62cd871a89ad20038b0d9ac855ab95625d75de0c0a340d5729aa00bedc2b543e",
+    "package-lock.json": "ae291c1fc5fa8868ad489317417b5f78ba1aeb10c46a432ea3d5de42d8ae0121",
+    "package.json": "707bf0cd62d6598e1d80492a8a0066680419044af915d5ffde2cacfa3b53f276",
+    "scripts/branding-check.mjs": "82f1c8f666d655486b473fea5207fbb0bf1c3d1c713a5527a4c27b0e6f602db6",
+    "scripts/browser-check.mjs": "67439ae59fd36d6c58c3e737d7140820c4efd27e927bfd871f018c0ce20e37e3",
+    "scripts/check-closed-production.mjs": "10fa8ba5c86151f5abef63c9844eefd8d905f71186f34c311429438243bfc153",
+    "scripts/comparison-browser.mjs": "70fcc5b0f01919ef4dd9804d283c8e8a4ccbbc62aeb8c459196b2ff036c30d56",
+    "scripts/generate-branding.mjs": "4e83e97f327b258071221182099ce041288ba4bda1022f7b241e9f73afb58d7b",
+    "scripts/guided-browser.mjs": "c66dd78e0082c52be82354962aafba069851f0b65db45886baca2a0bb6ee951d",
+    "scripts/investigate-rpc.ts": "23b3e6ce33122f3ce093672608766a6bdafc099320ed3c21e640efc688c0ee5f",
+    "scripts/live-check.ts": "a2aa2c3dee9339bb0ce24797e4e12cfbba0c7b18964d91e01b25c55ca27bbc6d",
+    "scripts/mobile-layout.mjs": "44e8ac3a19035cd56d7edd2d9065005cd4d0d50a2f0e8f930fc3cb2c740e0759",
+    "scripts/review-baseline.mjs": "b3f96c0f30f6ef1e58380b2b7caefe72fd9d071b68f58022072e6906eb314cfd",
+    "scripts/review-history.mjs": "870e3b5754f7501941f39ffd6e33479508bde6f6460ec0a233a50f3ce3686b90",
+    "scripts/smoke.ts": "a2f5872eea9c08aa1db1ba4a030b6b235dbff50d6d33ee0e5fda1ad8457b3ec2",
+    "scripts/ui-review.mjs": "2fdd600743d6c3ea58f2946e28c4999915cadf1c8c7ddd69fe276e4dc37d0897",
+    "scripts/validate-live-budget.ts": "80aef40456e0c0c7557959e918bf9f0f189c946489eb91805713a233af38de59",
+    "scripts/verify.mjs": "1e1fce92a6cc5c40d34f9c93cd8845f78254cda3d8115db943e0a4724ca13c95",
+    "tests/adversarial-boundaries.test.ts": "24649a19a297cd4f6dfec96c45a634a4ff69aa2adc8cb59bdf12a7a4421c7acb",
+    "tests/adversarial.test.ts": "be2cebef123ed39cfb66f0ddd3373be4e7967ddce3f83eec59521652b0c16a79",
+    "tests/bounds.test.ts": "15a8b416b9aab0aeefd7e15c54698774e582742256559302f9536caa8318cfbb",
+    "tests/budget-diagnostics.test.ts": "266ef636249b67415ea965dfae016d2294a22aa7e66c034982111c61b0a08c3a",
+    "tests/budget.test.ts": "89e20e273a5761e978ddd60eae6a1c7f8aa2b94b1422078bb2c7ed21a73c2b94",
+    "tests/capacity.test.ts": "97cf4d40c29cdc13595150803fba8b8cb2059915d588a70ab97f0f621858abd1",
+    "tests/cli.test.ts": "614faf17f0b46a2ee801d8286671b826f4965be4f2dc976dffe02b25eec18ed7",
+    "tests/engine.test.ts": "f2ec1dc456b7dcc99803fb4c955eb44789544d19550939b1de2ad9427a34cc99",
+    "tests/fixtures/adversarial.ts": "3f91e361e0c4f340fb4236d5216f795cffef28cebe274718146a70f7f699d9f6",
+    "tests/fixtures/health-comparison.ts": "d7b2d9b3dbac5ba00f8cda231f9f958a58c62f51b362c0dbda904bcef141a1ce",
+    "tests/fixtures/health-coordinator.ts": "bb21865534bcb5d6559d6d31ef6bfdc8d75202a10143a2972b248e77573f75d8",
+    "tests/fixtures/health-reconciliation.ts": "88620c108ede7bb0cd76f27d57ae938e60db2d32e2bd50d04ff978e9675c92ed",
+    "tests/health-comparison-experience.test.ts": "23b16f1296e77125484eb1be30e96a65be5bca06a94687c614f707b0098dcffd",
+    "tests/health-comparison-hardening.test.ts": "234914cff99babb56e9b2d03fcbd77f53ea3dc601374643282f5fbdfb825c402",
+    "tests/health-comparison-http.test.ts": "40327c66e9a6f38c8bf401ab2c1cebef67ebd7b8cfbd453ca770e4d396393ee6",
+    "tests/health-coordinator.test.ts": "1cb0c6e49009bc60f11d93de6fbf44adc9df905b10c22f831e1ac3b63f33ef8f",
+    "tests/health-dispatcher.test.ts": "bde06cc82da60f42aeea698b29df814a60730ed1d350ca828f6576a485926280",
+    "tests/health-native-transport.test.ts": "657594b8ade8289f7d1c9bd174e47bdee699dd4687d0646252b36ac030666dc5",
+    "tests/health-reconciliation.test.ts": "1aa84968d17ac9828a18b7275f894475d5e6d660ab2ab573ec259ef8c846d8ff",
+    "tests/m2.test.ts": "c05f0901d88cbedb317fa828d72379f22a6cc48187406f0183eb50afd663b132",
+    "tests/m3.test.ts": "88b63b0c4f13f780ffaf38db4cd081f8417f48a5656406bb6f6d07f028938dae",
+    "tests/m45.test.ts": "701eb94c5f45710bd6b250a819071b7dace1650f1f2e1e7fe82495d54cdcc019",
+    "tests/presentation.test.ts": "e4c4b6665fb94073ca360df2246d6a152e78da7f4de1843e868aa955e4a2801d",
+    "tsconfig.cli.json": "b8ab1c08c5166bfcb94c860ec038d3e8b04475c40202e603543495f92082dbc8",
+    "tsconfig.json": "598a84c0b76e64ceeadd5a2315ca8c56d4733f9d9ab5daff5817d592b0277d0b",
+    "vercel.json": "393b7b21211f6b89ceae999ce821134c8c2f95ba4b121462127d2dd039e3cde4"
+  },
+  "gates": {
+    "tests": {
+      "passed": 524,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0
+    },
+    "comparisonBrowser": {
+      "passed": 33,
+      "viewports": [
+        390,
+        1440
+      ],
+      "mocked": true,
+      "errors": []
+    },
+    "legacyBrowser": {
+      "passed": 23,
+      "mockedSubmissions": 14,
+      "errors": []
+    },
+    "typecheck": {
+      "exitCode": 0
+    },
+    "cliBuild": {
+      "exitCode": 0
+    },
+    "lint": {
+      "exitCode": 0,
+      "errors": 0,
+      "preExistingWarnings": 5
+    },
+    "productionBuild": {
+      "exitCode": 0,
+      "routes": [
+        "/",
+        "/_not-found",
+        "/api/diagnose"
+      ]
+    },
+    "diffCheck": {
+      "passed": true
+    },
+    "normalizationFocusedRegressions": {
+      "passed": 61,
+      "failed": 0
+    }
+  },
+  "logSha256": {
+    "tests": "303389ce73a4e2e93b2e889cca838743eb9653baeb992be3a32cc57b3523b027",
+    "typecheck": "ddd5201fcebde488b112aafb493ad7a5af51af7aafd5e1af0590aca624d2500e",
+    "cliBuild": "64901b58d06a2784c503d36b50335003dc870a3d91080d45c40cc8177096e688",
+    "lint": "658e00af35cc6600406a82c2eb0ae7ceaad1525ced9e1981b25db71559b00d34",
+    "build": "e3c4e2a374f9251069175e02f2e74f91272774585123fe31e600d98dd1b4e58e",
+    "comparisonBrowser": "3607f5822f6088e2cc7e0fad74e5165cb6ceff798084c11ae6639e7697581eab",
+    "legacyBrowser": "e7f3367ebf61d8d860cd5f5834700e456759c9dc7beec8e7d6f5295c26fd64d6",
+    "normalizationFocusedRegressions": "c7f6511d71e47c27230e1ec6bddba4ed5d7bb9d279f38865c2a9105916177ef4"
+  },
+  "evidenceSha256": {
+    "1440-comparison.json": "1e846bdc85462ceb8cfe36e8cd3c186c14da28953949d523aa33c9d684dcf2ba",
+    "1440-contradiction.png": "856d8dbbd4eceefe215cfa2c77cd6b49d74aa125cd71804007bd552f2516edba",
+    "1440-healthy.png": "22701469247e58843ae6f43e115f8a6e489ed94461c6731656c33060c7506050",
+    "1440-incomplete.png": "ebb2382f7e32383695cde2145f3d3d28b6ff45cca1be71072ebda7ad43e48a05",
+    "390-comparison.json": "1e846bdc85462ceb8cfe36e8cd3c186c14da28953949d523aa33c9d684dcf2ba",
+    "390-contradiction.png": "58db311cb0249f7cdd74df9321f33ec77f954724306a07a9388113e701e45d49",
+    "390-healthy.png": "b9d823dea934b97013d0603660d69484066fce36559ff47474d046748fbffc77",
+    "390-incomplete.png": "90d55213de1a6153277dffa0eb71805bf12f8875e62fb16adec38ce82401b86f",
+    "checks.json": "f1a8e298bcb213b6fbcb723497a45fea40e9a954b00b04eb24a544f3a95dc526",
+    "legacy-checks.json": "f84364b851ccb91d0cfbec393f109c4f23a5e25d0446ef0d5d9303b802544323"
+  },
+  "preservation": {
+    "demoFiles": 74,
+    "allDemoHashesMatch": true,
+    "protectedLegacyAndSecurityPathsUnchanged": true
+  },
+  "screenshotReview": {
+    "files": [
+      "1440-contradiction.png",
+      "1440-healthy.png",
+      "1440-incomplete.png",
+      "390-contradiction.png",
+      "390-healthy.png",
+      "390-incomplete.png"
+    ],
+    "syntheticReportsOnly": true,
+    "noSecretsOrUnrelatedPersonalDataObserved": true,
+    "noTextOrExifMetadata": true
+  },
+  "environmentAttempts": [
+    {
+      "check": "typecheck",
+      "exitCode": 143,
+      "detail": "Initial attempt terminated without compiler diagnostics; completed bounded retry passed."
+    },
+    {
+      "check": "lint",
+      "exitCode": 124,
+      "detail": "Initial 180-second attempt timed out without diagnostics; 300-second retry passed."
+    },
+    {
+      "check": "browser",
+      "detail": "Initial attempts failed at connection setup before UI checks. Cold local-server startup exhausted the initial server lifetime. Both suites passed after confirmed readiness with additional local-server startup headroom."
+    }
+  ],
+  "finalizationNormalization": {
+    "file": "lib/health-comparison-request.ts",
+    "change": "Remove one extraneous trailing newline; no tokens changed",
+    "beforeSha256": "ab068ae023148c8156435c9a19deaa145b6c4107f42919b75d8430d2f2889ab5",
+    "afterSha256": "6c99f7e271c48c95bbcc01564f4974d82eeb941e26675048366f78ee30bc862d",
+    "emittedJavaScriptIdentical": true,
+    "emittedJavaScriptSha256": "32ff238fca22c6fca37e90b97f76412afc7271d673dbd1caf41cb014adb38fc0"
+  }
+}

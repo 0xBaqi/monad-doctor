@@ -1,6 +1,6 @@
 # M4.1C: offline HTTP/Redis integration foundation
 
-This foundation is not exposed by an API route, UI or CLI. The production route still accepts only legacy health, gas and transaction inputs through `parseInput`. No Vercel, firewall, credential, quota or deployment configuration changes are required or made by this milestone.
+At M4.1C this foundation was not exposed by an API route, UI or CLI. M4.1D adds an explicit opt-in web/API selector; see [the integration contract](provider-comparison-m41d.md). The remainder records the M4.1C baseline. The production route still accepts only legacy health, gas and transaction inputs through `parseInput`. No Vercel, firewall, credential, quota or deployment configuration changes are required or made by this milestone.
 
 ## Interfaces and ownership
 

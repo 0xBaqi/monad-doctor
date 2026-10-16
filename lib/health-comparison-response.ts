@@ -1,5 +1,5 @@
 import { HEALTH_LIMITS, immutable, makeHealthPlan, type HealthResult, type HealthCounters, type HealthLedgerEntry, type HealthOperation } from './health-coordinator-model.ts';
-import { parseHealthComparisonRequest } from './health-coordinator.ts';
+import { parseHealthComparisonRequest } from './health-comparison-request.ts';
 import { reconcileHealthSnapshots, validateHealthSnapshot } from './health-reconciliation.ts';
 import { ValidationError } from './validation.ts';
 
@@ -173,4 +173,48 @@ export function serializeHealthComparison(raw: HealthResult): string {
  const text = JSON.stringify(wrapper);
  if (new TextEncoder().encode(text).byteLength > HEALTH_LIMITS.envelopeBytes) throw new ValidationError('Health comparison response exceeds 64 KiB.');
  return text;
+}
+
+export type DecodedComparison = Readonly<{ result: HealthResult; text: string }>;
+/** Strict public wrapper decoder. Retains the validated compact wire snapshot. */
+export function decodeHealthComparison(text: string): DecodedComparison {
+ if (typeof text !== 'string' || new TextEncoder().encode(text).byteLength > HEALTH_LIMITS.envelopeBytes) fail();
+ let raw: unknown;
+ try { raw = JSON.parse(text); } catch { return fail(); }
+ const wrapper = obj(plain(raw), ['comparisonResponseVersion', 'result']);
+ if (Object.keys(wrapper).length !== 2 || wrapper.comparisonResponseVersion !== COMPARISON_RESPONSE_VERSION) fail();
+ const canonical = serializeHealthComparison(wrapper.result as HealthResult);
+ if (text !== canonical) fail(); // The public contract is compact serializer output; reject duplicate/ambiguous keys.
+ const validated = JSON.parse(canonical) as { result: HealthResult };
+ return immutable({ result: validated.result, text: canonical });
+}
+/** Read before parsing; even a chunked HTTP 200 must pass the wire boundary. */
+export async function readHealthComparisonResponse(response: Response, signal: AbortSignal, expected: unknown): Promise<DecodedComparison> {
+ if (![200,500].includes(response.status) || response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json' || !response.body) fail();
+ const reader = response.body.getReader();
+ let done = false, size = 0, text = '';
+ const decoder = new TextDecoder('utf-8', { fatal: true });
+ const cancel = () => { void reader.cancel().catch(() => {}); };
+ signal.addEventListener('abort', cancel, { once: true });
+ try {
+  if (signal.aborted) fail();
+  while (true) {
+   const part = await reader.read();
+   if (signal.aborted) fail();
+   if (part.done) { done = true; text += decoder.decode(); break; }
+   size += part.value.byteLength;
+   if (size > HEALTH_LIMITS.envelopeBytes) fail();
+   text += decoder.decode(part.value, { stream: true });
+  }
+  const value = decodeHealthComparison(text);
+  if (value.result.kind === 'comparison') {
+   if (response.status !== 200 || !same(parseHealthComparisonRequest(expected), value.result.report.request)) fail();
+  } else if (response.status !== 500) fail();
+  return value;
+ } finally {
+  signal.removeEventListener('abort', cancel);
+  if (!done) cancel();
+  // A hostile reader need not settle cancellation; the UI stops waiting.
+  try { reader.releaseLock(); } catch { /* No server capacity is released here. */ }
+ }
 }

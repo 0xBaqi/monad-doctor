@@ -18,13 +18,14 @@ export type ComparisonHttpDependencies = Readonly<{
  runId?: string;
  wallNow?: () => number;
  respond?: (body: string, init: ResponseInit) => Response;
+ requireSharedHeight?: boolean;
 }>;
 const never = () => new Promise<void>(() => {});
 
-/** Offline-only adapter. No production route imports or activates this module. */
+/** Shared comparison lifecycle; publication never acknowledges transport drain. */
 export function startHealthComparisonHttp(request: Request, dependencies: ComparisonHttpDependencies): ComparisonHttpHandle {
  // Capture dependencies and ownership before asynchronous work or caller mutation.
- const { clock, redisFetch, rpcFetch, registerLifecycle, runId, wallNow } = dependencies;
+ const { clock, redisFetch, rpcFetch, registerLifecycle, runId, wallNow, requireSharedHeight } = dependencies;
  const respond = dependencies.respond ?? ((body: string, init: ResponseInit) => new Response(body, init));
  const env = { UPSTASH_REDIS_REST_URL: dependencies.env.UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN: dependencies.env.UPSTASH_REDIS_REST_TOKEN };
  const owner = dependencies.capacity ?? processCapacity, supplied = dependencies.lease;
@@ -48,7 +49,12 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
  const safeClear = (clear: () => void) => { try { clear(); } catch { /* Late timers cannot grant admission. */ } };
  const cancel = () => { stopped = true; stageCancel(); };
  const abort = () => cancel();
- const publish = (value: Response) => { if (!published) { published = true; resolveResponse(value); } };
+ const publish = (value: Response) => {
+  if (published) return;
+  // Timer delivery may be delayed: the monotonic boundary also guards late values.
+  if (initialized && deadlineReached()) { publicationTimeout(); return; }
+  published = true; resolveResponse(value);
+ };
  const error = (status: number, code: string) => diagnosticJson({ error: code }, status);
  let deadline = 0, lastTime = 0, initialized = false;
  // Capture admission time before the deferred work: a delayed microtask must
@@ -60,6 +66,16 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
  } catch { /* The async boundary publishes a sanitized failure and releases. */ }
  function expired() {
   try { const t = clock.now(); const invalid = !Number.isFinite(t) || t < lastTime; lastTime = t; return stopped || invalid || t >= deadline; } catch { return true; }
+ }
+ function deadlineReached() {
+  try { const t = clock.now(); const invalid = !Number.isFinite(t) || t < lastTime; lastTime = t; return invalid || t >= deadline; } catch { return true; }
+ }
+ function publicationTimeout() {
+  if (!published) {
+   published = true;
+   resolveResponse(error(504, 'Comparison publication timed out. Cancellation requested; cleanup is not confirmed. No new report was received.'));
+  }
+  cancel();
  }
  function bodyInput() {
   let resolve!: (raw: unknown) => void, reject!: (error: Error) => void, settle!: () => void;
@@ -90,7 +106,9 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
      if (size > 16384) throw new BodyLimitError('Request exceeds 16 KiB.');
      text += decoder.decode(part.value, { stream: true });
     }
-    resolve(parseHealthComparisonRequest(JSON.parse(text)));
+    const parsed = parseHealthComparisonRequest(JSON.parse(text));
+    if (requireSharedHeight && !parsed.alignSharedHeight) throw new Error('Shared-height plan required.');
+    resolve(parsed);
    } catch (e) { reject(e instanceof BodyLimitError ? e : new Error('Invalid health comparison request.')); }
    finally {
     safeClear(clear);
@@ -111,7 +129,7 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
    const registered = registerLifecycle(drained);
    if (registered !== undefined) { void Promise.resolve(registered).catch(() => {}); throw new Error('Lifecycle registration must be synchronous.'); }
    request.signal.addEventListener('abort', abort, { once: true });
-   clearWatchdog = clock.at(deadline, cancel);
+   clearWatchdog = clock.at(deadline, publicationTimeout);
    if (request.signal.aborted || stopped || expired()) { cancel(); publish(error(408, 'Comparison cancelled before collection.')); return; }
    const body = bodyInput();
    let input;
