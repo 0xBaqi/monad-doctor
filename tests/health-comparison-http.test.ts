@@ -136,20 +136,27 @@ for (const stage of ['before', 'reservation', 'collection', 'published'] as cons
 });
 
 test('lifecycle registration failure prevents even Redis dispatch and releases its slot exactly once', async () => {
- let releases = 0; const pool = createProcessCapacity();
- const s = setup({ registerLifecycle() { throw new Error('PRIVATE_MARKER'); }, capacity: { tryAcquire() { const lease = pool.tryAcquire(); return lease && { release() { releases++; lease.release(); } }; } } });
- const h = startHealthComparisonHttp(request(), s.deps); assert.equal((await h.response).status, 503); await h.drained;
- h.cancel(); assert.equal(releases, 1); assert.equal(s.reservations(), 0); assert.equal(s.rpc.calls.length, 0);
+ const s = setup({ registerLifecycle() { throw new Error('PRIVATE_MARKER'); } });
+ const lease = s.deps.capacity!.tryAcquire()!;
+ const h = startHealthComparisonHttp(request(), { ...s.deps, lease }); assert.equal((await h.response).status, 503); await h.drained;
+ const four = Array.from({length:4}, () => s.deps.capacity!.tryAcquire()); assert.ok(four.every(Boolean));
+ h.cancel(); lease.release(); assert.equal(s.deps.capacity!.tryAcquire(),undefined);
+ four.forEach(l => l!.release()); assert.equal(s.reservations(), 0); assert.equal(s.rpc.calls.length, 0);
 });
 
 test('captured capacity lease and receiver cannot be substituted during quarantine', async () => {
- let releases = 0, other = 0;
- const lease = { label: 'A', release() { assert.equal(this, lease); releases++; } };
- const depsPool = { tryAcquire: () => lease };
- const s = setup({ capacity: depsPool }); const h = startHealthComparisonHttp(request(), s.deps);
- lease.release = () => { other++; }; depsPool.tryAcquire = () => ({ label: 'B', release() { other++; } });
- await s.clock.flush(); await s.clock.advance(2250); await h.response; assert.equal(releases, 0);
- s.rpc.reply(0, '0x8f'); await h.drained; h.cancel(); assert.equal(releases, 1); assert.equal(other, 0);
+ const s = setup(), pool = s.deps.capacity!;
+ const a = pool.tryAcquire()!, b = pool.tryAcquire()!;
+ const injected = { ...s.deps, capacity: pool, lease: a };
+ const h = startHealthComparisonHttp(request(), injected);
+ injected.lease = b; injected.capacity = createProcessCapacity(s.clock.now);
+ assert.equal(Reflect.set(a, 'release', () => assert.fail('replacement')),false);
+ await s.clock.flush(); await s.clock.advance(2250); await h.response;
+ a.release(); // Ownership transferred: the old holder cannot release early.
+ const two = [pool.tryAcquire(),pool.tryAcquire()]; assert.ok(two.every(Boolean)); assert.equal(pool.tryAcquire(),undefined); two.forEach(l=>l!.release());
+ s.rpc.reply(0,'0x8f'); await h.drained; h.cancel();
+ const three = Array.from({length:3},()=>pool.tryAcquire()); assert.ok(three.every(Boolean)); assert.equal(pool.tryAcquire(),undefined);
+ three.forEach(l=>l!.release()); b.release();
 });
 
 test('quarantined RPC body retains capacity; late acknowledgment cannot alter response', async () => {
@@ -230,10 +237,12 @@ test('capacity clock reentry cannot bypass synchronous ownership accounting', ()
 });
 
 test('a consumed capacity object cannot start a second comparison or release the first', async () => {
- let released = 0; const lease = { release() { released++; } }; const s = setup({ capacity: { tryAcquire: () => lease } });
- const a = startHealthComparisonHttp(request(), s.deps), b = startHealthComparisonHttp(request(), s.deps);
- assert.equal((await b.response).status, 503); await s.clock.flush(); assert.equal(s.reservations(), 1); assert.equal(released, 0);
- await s.clock.advance(2250); await a.response; s.rpc.reply(0, '0x8f'); await a.drained; assert.equal(released, 1);
+ const s = setup(); const lease = s.deps.capacity!.tryAcquire()!; const injected = { ...s.deps, lease };
+ const a = startHealthComparisonHttp(request(), injected), b = startHealthComparisonHttp(request(), injected);
+ assert.equal((await b.response).status, 503); await s.clock.flush(); assert.equal(s.reservations(), 1);
+ lease.release(); assertHeld(s.deps.capacity);
+ await s.clock.advance(2250); await a.response; s.rpc.reply(0, '0x8f'); await a.drained;
+ const four = Array.from({length:4},()=>s.deps.capacity!.tryAcquire()); assert.ok(four.every(Boolean)); four.forEach(l=>l!.release());
 });
 
 test('cancellation during Redis clock preparation prevents invocation', async () => {

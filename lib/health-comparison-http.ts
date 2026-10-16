@@ -1,5 +1,5 @@
 import { checkDiagnosticRequest, diagnosticJson } from './http.ts';
-import { processCapacity, type ProcessCapacity } from './http-capacity.ts';
+import { claimProcessCapacity, processCapacity, type CapacityLease, type ProcessCapacity } from './http-capacity.ts';
 import { parseHealthComparisonRequest, startHealthComparison } from './health-coordinator.ts';
 import { serializeHealthComparison } from './health-comparison-response.ts';
 import { startTrackedReservation } from './tracked-budget.ts';
@@ -14,12 +14,12 @@ export type ComparisonHttpDependencies = Readonly<{
  rpcFetch: typeof fetch;
  registerLifecycle(drained: Promise<void>): void;
  capacity?: ProcessCapacity;
+ lease?: CapacityLease;
  runId?: string;
  wallNow?: () => number;
  respond?: (body: string, init: ResponseInit) => Response;
 }>;
 const never = () => new Promise<void>(() => {});
-const consumedCapacity = new WeakSet<object>();
 
 /** Offline-only adapter. No production route imports or activates this module. */
 export function startHealthComparisonHttp(request: Request, dependencies: ComparisonHttpDependencies): ComparisonHttpHandle {
@@ -27,13 +27,19 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
  const { clock, redisFetch, rpcFetch, registerLifecycle, runId, wallNow } = dependencies;
  const respond = dependencies.respond ?? ((body: string, init: ResponseInit) => new Response(body, init));
  const env = { UPSTASH_REDIS_REST_URL: dependencies.env.UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN: dependencies.env.UPSTASH_REDIS_REST_TOKEN };
+ const owner = dependencies.capacity ?? processCapacity, supplied = dependencies.lease;
  const denied = checkDiagnosticRequest(request);
- if (denied) return Object.freeze({ response: Promise.resolve(denied), drained: Promise.resolve(), cancel() {} });
- const lease = (dependencies.capacity ?? processCapacity).tryAcquire();
- if (!lease) return Object.freeze({ response: Promise.resolve(diagnosticJson({ error: 'Diagnostic capacity reached. Wait a minute and retry.' }, 429)), drained: Promise.resolve(), cancel() {} });
- if (consumedCapacity.has(lease)) return Object.freeze({ response: Promise.resolve(diagnosticJson({ error: 'Comparison admission lease already consumed.' }, 503)), drained: Promise.resolve(), cancel() {} });
- const release = lease.release.bind(lease);
- consumedCapacity.add(lease);
+ if (denied) {
+  // A supplied trusted token was acquired by the caller before request checks.
+  // Roll it back without allocating or touching a token owned by another job.
+  try { if (supplied !== undefined) claimProcessCapacity(owner, supplied)?.(); } catch { /* Foreign/consumed tokens are not ours to release. */ }
+  return Object.freeze({ response: Promise.resolve(denied), drained: Promise.resolve(), cancel() {} });
+ }
+ let release: (() => void) | undefined;
+ try { release = claimProcessCapacity(owner, supplied); }
+ catch { return Object.freeze({ response: Promise.resolve(diagnosticJson({ error: 'Comparison capacity ownership unavailable.' }, 503)), drained: Promise.resolve(), cancel() {} }); }
+ if (!release) return Object.freeze({ response: Promise.resolve(diagnosticJson({ error: 'Diagnostic capacity reached. Wait a minute and retry.' }, 429)), drained: Promise.resolve(), cancel() {} });
+ const releaseCapacity = release;
  let resolveResponse!: (response: Response) => void, resolveDrain!: () => void;
  const response = new Promise<Response>(resolve => { resolveResponse = resolve; });
  const drained = new Promise<void>(resolve => { resolveDrain = resolve; });
@@ -143,7 +149,7 @@ export function startHealthComparisonHttp(request: Request, dependencies: Compar
    // deliberately retained; there is no timeout-based capacity refund.
    await Promise.all(obligations).catch(never);
    safeClear(clearWatchdog); request.signal.removeEventListener('abort', abort);
-   if (!released) { released = true; release(); }
+   if (!released) { released = true; releaseCapacity(); }
    resolveDrain();
   }
  }
